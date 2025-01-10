@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+:root {
+    --error-dark: #f87171;
+    --error-light: #dc2626;
+}
+
+/* Modo claro */
+@media (prefers-color-scheme: light) {
+    .label-error {
+        color: var(--error-light);
+    }
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .label-error {
+        color: var(--error-dark);
+    }
+}
