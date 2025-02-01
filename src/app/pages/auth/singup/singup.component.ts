@@ -55,7 +55,7 @@ export default class SingupComponent {
       this._messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'Por favor, revisa los campos con errores',
+        detail: 'Por favor, revisa los campos marcados',
         life: 3000
       });
     }
