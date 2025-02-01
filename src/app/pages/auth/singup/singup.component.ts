@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 
 interface FormRegister {
   name: FormControl<string | null>;
+  lastName: FormControl<string | null>;
   email: FormControl<string | null>;
   password: FormControl<string | null>;
   secretKey: FormControl<string | null>;
@@ -27,6 +28,7 @@ export default class SingupComponent {
 
   form = this._fb.group<FormRegister>({
     name: this._fb.control('', [Validators.required]),
+    lastName: this._fb.control('',[Validators.required]),
     email: this._fb.control('', [Validators.required, Validators.email]),
     password: this._fb.control('', [Validators.required]),
     secretKey: this._fb.control('', [Validators.required])

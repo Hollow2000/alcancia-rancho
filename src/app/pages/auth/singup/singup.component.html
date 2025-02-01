@@ -20,6 +20,17 @@
                     <div>
                         <p-floatlabel variant="in">
                             <input
+                                class="{{form.controls.lastName.invalid && form.controls.lastName.touched ? 'ng-invalid ng-dirty' : ''}}"
+                                formControlName="lastName" id="lastName" type="text" pInputText fluid="true" pSize="small" />
+                            <label for="lastName">Apellidos</label>
+                        </p-floatlabel>
+                        @if (form.controls.name.invalid && form.controls.name.touched){
+                        <small class="label-error">Este campo es obligatorio</small>
+                        }
+                    </div>
+                    <div>
+                        <p-floatlabel variant="in">
+                            <input
                                 class="{{form.controls.email.invalid && form.controls.email.touched ? 'ng-invalid ng-dirty' : ''}}"
                                 formControlName="email" id="email" type="email" pInputText fluid="true" pSize="small" />
                             <label for="email">Correo electronico</label>
