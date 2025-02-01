@@ -1,1 +1,58 @@
-<p>login works!</p>
+<div class="wrapper">
+    <p-card class="card">
+        <div class="container">
+            <h2>Iniciar sesión</h2>
+            <span>¡Bienvenido a la Alcancia del Rancho!</span>
+            <form [formGroup]="form">
+                <small>No tienes una cuenta? <p-button label="Crea una cuenta" [link]="true" /></small>
+                <div class="input-group">
+                    <div>
+                        <p-floatlabel variant="in">
+                            <input
+                                class="{{form.controls.email.invalid && form.controls.email.touched ? 'ng-invalid ng-dirty' : ''}}"
+                                formControlName="email" id="email" type="email" pInputText fluid="true" pSize="small" />
+                            <label for="email">Correo electronico</label>
+                        </p-floatlabel>
+                        @if (form.controls.email.getError('required') && form.controls.email.touched){
+                        <small class="label-error">Este campo es obligatorio</small>
+                        }
+                        @if (form.controls.email.getError('email') && form.controls.email.touched){
+                        <small class="label-error">Introduce un correo electronico valido</small>
+                        }
+                    </div>
+                    <div>
+                        <p-floatlabel variant="in">
+                            <p-password
+                                class="{{form.controls.password.invalid && form.controls.password.touched ? 'ng-invalid ng-dirty' : ''}}"
+                                formControlName="password" id="password" promptLabel="Crea una contraseña"
+                                weakLabel="Muy simple" mediumLabel="Dificultad media" strongLabel="Dificultad alta"
+                                [toggleMask]="true" fluid="true" pSize="small" />
+                            <label for="password">Crea una contraseña</label>
+                        </p-floatlabel>
+                        @if (form.controls.password.invalid && form.controls.password.touched){
+                        <small class="label-error">Este campo es obligatorio</small>
+                        }
+                    </div>
+                </div>
+                <small>Olvidaste tu contraseña? <p-button label="Recuperar contraseña" [link]="true" /></small>
+                <div class="button-container">
+                    <p-button (onClick)="submit()" label="Crear cuenta" [rounded]="true" severity="success" />
+                </div>
+            </form>
+        </div>
+    </p-card>
+    
+    <p-card class="card">
+        <h2>O inicia sesión con</h2>
+        <div class="flex-row">
+            <p-button [outlined]="true">
+                <img src="https://developers.google.com/identity/images/branding_guideline_sample_lt_sq_sl.svg" alt="google"
+                    width="42" height="42">
+            </p-button>
+            <p-button [outlined]="true">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" alt="facebook"
+                    width="42" height="42">
+            </p-button>
+        </div>
+    </p-card>
+</div>
