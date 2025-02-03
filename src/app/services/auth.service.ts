@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, UserCredential } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updateProfile, UserCredential } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +18,9 @@ export class AuthService {
     if (this._auth.currentUser) {
       return updateProfile(this._auth.currentUser,{displayName: name})
     }
+  }
+
+  async signInWithGoogle(): Promise<UserCredential>{
+    return signInWithPopup(this._auth,new GoogleAuthProvider);
   }
 }

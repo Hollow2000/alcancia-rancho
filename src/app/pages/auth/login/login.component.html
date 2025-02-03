@@ -36,23 +36,14 @@
                 </div>
                 <small>Olvidaste tu contraseña? <p-button label="Recuperar contraseña" [link]="true" /></small>
                 <div class="button-container">
-                    <p-button (onClick)="submit()" label="Iniciar sesión" [rounded]="true" severity="success" />
+                    <p-button (onClick)="submit()" label="Acceder" [rounded]="true" severity="success" />
+                    <span>o</span>
+                <p-button [outlined]="true" (onClick)="signInWithGoogle()">
+                    <img width="24" height="24" src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo"/>
+                    <span>Acceder con Google</span>
+                </p-button>
                 </div>
             </form>
-        </div>
-    </p-card>
-    
-    <p-card class="card">
-        <h2>O inicia sesión con</h2>
-        <div class="flex-row">
-            <p-button [outlined]="true">
-                <img src="https://developers.google.com/identity/images/branding_guideline_sample_lt_sq_sl.svg" alt="google"
-                    width="42" height="42">
-            </p-button>
-            <p-button [outlined]="true">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" alt="facebook"
-                    width="42" height="42">
-            </p-button>
         </div>
     </p-card>
 </div>

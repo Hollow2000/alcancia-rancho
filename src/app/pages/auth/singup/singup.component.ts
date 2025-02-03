@@ -62,6 +62,24 @@ export default class SingupComponent {
     }
   }
 
+  async signInWithGoogle(){
+    await this._authService.signInWithGoogle().then(() => {
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Registro exitoso',
+        detail: '¡Bienvenido a la Alcancia del Rancho!',
+        life: 3000
+      });
+    }).catch((error: FirebaseError) => {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error al crear cuenta',
+        detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
+        life: 3000
+      });
+    });
+  }
+
   private async createAccount() {
     const { name, email, password } = this.form.value;
     await this._authService.singUp(email!, password!).then(()=>{
