@@ -1,11 +1,17 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updateProfile, UserCredential } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updateProfile, User, UserCredential } from '@angular/fire/auth';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private _auth = inject(Auth);
+
+  get authState$(): Observable<User | null>{
+    return authState(this._auth);
+  }
+
   async singUp(email: string, password: string): Promise<UserCredential>{
     return createUserWithEmailAndPassword(this._auth,email,password);
   }
