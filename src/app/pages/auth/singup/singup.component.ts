@@ -7,6 +7,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../services/auth.service';
+import { RouterLink } from '@angular/router';
+import { FirebaseError } from '@angular/fire/app';
 
 interface FormRegister {
   name: FormControl<string | null>;
@@ -19,7 +21,7 @@ interface FormRegister {
 @Component({
   selector: 'app-singup',
   standalone: true,
-  imports: [Card, FloatLabel, PasswordModule, ButtonModule, InputTextModule, ReactiveFormsModule],
+  imports: [Card, FloatLabel, PasswordModule, ButtonModule, InputTextModule, ReactiveFormsModule, RouterLink],
   templateUrl: './singup.component.html',
   styleUrl: './singup.component.css'
 })
@@ -61,28 +63,31 @@ export default class SingupComponent {
   }
 
   private async createAccount() {
-    try {
-      const { name, email, password } = this.form.value;
-      const credential = await this._authService.singUp(email!, password!);
-      await this._authService.updateName(name!);
-      console.log(credential);
-      
-      this._messageService.add({
-        severity: 'success',
-        summary: 'Registro exitoso',
-        detail: '¡Bienvenido a la Alcancia del Rancho!',
-        life: 3000
+    const { name, email, password } = this.form.value;
+    await this._authService.singUp(email!, password!).then(()=>{
+      this._authService.updateName(name!).then(() =>{
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Registro exitoso',
+          detail: '¡Bienvenido a la Alcancia del Rancho!',
+          life: 3000
+        });
+      }).catch((error: FirebaseError) => {
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error al crear cuenta',
+          detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
+          life: 3000
+        });
       });
-    } catch (error) {
-      console.log(error);
-      
+    }).catch((error: FirebaseError) => {
       this._messageService.add({
         severity: 'error',
         summary: 'Error al crear cuenta',
-        detail: 'Por favor comunicate con el desarrollador',
+        detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
         life: 3000
       });
-    }
+    });;
   }
 
 }

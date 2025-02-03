@@ -4,7 +4,7 @@
             <h2>Iniciar sesión</h2>
             <span>¡Bienvenido a la Alcancia del Rancho!</span>
             <form [formGroup]="form">
-                <small>No tienes una cuenta? <p-button label="Crea una cuenta" [link]="true" /></small>
+                <small>No tienes una cuenta? <p-button label="Crea una cuenta" [link]="true" routerLink="/auth/register"/></small>
                 <div class="input-group">
                     <div>
                         <p-floatlabel variant="in">
@@ -27,7 +27,7 @@
                                 formControlName="password" id="password" promptLabel="Crea una contraseña"
                                 weakLabel="Muy simple" mediumLabel="Dificultad media" strongLabel="Dificultad alta"
                                 [toggleMask]="true" fluid="true" pSize="small" />
-                            <label for="password">Crea una contraseña</label>
+                            <label for="password">Contraseña</label>
                         </p-floatlabel>
                         @if (form.controls.password.invalid && form.controls.password.touched){
                         <small class="label-error">Este campo es obligatorio</small>
@@ -36,7 +36,7 @@
                 </div>
                 <small>Olvidaste tu contraseña? <p-button label="Recuperar contraseña" [link]="true" /></small>
                 <div class="button-container">
-                    <p-button (onClick)="submit()" label="Crear cuenta" [rounded]="true" severity="success" />
+                    <p-button (onClick)="submit()" label="Iniciar sesión" [rounded]="true" severity="success" />
                 </div>
             </form>
         </div>

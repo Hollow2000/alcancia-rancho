@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, updateProfile, UserCredential } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, UserCredential } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +8,10 @@ export class AuthService {
   private _auth = inject(Auth);
   async singUp(email: string, password: string): Promise<UserCredential>{
     return createUserWithEmailAndPassword(this._auth,email,password);
+  }
+
+  async login(email: string, password: string): Promise<UserCredential>{
+    return signInWithEmailAndPassword(this._auth, email, password);
   }
 
   async updateName(name: string){

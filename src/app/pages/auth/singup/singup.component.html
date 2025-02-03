@@ -4,7 +4,7 @@
             <h2>Crear una cuenta</h2>
             <span>¡Bienvenido a la Alcancia del Rancho!</span>
             <form [formGroup]="form">
-                <small>Ya tienes una cuenta? <p-button label="Inicia sesión" [link]="true" /></small>
+                <small>Ya tienes una cuenta? <p-button label="Inicia sesión" [link]="true" routerLink="/auth/login" /></small>
                 <div class="input-group">
                     <div>
                         <p-floatlabel variant="in">
@@ -68,7 +68,6 @@
                         }
                     </div>
                 </div>
-                <small>Olvidaste tu contraseña? <p-button label="Recuperar contraseña" [link]="true" /></small>
                 <div class="button-container">
                     <p-button (onClick)="submit()" label="Crear cuenta" [rounded]="true" severity="success" />
                 </div>
