@@ -9,7 +9,7 @@ import { PasswordModule } from 'primeng/password';
 import { AuthService } from '../../../services/auth.service';
 import { FirebaseError } from '@angular/fire/app';
 import { AUTH_ERROR } from '../../../core/constants/AuthFirebaseErrors';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 interface FormLogin {
   email: FormControl<string | null>;
@@ -27,6 +27,7 @@ export default class LoginComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _messageService = inject(MessageService);
   private readonly _authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   form = this._fb.group<FormLogin>({
     email: this._fb.control('', [Validators.required, Validators.email]),
@@ -55,6 +56,7 @@ export default class LoginComponent {
         detail: '¡Bienvenido a la Alcancia del Rancho!',
         life: 3000
       });
+      this.router.navigateByUrl('');
     }).catch((error: FirebaseError) => {
       this._messageService.add({
         severity: 'error',
@@ -74,6 +76,7 @@ export default class LoginComponent {
         detail: '¡Bienvenido a la Alcancia del Rancho!',
         life: 3000
       });
+      this.router.navigateByUrl('');
     }).catch((error: FirebaseError) => {
       console.error(error);
       this._messageService.add({

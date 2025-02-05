@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../services/auth.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FirebaseError } from '@angular/fire/app';
 
 interface FormRegister {
@@ -29,6 +29,7 @@ export default class SingupComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _messageService = inject(MessageService);
   private readonly _authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   form = this._fb.group<FormRegister>({
     name: this._fb.control('', [Validators.required]),
@@ -70,6 +71,7 @@ export default class SingupComponent {
         detail: '¡Bienvenido a la Alcancia del Rancho!',
         life: 3000
       });
+      this.router.navigateByUrl('');
     }).catch((error: FirebaseError) => {
       this._messageService.add({
         severity: 'error',
@@ -98,6 +100,7 @@ export default class SingupComponent {
           life: 3000
         });
       });
+      this.router.navigateByUrl('');
     }).catch((error: FirebaseError) => {
       this._messageService.add({
         severity: 'error',
