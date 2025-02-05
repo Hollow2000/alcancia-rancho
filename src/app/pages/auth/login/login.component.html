@@ -24,8 +24,7 @@
                         <p-floatlabel variant="in">
                             <p-password
                                 class="{{form.controls.password.invalid && form.controls.password.touched ? 'ng-invalid ng-dirty' : ''}}"
-                                formControlName="password" id="password" promptLabel="Crea una contraseña"
-                                weakLabel="Muy simple" mediumLabel="Dificultad media" strongLabel="Dificultad alta"
+                                formControlName="password" id="password" feedback="false"
                                 [toggleMask]="true" fluid="true" pSize="small" />
                             <label for="password">Contraseña</label>
                         </p-floatlabel>
