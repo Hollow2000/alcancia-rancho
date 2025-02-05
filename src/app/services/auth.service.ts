@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, updateProfile, User, UserCredential } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User, UserCredential } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,6 +10,10 @@ export class AuthService {
 
   get authState$(): Observable<User | null>{
     return authState(this._auth);
+  }
+
+  async logOut(): Promise<void>{
+    return signOut(this._auth);
   }
 
   async singUp(email: string, password: string): Promise<UserCredential>{
@@ -24,6 +28,10 @@ export class AuthService {
     if (this._auth.currentUser) {
       return updateProfile(this._auth.currentUser,{displayName: name})
     }
+  }
+
+  getUserName(){
+    return this._auth.currentUser?.displayName;
   }
 
   async signInWithGoogle(): Promise<UserCredential>{
