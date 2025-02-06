@@ -1,0 +1,87 @@
+Crear varios ahorros (nombre, cantidad, meta),
+cada ahorro tendra sus movimientos (idAhorros, cantidad,descripcion,fecha,familiar,tipo)
+seleccionando un familiar de la lista de familiares que tambien se podran agregar (admin, apellidos, nombre)
+
+Tabs:
+- Ahorros
+- Movimientos
+	- Retiros
+	- Ingresos
+- Familiares
+
+Pantallas
+- Listado de ahorros -> 
+	Titulos: Ahorros activos		{$suma de todos los ahorros}
+	Columnas: Nombre o proposito, Cantidad ahorrado, Meta
+	Controles generales: (Boton agregar ahorro) 
+	Controles individuales: (Boton Guardar) (Boton Retirar) (Botones Editar) (Boton Eliminar)
+	Clic en un registro: Navegar a movimientos.
+
+- Formulario de ahorro ->  ---Posible modal--
+	Nuevo:
+		Titulo: Crear ahorro nuevo
+		Campos: Nombre o proposito, Meta. 
+		Controles Generales: (Boton Crear)
+
+	Editar:
+		Titulo: Editar ahorro {nombreAhorro}
+		Campos: Nombre, Meta. 
+		Controles Generales: (Boton Confirmar)
+		
+- Listado de Familiares -> 
+	Titulo: Familiares registrados
+	Columnas: Nombre(s), Apellidos
+	Controles generales: (Boton Agregar Familiar)
+	Controles individuales: (Boton Editar) (Boton Eliminar)
+
+- Formulario de familiares ->
+	Nuevo:
+		Titulo: Agregar familiar
+		Campos: Nombre(s), Apellidos
+		Controles: (Boton Agregar)
+	Editar
+		Titulo: Editar familiar
+		Campos: Nombre(s), Apellidos
+		Controles: (Boton Confirmar)
+
+- Listado de movimientos. -> 
+	Sin ahorro seleccionado:
+		Titulo: Movimientos Recientes
+		Columnas: Nombre del ahorro, Tipo, Cantidad, Fecha, Nombre Famiiliar
+		Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo)
+
+	Ahorro seleccionado:
+		Titulo: Movimientos de {Nombre del ahorro}
+		Columnas: Descripcion, Tipo, Cantidad, Fecha, Familiar
+		Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo) (Boton Guardar) (Boton Retirar)
+
+	Retiros:
+		Titulo: Retiros
+		Columnas: Nombre del ahorro, Tipo, Cantidad, Fecha, Nombre Famiiliar
+		Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo)
+
+	Ingresos:
+		Titulo: Ingresos
+		Columnas: Nombre del ahorro, Tipo, Cantidad, Fecha, Nombre Famiiliar
+		Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo)
+
+    Retiros de ahorro seleccionado:
+        Titulo: Retiros de {nombreAhorro}
+        Columnas: Descripcion, Cantidad, Fecha Famiiliar
+        Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo) (Boton Guardar) (Boton Retirar)
+
+    Ingresos de ahorro seleccionado:
+        Titulo: Ingresos de {nombreAhorro}
+        Columnas: Descripcion, Cantidad, Fecha Famiiliar
+        Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo) (Boton Guardar) (Boton Retirar)
+
+- Formulario movimiento. -> 
+	Retirar:
+		Titulo: Retirar de {Nombre ahorro}
+		Campos: Ahorro(Dropdown), Cantidad, Descripcion, Fecha(DatePicker), Familiar(DropDown)
+		Controles: (Boton Retirar)
+		
+	Guardar:
+		Titulo: Guardar en {Nombre ahorro}
+		Campos: Ahorro(Dropdown), Cantidad, Descripcion, Fecha(DatePicker), Familiar(DropDown)
+		Controles: (Boton Guardar)
