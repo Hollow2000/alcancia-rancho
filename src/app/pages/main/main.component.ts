@@ -34,17 +34,17 @@ export class MainComponent {
       {
         label: 'Movimientos',
         icon: 'pi pi-arrow-right-arrow-left',
-        command: () => {this.router.navigateByUrl('')},
+        command: () => {this.router.navigateByUrl('movimientos')},
         items: [
           {
             label: 'Retiros',
             icon: 'pi pi-dolar',
-            command: () => {this.router.navigateByUrl('?type=retiro')}
+            command: () => {this.router.navigateByUrl('movimientos?type=retiro')}
           },
           {
             label: 'Ingresos',
             icon: 'pi pi-money-bil',
-            command: () => {this.router.navigateByUrl('?type=ingreso')}
+            command: () => {this.router.navigateByUrl('movimientos?type=ingreso')}
           }
         ]
       },
