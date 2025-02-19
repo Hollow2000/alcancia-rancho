@@ -1,1 +1,57 @@
-<h1>HOME COMPONENT</h1>
+<p-dataview #dv [value]="movements()" [layout]="layout">
+    <ng-template #header>
+        <div class="header">
+            <h3>Movimientos recientes</h3>
+            @if (layout === 'grid') {
+                <div class="controls">
+                    <p-button label="Nuevo ahorro" size="small" />
+                    <p-select [options]="filterOptions" [(ngModel)]="filter" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                </div>
+            }
+        </div>
+        @if (layout === 'list') {
+        <div class="header-bottom">
+                <div class="controls">
+                    <p-button label="Nuevo ahorro" size="small" />
+                    <p-select [options]="filterOptions" [(ngModel)]="filter" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                </div>
+            </div>
+        }
+    </ng-template>
+    <ng-template #list let-movements>
+        @for (movement of movements; track $index) {
+            <div class="border-bottom item-list">
+                <div class="item-header">
+                    <h3 style="color: green;">
+                        <i class="pi pi-arrow-circle-up"></i> ${{movement.cantidad}}.00
+                    </h3>
+                    <h3>{{movement.fecha}}</h3>
+                </div>
+                <div class="item-body">
+                    <span><strong>Ahorro: </strong>{{movement.idAhorros}}</span>
+                    <span><strong>Familiar:</strong> {{movement.familiar}}</span>
+                    <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
+                </div>
+            </div>
+        } 
+    </ng-template>
+    <ng-template #grid let-movements>
+        <div class="grid-container">
+            @for (movement of movements; track $index) {
+                <p-card>
+                    <div class="item-header">
+                        <h3 style="color: green;">
+                            <i class="pi pi-arrow-circle-up"></i> ${{movement.cantidad}}.00
+                        </h3>
+                        <h3>{{movement.fecha}}</h3>
+                    </div>
+                    <div class="item-body">
+                        <span><strong>Ahorro: </strong>{{movement.idAhorros}}</span>
+                        <span><strong>Familiar:</strong> {{movement.familiar}}</span>
+                        <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
+                    </div>
+                </p-card>
+            }
+        </div>
+    </ng-template>
+</p-dataview>
