@@ -8,7 +8,7 @@ import { enviroment } from '../env/enviroment';
 })
 export class AuthService {
   private _auth = inject(Auth);
-  mockIsLogged = false;
+  mockIsLogged = enviroment.isLogged;
 
   get authState$(): Observable<User | null>{
     return authState(this._auth);

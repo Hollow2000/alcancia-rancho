@@ -5,7 +5,8 @@ import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
-import { MovementService } from '../../../services/movement.service';
+import { Movement, MovementService, TypeMovementEnum } from '../../../services/movement.service';
+import { CurrencyPipe } from '@angular/common';
 
 interface FilterDropdown {
   id: string,
@@ -16,7 +17,8 @@ interface FilterDropdown {
   selector: 'app-home',
   standalone: true,
   imports: [
-    DataViewModule, SelectModule, FormsModule, CardModule
+    DataViewModule, SelectModule, FormsModule, CardModule,
+    CurrencyPipe
   ],
   templateUrl: './movements.component.html',
   styleUrl: './movements.component.css'
@@ -63,5 +65,9 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  isDeposit(movement: Movement): boolean{
+    return movement.tipo === TypeMovementEnum.into;
   }
 }

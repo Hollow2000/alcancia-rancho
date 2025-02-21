@@ -22,8 +22,9 @@
         @for (movement of movements; track $index) {
             <div class="border-bottom item-list">
                 <div class="item-header">
-                    <h3 style="color: green;">
-                        <i class="pi pi-arrow-circle-up"></i> ${{movement.cantidad}}.00
+                    <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
+                        <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i>
+                        {{movement.cantidad | currency}}
                     </h3>
                     <h3>{{movement.fecha}}</h3>
                 </div>
@@ -40,8 +41,9 @@
             @for (movement of movements; track $index) {
                 <p-card [style]="{height: '100%'}">
                     <div class="item-header">
-                        <h3 style="color: green;">
-                            <i class="pi pi-arrow-circle-up"></i> ${{movement.cantidad}}.00
+                        <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
+                            <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i> 
+                            {{movement.cantidad | currency}}
                         </h3>
                         <h3>{{movement.fecha}}</h3>
                     </div>

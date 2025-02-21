@@ -1,3 +1,4 @@
 export const enviroment = {
-    mockUp: true
+    mockUp: true,
+    isLogged: true,
 }
