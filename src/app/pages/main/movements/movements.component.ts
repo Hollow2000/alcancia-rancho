@@ -25,7 +25,7 @@ interface FilterDropdown {
 })
 export class MovementsComponent implements OnInit, OnDestroy {
   private readonly _movementService = inject(MovementService);
-  private readonly _deviceService = inject(DeviceService);
+  private readonly _deviceService = inject(DeviceService)
 
   movements$ = this._movementService.getMovement();
 

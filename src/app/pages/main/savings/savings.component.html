@@ -1,1 +1,55 @@
-<p>savings works!</p>
+<p-dataview #dv [value]="savings$()" [layout]="layout">
+    <ng-template #header>
+        <div class="header">
+            <h3>Movimientos recientes</h3>
+            @if (layout === 'grid') {
+                <div class="controls">
+                    <p-select [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por tipo" />
+                    <p-select [options]="filterSavingOptions" [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                </div>
+            }
+        </div>
+        @if (layout === 'list') {
+        <div class="header-bottom">
+                <div class="controls">
+                    <p-select [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por tipo" />
+                    <p-select [options]="filterSavingOptions" [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                </div>
+            </div>
+        }
+    </ng-template>
+    <ng-template #list let-savings>
+        @for (saving of savings; track $index) {
+            <div class="border-bottom item-list">
+                <div class="item-header">
+                    <h3>
+                        <i class="pi pi-wallet"></i> 
+                        {{saving.cantidad | currency}}
+                    </h3>
+                </div>
+                <div class="item-body">
+                    <span><strong>Nombre: </strong>{{saving.nombre}}</span>
+                    <span><strong>Meta:</strong> {{saving.meta}}</span>
+                </div>
+            </div>
+        } 
+    </ng-template>
+    <ng-template #grid let-savings>
+        <div class="grid-container">
+            @for (saving of savings; track $index) {
+                <p-card [style]="{height: '100%'}">
+                    <div class="item-header">
+                        <h3>
+                            <i class="pi pi-wallet"></i> 
+                            {{saving.cantidad | currency}}
+                        </h3>
+                    </div>
+                    <div class="item-body">
+                        <span><strong>Nombre: </strong>{{saving.nombre}}</span>
+                        <span><strong>Meta:</strong> {{saving.meta}}</span>
+                    </div>
+                </p-card>
+            }
+        </div>
+    </ng-template>
+</p-dataview>
