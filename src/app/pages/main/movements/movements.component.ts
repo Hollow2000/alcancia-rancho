@@ -1,6 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Button } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
@@ -8,7 +7,7 @@ import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
 import { MovementService } from '../../../services/movement.service';
 
-interface SelectSaving {
+interface FilterDropdown {
   id: string,
   nombre: string,
 }
@@ -17,7 +16,7 @@ interface SelectSaving {
   selector: 'app-home',
   standalone: true,
   imports: [
-    DataViewModule, Button, SelectModule, FormsModule, CardModule
+    DataViewModule, SelectModule, FormsModule, CardModule
   ],
   templateUrl: './movements.component.html',
   styleUrl: './movements.component.css'
@@ -32,12 +31,24 @@ export class MovementsComponent implements OnInit, OnDestroy {
   
   layout: 'list' | 'grid' = 'list';
   
-  filter?: SelectSaving | undefined;
-  filterOptions: SelectSaving[] | undefined = [
+  filterSaving?: FilterDropdown | undefined;
+  filterSavingOptions: FilterDropdown[] | undefined = [
     {
       id: '/ahorros/5Z3RBEfu05n1EA8DBtO1',
       nombre: 'Puerta'
     }
+  ];
+
+  filterType?: FilterDropdown | undefined;
+  filterTypeOptions: FilterDropdown[] | undefined = [
+    {
+      id: 'retiro',
+      nombre: 'Retiros'
+    },
+    {
+      id: 'deposito',
+      nombre: 'Depositos'
+    },
   ];
 
   movements = signal<any>([

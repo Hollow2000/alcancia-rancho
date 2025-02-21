@@ -1,3 +1,9 @@
 h4{
     margin: 0;
 }
+
+.menu{
+    position: sticky;
+    top: -1px;
+    z-index: 99;
+}

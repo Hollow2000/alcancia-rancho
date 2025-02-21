@@ -1,19 +1,19 @@
-<p-dataview #dv [value]="movements$()" [layout]="layout">
+<p-dataview #dv [value]="movements()" [layout]="layout">
     <ng-template #header>
         <div class="header">
             <h3>Movimientos recientes</h3>
             @if (layout === 'grid') {
                 <div class="controls">
-                    <p-button label="Nuevo ahorro" size="small" />
-                    <p-select [options]="filterOptions" [(ngModel)]="filter" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                    <p-select [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por tipo" />
+                    <p-select [options]="filterSavingOptions" [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
                 </div>
             }
         </div>
         @if (layout === 'list') {
         <div class="header-bottom">
                 <div class="controls">
-                    <p-button label="Nuevo ahorro" size="small" />
-                    <p-select [options]="filterOptions" [(ngModel)]="filter" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                    <p-select [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por tipo" />
+                    <p-select [options]="filterSavingOptions" [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
                 </div>
             </div>
         }
@@ -38,7 +38,7 @@
     <ng-template #grid let-movements>
         <div class="grid-container">
             @for (movement of movements; track $index) {
-                <p-card>
+                <p-card [style]="{height: '100%'}">
                     <div class="item-header">
                         <h3 style="color: green;">
                             <i class="pi pi-arrow-circle-up"></i> ${{movement.cantidad}}.00
