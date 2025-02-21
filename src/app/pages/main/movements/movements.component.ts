@@ -51,33 +51,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
     },
   ];
 
-  movements = signal<any>([
-    {
-      cantidad: 100,
-      descripcion: "Primer ahorro",
-      familiar: "Saul Moedano",
-      fecha: "10 de enero de 2025",
-      idAhorros: "Puerta",
-      tipo: "deposito"
-    },
-    {
-      cantidad: 2500,
-      descripcion: "asmdñamsñm amsldmñamsd ñasmdñ malsd",
-      familiar: "Saul Emmanuel Moedano Miguel",
-      fecha: "10 de enero de 2025",
-      idAhorros: "Reparacion de la lozeta y pared del cuarto de baño",
-      tipo: "deposito"
-    },
-    {
-      cantidad: 100,
-      descripcion: "Primer ahorro",
-      familiar: "Saul Moedano",
-      fecha: "10 de enero de 2025",
-      idAhorros: "Puerta",
-      tipo: "deposito"
-    }
-  ]);
-
   ngOnInit(): void {
     this.subscription = this._deviceService.isMobile$.subscribe(
       (isMobile) => {

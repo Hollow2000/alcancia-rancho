@@ -1,6 +1,7 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
 import { DocumentReference, Firestore, Timestamp, collection, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { enviroment } from '../env/enviroment';
 
 export interface MovementDTO {
   id: string;
@@ -40,7 +41,38 @@ export class MovementService {
 
   private movements$ = signal<Movement[]>([]);
 
+  mockMovements = signal<Movement[]>([
+    {
+      id: '122t4f5g4q3',
+      cantidad: 100,
+      descripcion: "Primer ahorro",
+      familiar: "Saul Moedano",
+      fecha: "10 de enero de 2025",
+      idAhorros: "Puerta",
+      tipo: TypeMovementEnum.into
+    },
+    {
+      id: 'hq45tbrt435',
+      cantidad: 2500,
+      descripcion: "asmdñamsñm amsldmñamsd ñasmdñ malsd",
+      familiar: "Saul Emmanuel Moedano Miguel",
+      fecha: "10 de enero de 2025",
+      idAhorros: "Reparacion de la lozeta y pared del cuarto de baño",
+      tipo: TypeMovementEnum.into
+    },
+    {
+      id: 'qa3hbe534t',
+      cantidad: 2300,
+      descripcion: "Retiro para el marco de la puerta",
+      familiar: "Saul Moedano",
+      fecha: "10 de enero de 2025",
+      idAhorros: "Puerta",
+      tipo: TypeMovementEnum.out
+    }
+  ]);
+
   getMovement(): Signal<Movement[]> {
+    if (enviroment.mockUp) {return this.mockMovements;}
     const document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<MovementDTO[]>;
     
     document.subscribe({
