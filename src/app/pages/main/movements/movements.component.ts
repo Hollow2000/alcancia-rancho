@@ -2,11 +2,11 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
-import { SelectButton } from 'primeng/selectbutton';
 import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
+import { MovementService } from '../../../services/movement.service';
 
 interface SelectSaving {
   id: string,
@@ -17,14 +17,16 @@ interface SelectSaving {
   selector: 'app-home',
   standalone: true,
   imports: [
-    DataViewModule, Button, SelectModule, 
-    SelectButton, FormsModule, CardModule
+    DataViewModule, Button, SelectModule, FormsModule, CardModule
   ],
   templateUrl: './movements.component.html',
   styleUrl: './movements.component.css'
 })
 export class MovementsComponent implements OnInit, OnDestroy {
-  private readonly deviceService = inject(DeviceService);
+  private readonly _movementService = inject(MovementService);
+  private readonly _deviceService = inject(DeviceService);
+
+  movements$ = this._movementService.getMovement();
 
   private subscription?: Subscription;
   
@@ -66,7 +68,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
   ]);
 
   ngOnInit(): void {
-    this.subscription = this.deviceService.isMobile$.subscribe(
+    this.subscription = this._deviceService.isMobile$.subscribe(
       (isMobile) => {
         this.layout = isMobile ? 'list' : 'grid';
       }
