@@ -48,6 +48,10 @@ export class AuthService {
     return enviroment.mockUp ? 'Mock Up' : this._auth.currentUser?.displayName;
   }
 
+  getUserImage(){
+    return enviroment.mockUp ? undefined : this._auth.currentUser?.photoURL ?? undefined;
+  }
+
   async signInWithGoogle(): Promise<UserCredential | void>{
     if (enviroment.mockUp) {
       this.mockIsLogged = true;

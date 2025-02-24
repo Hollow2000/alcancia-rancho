@@ -4,11 +4,12 @@ import { AuthService } from '../../services/auth.service';
 import { FirebaseError } from '@angular/fire/app';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Menubar } from 'primeng/menubar';
+import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [RouterOutlet, Menubar],
+  imports: [RouterOutlet, Menubar, AvatarModule],
   providers: [],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
@@ -62,6 +63,10 @@ export class MainComponent {
 
   get userName() {
     return this._authService.getUserName();
+  }
+
+  get userImage() {
+    return this._authService.getUserImage();
   }
 
   async logOut() {

@@ -1,1 +1,40 @@
-<p>family works!</p>
+<p-dataview #dv [value]="family$()" [layout]="layout">
+    <ng-template #header>
+        <div class="header">
+            <h3>Familiares registrados</h3>
+            <p-button label="Nuevo familiar" />
+        </div>
+    </ng-template>
+    <ng-template #list let-family>
+        @for (pepole of family; track $index) {
+            <div class="border-bottom item-list">
+                <div class="item-header">
+                    @if (pepole.foto) {
+                        <p-avatar [image]="pepole.foto" shape="circle" />
+                    }@else {
+                        <p-avatar [label]="getIniciales(pepole)" shape="circle" />
+                    }
+                    <h4>{{pepole.nombres}} {{pepole.apellidos}}</h4>
+                    @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
+                </div>
+            </div>
+        } 
+    </ng-template>
+    <ng-template #grid let-family>
+        <div class="grid-container">
+            @for (pepole of family; track $index) {
+                <p-card [style]="{height: '100%'}">
+                    <div class="item-header">
+                        @if (pepole.foto) {
+                            <p-avatar [image]="pepole.foto" shape="circle" />
+                        }@else {
+                            <p-avatar [label]="getIniciales(pepole)" shape="circle" />
+                        }
+                        <h4>{{pepole.nombres}} {{pepole.apellidos}}</h4>
+                        @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
+                    </div>
+                </p-card>
+            }
+        </div>
+    </ng-template>
+</p-dataview>

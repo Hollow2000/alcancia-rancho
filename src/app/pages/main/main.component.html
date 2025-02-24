@@ -1,4 +1,7 @@
 <p-menubar class="menu" [model]="items" breakpoint="705px">
-        <h4>Hola, {{userName}}</h4>
+        <div class="account">
+                <h4>Hola, {{userName}}</h4>
+                <p-avatar [image]="userImage" shape="circle" />
+        </div>
 </p-menubar>
 <router-outlet/>
