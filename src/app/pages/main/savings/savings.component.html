@@ -12,7 +12,7 @@
     </ng-template>
     <ng-template #list let-savings>
         @for (saving of savings; track $index) {
-            <div class="border-bottom item-list">
+            <div class="border-bottom item-list" (click)="details(saving)">
                 <div class="item-header">
                     <h3>
                         <i class="pi pi-wallet"></i> 

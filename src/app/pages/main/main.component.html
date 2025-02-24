@@ -1,7 +1,11 @@
 <p-menubar class="menu" [model]="items" breakpoint="705px">
         <div class="account">
                 <h4>Hola, {{userName}}</h4>
-                <p-avatar [image]="userImage" shape="circle" />
+                @if (userImage) {
+                        <p-avatar [image]="userImage" shape="circle" />
+                }@else {
+                        <p-avatar icon="pi pi-user" shape="circle" />
+                }
         </div>
 </p-menubar>
 <router-outlet/>

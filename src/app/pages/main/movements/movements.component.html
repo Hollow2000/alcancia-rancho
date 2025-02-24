@@ -29,7 +29,7 @@
                         }
                         @if(filterType?.id === 'deposito' || !filterType){
                             <p-button label="Guardar" size="small" />
-                        }>
+                        }
                     }
                     <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
                         optionLabel="nombre" placeholder="Filtrar por tipo" />
