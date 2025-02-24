@@ -467,7 +467,7 @@ const MyPreset = definePreset(Material, {
                     hoverMutedColor: "{surface.600}"
                 },
                 content: {
-                    background: "{surface.200}",
+                    background: "{surface.100}",
                     hoverBackground: "{surface.100}",
                     borderColor: "{surface.300}",
                     color: "{text.color}",

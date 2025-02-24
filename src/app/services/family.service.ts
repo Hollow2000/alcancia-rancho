@@ -20,6 +20,7 @@ export class FamilyService {
   private readonly _collectionRef = collection(this._firestore, PATH);
 
   family$ = signal<Family[]>([]);
+  loading$ = signal(false);
 
   mockFamifly$ = signal<Family[]>([
     {
@@ -35,7 +36,13 @@ export class FamilyService {
   ]);
 
   getFamilyList(): Signal<Family[]> {
-    if (enviroment.mockUp) {return this.mockFamifly$}
+    this.loading$.set(true);
+    if (enviroment.mockUp) { 
+      setTimeout(() => {
+        this.loading$.set(false);  // Desactivar estado de carga después de 2 segundos
+      }, 2000);
+      return this.mockFamifly$;
+    }
 
     const document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<Family[]>;
 
@@ -47,7 +54,7 @@ export class FamilyService {
         console.error('Error al obtener la colección ' + PATH + ': ', err);
       }
     });
-
+    this.loading$.set(false);
     return this.family$;
   }
 

@@ -5,24 +5,28 @@ import { DataView } from 'primeng/dataview';
 import { AvatarModule } from 'primeng/avatar';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { Skeleton } from 'primeng/skeleton';
 import { Subscription } from 'rxjs';
 import { DeviceService } from '../../../services/device.service';
 import { Family, FamilyService } from '../../../services/family.service';
 import { InputText } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { Utils } from '../../../Utils/Utils';
 
 @Component({
   selector: 'app-family',
   standalone: true,
-  imports: [Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, InputText, FormsModule],
+  imports: [Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, InputText, FormsModule, Skeleton],
   templateUrl: './family.component.html',
   styleUrl: './family.component.css'
 })
 export class FamilyComponent implements OnInit, OnDestroy {
   private readonly _deviceService = inject(DeviceService);
   private readonly _familyService = inject(FamilyService);
+  readonly _utils = inject(Utils);
   
   family$ = this._familyService.getFamilyList();
+  loading$ = this._familyService.loading$;
   filter = '';
 
   private subscription?: Subscription;

@@ -1,4 +1,4 @@
-<p-dataview #dv [value]="family$()" [layout]="layout">
+<p-dataview #dv [value]="family$()" [layout]="layout" emptyMessage="No hay resultados para mostrar">
     <ng-template #header>
         <div class="header">
             <h3>Familiares registrados</h3>
@@ -12,28 +12,22 @@
         </div>
     </ng-template>
     <ng-template #list let-family>
-        @for (pepole of family; track $index) {
-            <div class="border-bottom item-list">
-                <div class="item-info">
-                    @if (pepole.foto) {
-                        <p-avatar [image]="pepole.foto" shape="circle" />
-                    }@else {
-                        <p-avatar [label]="getIniciales(pepole)" shape="circle" />
-                    }
-                    <h4>{{pepole.nombres}} {{pepole.apellidos}}</h4>
-                    @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
+        @if (loading$()) {
+            @for (_ of _utils.arrayOf(10); track $index) {
+                <div class="border-bottom item-list">
+                    <div class="item-info">
+                        <p-skeleton width="3rem" height="1rem" shape="circle" size="2rem" />
+                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                    </div>
+                    <div class="item-controls">
+                        <p-button icon="pi pi-pencil" disabled="true" rounded="true" [style]="{width:'30px', height:'30px'}"/>
+                        <p-button icon="pi pi-trash" disabled="true" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
+                    </div>
                 </div>
-                <div class="item-controls">
-                    <p-button icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
-                    <p-button icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
-                </div>
-            </div>
-        } 
-    </ng-template>
-    <ng-template #grid let-family>
-        <div class="grid-container">
+            } 
+        }@else {
             @for (pepole of family; track $index) {
-                <p-card [style]="{height: '100%'}">
+                <div class="border-bottom item-list">
                     <div class="item-info">
                         @if (pepole.foto) {
                             <p-avatar [image]="pepole.foto" shape="circle" />
@@ -44,10 +38,46 @@
                         @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
                     </div>
                     <div class="item-controls">
-                        <p-button icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
-                        <p-button icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
+                        <p-button icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
+                        <p-button icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
                     </div>
-                </p-card>
+                </div>
+            } 
+        }
+    </ng-template>
+    <ng-template #grid let-family>
+        <div class="grid-container">
+            @if (loading$()) {
+                @for (_ of  _utils.arrayOf(10);  track $index) {
+                    <p-card [style]="{height: '100%'}">
+                        <div class="item-info">
+                            <p-skeleton width="3rem" height="1rem" shape="circle" size="2rem" />
+                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                        </div>
+                        <div class="item-controls">
+                            <p-button icon="pi pi-pencil" disabled="true" label="Editar" rounded="true" size="small"/>
+                            <p-button icon="pi pi-trash" disabled="true" label="Eliminar" severity="danger" rounded="true" size="small" />
+                        </div>
+                    </p-card>
+                }
+            }@else {
+                @for (pepole of family; track $index) {
+                    <p-card [style]="{height: '100%'}">
+                        <div class="item-info">
+                            @if (pepole.foto) {
+                                <p-avatar [image]="pepole.foto" shape="circle" />
+                            }@else {
+                                <p-avatar [label]="getIniciales(pepole)" shape="circle" />
+                            }
+                            <h4>{{pepole.nombres}} {{pepole.apellidos}}</h4>
+                            @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
+                        </div>
+                        <div class="item-controls">
+                            <p-button icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
+                            <p-button icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
+                        </div>
+                    </p-card>
+                }
             }
         </div>
     </ng-template>
