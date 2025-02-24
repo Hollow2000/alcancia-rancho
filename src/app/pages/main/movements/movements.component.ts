@@ -5,41 +5,36 @@ import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
-import { Movement, MovementService, TypeMovementEnum } from '../../../services/movement.service';
+import { FilterDropdown, Movement, MovementService, TypeMovementEnum } from '../../../services/movement.service';
 import { CurrencyPipe } from '@angular/common';
-
-interface FilterDropdown {
-  id: string,
-  nombre: string,
-}
+import { Saving, SavingService } from '../../../services/saving.service';
+import { Button } from 'primeng/button';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     DataViewModule, SelectModule, FormsModule, CardModule,
-    CurrencyPipe
+    Button ,CurrencyPipe
   ],
   templateUrl: './movements.component.html',
   styleUrl: './movements.component.css'
 })
 export class MovementsComponent implements OnInit, OnDestroy {
   private readonly _movementService = inject(MovementService);
+  private readonly _savingService = inject(SavingService);
   private readonly _deviceService = inject(DeviceService)
+  private readonly _activatedRouter = inject(ActivatedRoute)
 
-  movements$ = this._movementService.getMovement();
-
+  movements$ = this._movementService.getMovement(this.filterSaving, this.filterType);
+  
   private subscription?: Subscription;
   
   layout: 'list' | 'grid' = 'list';
   
-  filterSaving?: FilterDropdown | undefined;
-  filterSavingOptions: FilterDropdown[] | undefined = [
-    {
-      id: '/ahorros/5Z3RBEfu05n1EA8DBtO1',
-      nombre: 'Puerta'
-    }
-  ];
+  filterSaving?: Saving | undefined;
+  savings$ = this._savingService.getSavings();
 
   filterType?: FilterDropdown | undefined;
   filterTypeOptions: FilterDropdown[] | undefined = [
@@ -59,6 +54,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
         this.layout = isMobile ? 'list' : 'grid';
       }
     );
+    this._activatedRouter.queryParams.subscribe(params => {
+      this.filterType = this.filterTypeOptions?.find(type => type.id === params['type']);
+      this.filterSaving = this.savings$().find(saving => saving.id === params['saving'])
+      this.notifyFilter();
+    });
   }
 
   ngOnDestroy(): void {
@@ -69,5 +69,13 @@ export class MovementsComponent implements OnInit, OnDestroy {
 
   isDeposit(movement: Movement): boolean{
     return movement.tipo === TypeMovementEnum.into;
+  }
+
+  getSavingName(idAhorro: string) {
+    return this.savings$().find(saving => saving.id === idAhorro)?.nombre;
+  }
+
+  notifyFilter(){
+    this.movements$ = this._movementService.getMovement(this.filterSaving, this.filterType);
   }
 }

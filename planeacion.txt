@@ -68,12 +68,12 @@ Pantallas
     Retiros de ahorro seleccionado:
         Titulo: Retiros de {nombreAhorro}
         Columnas: Descripcion, Cantidad, Fecha Famiiliar
-        Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo) (Boton Guardar) (Boton Retirar)
+        Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo) (Boton Retirar)
 
     Ingresos de ahorro seleccionado:
         Titulo: Ingresos de {nombreAhorro}
         Columnas: Descripcion, Cantidad, Fecha Famiiliar
-        Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo) (Boton Guardar) (Boton Retirar)
+        Controles general: (Dropdown filtar por ahorro) (Dropdown filrar por tipo) (Boton Guardar)
 
 - Formulario movimiento. -> 
 	Retirar:

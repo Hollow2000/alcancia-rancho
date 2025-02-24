@@ -1,7 +1,8 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { DocumentReference, Firestore, Timestamp, collection, collectionData } from '@angular/fire/firestore';
+import { DocumentReference, Firestore, Timestamp, collection, collectionData, query, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
+import { Saving } from './saving.service';
 
 export interface MovementDTO {
   id: string;
@@ -10,7 +11,7 @@ export interface MovementDTO {
   descripcion: string,
   fecha: Timestamp,
   familiar: string,
-  idAhorros: DocumentReference
+  idAhorros: string
 }
 
 export interface Movement {
@@ -28,6 +29,11 @@ export type NewMovement = Omit<MovementDTO, 'id'>;
 export enum TypeMovementEnum {
   into = 'deposito',
   out = 'retiro'
+}
+
+export interface FilterDropdown {
+  id: string,
+  nombre: string,
 }
 
 const PATH = 'movimientos';
@@ -48,7 +54,7 @@ export class MovementService {
       descripcion: "Primer ahorro",
       familiar: "Saul Moedano",
       fecha: "10 de enero de 2025",
-      idAhorros: "Puerta",
+      idAhorros: "5Z3RBEfu05n1EA8DBtO1",
       tipo: TypeMovementEnum.into
     },
     {
@@ -57,7 +63,7 @@ export class MovementService {
       descripcion: "asmdñamsñm amsldmñamsd ñasmdñ malsd",
       familiar: "Saul Emmanuel Moedano Miguel",
       fecha: "10 de enero de 2025",
-      idAhorros: "Reparacion de la lozeta y pared del cuarto de baño",
+      idAhorros: "5Z3RBEfu05n1EA8DBtO1",
       tipo: TypeMovementEnum.into
     },
     {
@@ -66,14 +72,31 @@ export class MovementService {
       descripcion: "Retiro para el marco de la puerta",
       familiar: "Saul Moedano",
       fecha: "10 de enero de 2025",
-      idAhorros: "Puerta",
+      idAhorros: "5Z3RBEfu05n1EA8DBtO1",
       tipo: TypeMovementEnum.out
     }
   ]);
 
-  getMovement(): Signal<Movement[]> {
+  getMovement(filterSaving?: Saving | undefined, filterType?: FilterDropdown | undefined): Signal<Movement[]> {
     if (enviroment.mockUp) {return this.mockMovements;}
-    const document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<MovementDTO[]>;
+    
+    let document;
+    if (filterSaving && filterType){
+      const q = query(
+        this._collectionRef, 
+        where('idAhorros', '==', filterSaving.id),
+        where('tipo', '==', filterType.id)
+      );
+      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
+    } else if (filterType){
+      const q = query(this._collectionRef, where('tipo', '==', filterType.id));
+      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
+    } else if (filterSaving){
+      const q = query(this._collectionRef, where('idAhorros', '==', filterSaving.id));
+      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
+    } else {
+      document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<MovementDTO[]>;
+    }
     
     document.subscribe({
       next: (data) => {
@@ -89,7 +112,7 @@ export class MovementService {
               year: 'numeric',
             }),
             familiar: dto.familiar,  // Obtener el ID del DocumentReference
-            idAhorros: dto.idAhorros.id
+            idAhorros: dto.idAhorros
           }))
         );
       },

@@ -1,19 +1,41 @@
 <p-dataview #dv [value]="movements$()" [layout]="layout">
     <ng-template #header>
         <div class="header">
-            <h3>Movimientos recientes</h3>
+            <h3>{{filterType?.nombre ?? 'Movimientos'}} {{filterSaving ? 'de '+filterSaving.nombre :'recientes'}}</h3>
             @if (layout === 'grid') {
                 <div class="controls">
-                    <p-select [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por tipo" />
-                    <p-select [options]="filterSavingOptions" [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                    @if (filterSaving) {
+                        @if(filterType?.id === 'retiro' || !filterType){
+                            <p-button label="Retirar dinero" size="small" />
+                        }
+                        @if(filterType?.id === 'deposito' || !filterType){
+                            <p-button label="Guardar dinero" size="small" />
+                        }
+                    }
+                    <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
+                        optionLabel="nombre" placeholder="Filtrar por tipo" />
+                    <p-select size="small" (onChange)="notifyFilter()" [options]="savings$()"
+                        [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre"
+                        placeholder="Filtrar por ahorro" />
                 </div>
             }
         </div>
         @if (layout === 'list') {
         <div class="header-bottom">
                 <div class="controls">
-                    <p-select [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por tipo" />
-                    <p-select [options]="filterSavingOptions" [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+                    @if (filterSaving) {
+                        @if(filterType?.id === 'retiro' || !filterType){
+                            <p-button label="Retirar" size="small" />
+                        }
+                        @if(filterType?.id === 'deposito' || !filterType){
+                            <p-button label="Guardar" size="small" />
+                        }>
+                    }
+                    <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
+                        optionLabel="nombre" placeholder="Filtrar por tipo" />
+                    <p-select size="small" (onChange)="notifyFilter()" [options]="savings$()"
+                        [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre"
+                        placeholder="Filtrar por ahorro" />
                 </div>
             </div>
         }
@@ -29,7 +51,7 @@
                     <h3>{{movement.fecha}}</h3>
                 </div>
                 <div class="item-body">
-                    <span><strong>Ahorro: </strong>{{movement.idAhorros}}</span>
+                    <span><strong>Ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
                     <span><strong>Familiar:</strong> {{movement.familiar}}</span>
                     <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
                 </div>
@@ -48,7 +70,7 @@
                         <h3>{{movement.fecha}}</h3>
                     </div>
                     <div class="item-body">
-                        <span><strong>Ahorro: </strong>{{movement.idAhorros}}</span>
+                        <span><strong>Ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
                         <span><strong>Familiar:</strong> {{movement.familiar}}</span>
                         <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
                     </div>

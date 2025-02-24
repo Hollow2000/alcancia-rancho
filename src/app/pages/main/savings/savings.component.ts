@@ -3,10 +3,11 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
-import { SelectModule } from 'primeng/select';
 import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
-import { SavingService } from '../../../services/saving.service';
+import { Saving, SavingService } from '../../../services/saving.service';
+import { Button } from 'primeng/button';
+import { Router } from '@angular/router';
 
 interface FilterDropdown {
   id: string,
@@ -17,7 +18,7 @@ interface FilterDropdown {
   selector: 'app-savings',
   standalone: true,
   imports: [
-    DataViewModule, SelectModule, FormsModule, CardModule,
+    DataViewModule, Button, FormsModule, CardModule,
     CurrencyPipe
   ],
   templateUrl: './savings.component.html',
@@ -26,32 +27,13 @@ interface FilterDropdown {
 export class SavingsComponent {
   private readonly _savingService = inject(SavingService);
   private readonly _deviceService = inject(DeviceService)
+  private readonly _router = inject(Router);
 
   savings$ = this._savingService.getSavings();
 
   private subscription?: Subscription;
   
   layout: 'list' | 'grid' = 'list';
-  
-  filterSaving?: FilterDropdown | undefined;
-  filterSavingOptions: FilterDropdown[] | undefined = [
-    {
-      id: '/ahorros/5Z3RBEfu05n1EA8DBtO1',
-      nombre: 'Puerta'
-    }
-  ];
-
-  filterType?: FilterDropdown | undefined;
-  filterTypeOptions: FilterDropdown[] | undefined = [
-    {
-      id: 'retiro',
-      nombre: 'Retiros'
-    },
-    {
-      id: 'deposito',
-      nombre: 'Depositos'
-    },
-  ];
 
   ngOnInit(): void {
     this.subscription = this._deviceService.isMobile$.subscribe(
@@ -65,5 +47,17 @@ export class SavingsComponent {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  details(saving: Saving) {
+    this._router.navigateByUrl('movimientos?saving=' + saving.id)
+  }
+
+  get totalSaving(){
+    let total = 0;
+    this.savings$().forEach(saving => {
+      total += Number(saving.cantidad);
+    })
+    return total;
   }
 }
