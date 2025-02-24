@@ -72,13 +72,29 @@ export class MovementService {
       descripcion: "Retiro para el marco de la puerta",
       familiar: "Saul Moedano",
       fecha: "10 de enero de 2025",
-      idAhorros: "5Z3RBEfu05n1EA8DBtO1",
+      idAhorros: "df3RBEfu05n1EA8DB123",
       tipo: TypeMovementEnum.out
     }
   ]);
 
   getMovement(filterSaving?: Saving | undefined, filterType?: FilterDropdown | undefined): Signal<Movement[]> {
-    if (enviroment.mockUp) {return this.mockMovements;}
+    if (enviroment.mockUp) {
+      if (filterSaving && filterType){
+        return signal<Movement[]>(this.mockMovements().filter(movement =>{
+          return movement.idAhorros === filterSaving.id && movement.tipo === filterType.id
+        }));
+      } else if (filterType){
+        return signal<Movement[]>(this.mockMovements().filter(movement =>{
+          return movement.tipo === filterType.id
+        }));
+      } else if (filterSaving){
+        return signal<Movement[]>(this.mockMovements().filter(movement =>{
+          return movement.idAhorros === filterSaving.id
+        }));
+      } else {
+        return this.mockMovements;
+      }
+    }
     
     let document;
     if (filterSaving && filterType){
