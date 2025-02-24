@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { Saving, SavingService } from '../../../services/saving.service';
 import { Button } from 'primeng/button';
 import { Router } from '@angular/router';
+import { Skeleton } from 'primeng/skeleton';
+import { Utils } from '../../../Utils/utils';
 
 interface FilterDropdown {
   id: string,
@@ -19,7 +21,7 @@ interface FilterDropdown {
   standalone: true,
   imports: [
     DataViewModule, Button, FormsModule, CardModule,
-    CurrencyPipe
+    CurrencyPipe, Skeleton
   ],
   templateUrl: './savings.component.html',
   styleUrl: './savings.component.css'
@@ -28,8 +30,10 @@ export class SavingsComponent {
   private readonly _savingService = inject(SavingService);
   private readonly _deviceService = inject(DeviceService)
   private readonly _router = inject(Router);
+  readonly _utils = inject(Utils);
 
   savings$ = this._savingService.getSavings();
+  loading$ = this._savingService.loading$;
 
   private subscription?: Subscription;
   

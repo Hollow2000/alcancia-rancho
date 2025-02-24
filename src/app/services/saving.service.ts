@@ -20,6 +20,7 @@ export class SavingService {
   private readonly _collectionRef = collection(this._firestore, PATH);
 
   savings$ = signal<Saving[]>([]);
+  loading$ = signal(false);
 
   mockSavings$ = signal<Saving[]>([
     {
@@ -37,7 +38,14 @@ export class SavingService {
   ]);
 
   getSavings(): Signal<Saving[]> {
-    if (enviroment.mockUp) {return this.mockSavings$;}
+    this.loading$.set(true)
+    
+    if (enviroment.mockUp) {
+      setTimeout(() => {
+        this.loading$.set(false);  // Desactivar estado de carga después de 2 segundos
+      }, 2000);
+      return this.mockSavings$;
+    }
 
     const document = collectionData(this._collectionRef, {idField: 'id'}) as Observable<Saving[]>;
 
@@ -50,6 +58,7 @@ export class SavingService {
       }
     });
 
+    this.loading$.set(false);
     return this.savings$;
   }
 }

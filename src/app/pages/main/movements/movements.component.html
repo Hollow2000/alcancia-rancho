@@ -41,30 +41,29 @@
         }
     </ng-template>
     <ng-template #list let-movements>
-        @for (movement of movements; track $index) {
-            <div class="border-bottom item-list">
-                <div class="item-header">
-                    <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
-                        <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i>
-                        {{movement.cantidad | currency}}
-                    </h3>
-                    <h3>{{movement.fecha}}</h3>
+        @if (loading$()) {
+            @for (_ of _utils.arrayOf(6); track $index) {
+                <div class="border-bottom item-list">
+                    <div class="item-header">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <p-skeleton width="1rem" height="1rem" shape="circle" size="2rem" />
+                            <p-skeleton width="6rem" height="2rem" />
+                        </div>
+                        <p-skeleton width="10rem" height="2rem" />
+                    </div>
+                    <div class="item-body">
+                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                    </div>
                 </div>
-                <div class="item-body">
-                    <span><strong>Ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
-                    <span><strong>Familiar:</strong> {{movement.familiar}}</span>
-                    <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
-                </div>
-            </div>
-        } 
-    </ng-template>
-    <ng-template #grid let-movements>
-        <div class="grid-container">
+            } 
+        }@else {
             @for (movement of movements; track $index) {
-                <p-card [style]="{height: '100%'}">
+                <div class="border-bottom item-list">
                     <div class="item-header">
                         <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
-                            <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i> 
+                            <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i>
                             {{movement.cantidad | currency}}
                         </h3>
                         <h3>{{movement.fecha}}</h3>
@@ -74,7 +73,46 @@
                         <span><strong>Familiar:</strong> {{movement.familiar}}</span>
                         <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
                     </div>
-                </p-card>
+                </div>
+            } 
+        }
+    </ng-template>
+    <ng-template #grid let-movements>
+        <div class="grid-container">
+            @if (loading$()) {
+                @for (_ of _utils.arrayOf(6); track $index) {
+                    <p-card [style]="{height: '100%'}">
+                        <div class="item-header">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <p-skeleton width="1rem" height="1rem" shape="circle" size="2rem" />
+                                <p-skeleton width="6rem" height="2rem" />
+                            </div>
+                            <p-skeleton width="10rem" height="2rem" />
+                        </div>
+                        <div class="item-body">
+                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                        </div>
+                    </p-card>
+                }
+            }@else {
+                @for (movement of movements; track $index) {
+                    <p-card [style]="{height: '100%'}">
+                        <div class="item-header">
+                            <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
+                                <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i> 
+                                {{movement.cantidad | currency}}
+                            </h3>
+                            <h3>{{movement.fecha}}</h3>
+                        </div>
+                        <div class="item-body">
+                            <span><strong>Ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
+                            <span><strong>Familiar:</strong> {{movement.familiar}}</span>
+                            <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
+                        </div>
+                    </p-card>
+                }
             }
         </div>
     </ng-template>

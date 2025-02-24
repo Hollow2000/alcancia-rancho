@@ -10,13 +10,15 @@ import { CurrencyPipe } from '@angular/common';
 import { Saving, SavingService } from '../../../services/saving.service';
 import { Button } from 'primeng/button';
 import { ActivatedRoute } from '@angular/router';
+import { Skeleton } from 'primeng/skeleton';
+import { Utils } from '../../../Utils/utils';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     DataViewModule, SelectModule, FormsModule, CardModule,
-    Button ,CurrencyPipe
+    Button ,CurrencyPipe, Skeleton
   ],
   templateUrl: './movements.component.html',
   styleUrl: './movements.component.css'
@@ -26,8 +28,10 @@ export class MovementsComponent implements OnInit, OnDestroy {
   private readonly _savingService = inject(SavingService);
   private readonly _deviceService = inject(DeviceService)
   private readonly _activatedRouter = inject(ActivatedRoute)
+  readonly _utils = inject(Utils);
 
   movements$ = this._movementService.getMovement(this.filterSaving, this.filterType);
+  loading$ = this._movementService.loading$;
   
   private subscription?: Subscription;
   

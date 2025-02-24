@@ -46,6 +46,7 @@ export class MovementService {
   private readonly _collectionRef = collection(this._firestore, PATH);
 
   private movements$ = signal<Movement[]>([]);
+  loading$ = signal(false);
 
   mockMovements = signal<Movement[]>([
     {
@@ -78,7 +79,12 @@ export class MovementService {
   ]);
 
   getMovement(filterSaving?: Saving | undefined, filterType?: FilterDropdown | undefined): Signal<Movement[]> {
+    this.loading$.set(true)
+    
     if (enviroment.mockUp) {
+      setTimeout(() => {
+        this.loading$.set(false);  // Desactivar estado de carga después de 2 segundos
+      }, 2000);
       if (filterSaving && filterType){
         return signal<Movement[]>(this.mockMovements().filter(movement =>{
           return movement.idAhorros === filterSaving.id && movement.tipo === filterType.id
@@ -137,6 +143,7 @@ export class MovementService {
       }
     });
 
+    this.loading$.set(false);
     return this.movements$;
   }
 }

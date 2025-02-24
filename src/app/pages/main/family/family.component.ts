@@ -11,7 +11,8 @@ import { DeviceService } from '../../../services/device.service';
 import { Family, FamilyService } from '../../../services/family.service';
 import { InputText } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import { Utils } from '../../../Utils/Utils';
+import { Utils } from '../../../Utils/utils';
+
 
 @Component({
   selector: 'app-family',

@@ -11,4 +11,8 @@ export class Utils {
     arrayOf(size: number): Array<any>{
         return new Array(size)
     }
+
+    delay(seconds: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+    }
 }

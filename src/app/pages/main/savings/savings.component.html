@@ -11,31 +11,30 @@
         </div>
     </ng-template>
     <ng-template #list let-savings>
-        @for (saving of savings; track $index) {
-            <div class="border-bottom item-list" (click)="details(saving)">
-                <div class="item-header">
-                    <h3>
-                        <i class="pi pi-wallet"></i> 
-                        {{saving.cantidad | currency}}
-                    </h3>
+        @if (loading$()) {
+            @for (_ of _utils.arrayOf(8); track $index) {
+                <div class="border-bottom item-list">
+                    <div class="item-header">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <i class="pi pi-wallet"></i> 
+                            <p-skeleton width="6rem" height="2rem" />
+                        </div>
+                    </div>
+                    <div class="item-body">
+                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                    </div>
+                    <div class="item-footer">
+                        <p-button disabled="true" icon="pi pi-download" label="Guardar" />
+                        <p-button disabled="true" icon="pi pi-upload" label="Retriar" />
+                        <p-button disabled="true" icon="pi pi-pencil" severity="secondary" />
+                        <p-button disabled="true" icon="pi pi-trash" severity="danger" />
+                    </div>
                 </div>
-                <div class="item-body">
-                    <span><strong>Nombre: </strong>{{saving.nombre}}</span>
-                    <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
-                </div>
-                <div class="item-footer">
-                    <p-button icon="pi pi-download" label="Guardar" />
-                    <p-button icon="pi pi-upload" label="Retriar" />
-                    <p-button icon="pi pi-pencil" severity="secondary" />
-                    <p-button icon="pi pi-trash" severity="danger" />
-                </div>
-            </div>
-        } 
-    </ng-template>
-    <ng-template #grid let-savings>
-        <div class="grid-container">
+            } 
+        }@else {
             @for (saving of savings; track $index) {
-                <p-card [style]="{height: '100%'}" (click)="details(saving)">
+                <div class="border-bottom item-list" (click)="details(saving)">
                     <div class="item-header">
                         <h3>
                             <i class="pi pi-wallet"></i> 
@@ -47,12 +46,59 @@
                         <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
                     </div>
                     <div class="item-footer">
-                        <p-button icon="pi pi-download" label="Guardar" size="small" />
-                        <p-button icon="pi pi-upload" label="Retriar" size="small" />
-                        <p-button icon="pi pi-pencil" severity="secondary" size="small" />
-                        <p-button icon="pi pi-trash" severity="danger" size="small" />
+                        <p-button icon="pi pi-download" label="Guardar" />
+                        <p-button icon="pi pi-upload" label="Retriar" />
+                        <p-button icon="pi pi-pencil" severity="secondary" />
+                        <p-button icon="pi pi-trash" severity="danger" />
                     </div>
-                </p-card>
+                </div>
+            } 
+        }
+    </ng-template>
+    <ng-template #grid let-savings>
+        <div class="grid-container">
+            @if (loading$()) {
+                @for (_ of _utils.arrayOf(8); track $index) {
+                    <p-card [style]="{height: '100%'}">
+                        <div class="item-header">
+                            <div style="display: flex; gap: 0.5rem;">
+                                <i class="pi pi-wallet"></i> 
+                                <p-skeleton width="6rem" height="2rem" />
+                            </div>
+                        </div>
+                        <div class="item-body">
+                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                        </div>
+                        <div class="item-footer">
+                            <p-button icon="pi pi-download" disabled="true" label="Guardar" size="small" />
+                            <p-button icon="pi pi-upload" disabled="true" label="Retriar" size="small" />
+                            <p-button icon="pi pi-pencil" disabled="true" severity="secondary" size="small" />
+                            <p-button icon="pi pi-trash" disabled="true" severity="danger" size="small" />
+                        </div>
+                    </p-card>
+                }
+            }@else {
+                @for (saving of savings; track $index) {
+                    <p-card [style]="{height: '100%'}" (click)="details(saving)">
+                        <div class="item-header">
+                            <h3>
+                                <i class="pi pi-wallet"></i> 
+                                {{saving.cantidad | currency}}
+                            </h3>
+                        </div>
+                        <div class="item-body">
+                            <span><strong>Nombre: </strong>{{saving.nombre}}</span>
+                            <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
+                        </div>
+                        <div class="item-footer">
+                            <p-button icon="pi pi-download" label="Guardar" size="small" />
+                            <p-button icon="pi pi-upload" label="Retriar" size="small" />
+                            <p-button icon="pi pi-pencil" severity="secondary" size="small" />
+                            <p-button icon="pi pi-trash" severity="danger" size="small" />
+                        </div>
+                    </p-card>
+                }
             }
         </div>
     </ng-template>
