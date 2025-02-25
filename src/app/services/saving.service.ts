@@ -52,13 +52,14 @@ export class SavingService {
     document.subscribe({
       next: (data) => {
         this.savings$.set(data);
+        this.loading$.set(false);
       },
       error: (err) => {
+        this.loading$.set(false);
         console.error('Error al obtener la colección ' + PATH + ': ', err);
       }
     });
 
-    this.loading$.set(false);
     return this.savings$;
   }
 }

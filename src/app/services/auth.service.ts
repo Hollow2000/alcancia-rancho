@@ -39,9 +39,13 @@ export class AuthService {
       this.mockIsLogged = true;
       return Promise.resolve();
     }
-    const user = await createUserWithEmailAndPassword(this._auth,email,password);
-    this._loaderService.hide()
-    return user;
+    await createUserWithEmailAndPassword(this._auth,email,password).then(user => {
+      this._loaderService.hide()
+      return user;
+    }).catch(error => {
+      this._loaderService.hide()
+      throw error;
+    });
   }
 
   async login(email: string, password: string): Promise<UserCredential | void>{
@@ -52,9 +56,13 @@ export class AuthService {
       this.mockIsLogged = true;
       return Promise.resolve();
     }
-    const user = await signInWithEmailAndPassword(this._auth, email, password);
-    this._loaderService.hide()
-    return user;
+    await signInWithEmailAndPassword(this._auth, email, password).then(user => {
+      this._loaderService.hide()
+      return user;
+    }).catch(error => {
+      this._loaderService.hide()
+      throw error;
+    })
   }
 
   async updateName(name: string){
@@ -79,8 +87,12 @@ export class AuthService {
       this.mockIsLogged = true;
       return Promise.resolve();
     }
-    const user = await signInWithPopup(this._auth,new GoogleAuthProvider);
-    this._loaderService.hide()
-    return user;
+    await signInWithPopup(this._auth,new GoogleAuthProvider).then(user => {
+      this._loaderService.hide()
+      return user;
+    }).catch(error => {
+      this._loaderService.hide()
+      throw error;
+    });
   }
 }

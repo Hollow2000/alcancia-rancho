@@ -49,12 +49,13 @@ export class FamilyService {
     document.subscribe({
       next: (data) => {
         this.family$.set(data);
+        this.loading$.set(false);
       },
       error: (err) => {
+        this.loading$.set(false);
         console.error('Error al obtener la colección ' + PATH + ': ', err);
       }
     });
-    this.loading$.set(false);
     return this.family$;
   }
 
