@@ -66,6 +66,11 @@ h4{
     justify-content: space-between;
 }
 
+.dialog-checkbox {
+    display: flex;
+    gap: 1rem;
+}
+
 .dialog-buttons {
     display: flex;
     justify-content: flex-end;

@@ -2,7 +2,7 @@
     <ng-template #header>
         <div class="header">
             <h3>Familiares registrados</h3>
-            <p-button label="Nuevo familiar" (onClick)="dialogFormVisible = true; dialogIsEdit = false;" />
+            <p-button label="Nuevo familiar" (onClick)="dialogFormVisible = true; dialogIsNew = true;" />
         </div>
         <div class="header">
             <p-iconfield>
@@ -38,7 +38,7 @@
                         @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
                     </div>
                     <div class="item-controls">
-                        <p-button (onClick)="dialogFormVisible = true; dialogIsEdit = true;" icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
+                        <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
                         <p-button icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                             @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
                         </div>
                         <div class="item-controls">
-                            <p-button (onClick)="dialogFormVisible = true; dialogIsEdit = true;" icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
+                            <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
                             <p-button icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
                         </div>
                     </p-card>
@@ -84,20 +84,36 @@
 </p-dataview>
 
 
-<p-dialog header="{{dialogIsEdit ? 'Editar familiar' : 'Nuevo familiar'}}" [modal]="true" [(visible)]="dialogFormVisible" [style]="{ width: '25rem' }">
-    <div class="dialog-content">
+<p-dialog header="{{dialogIsNew ? 'Nuevo familiar' : 'Editar familiar'}}" [modal]="true" closable="false" [(visible)]="dialogFormVisible" [style]="{ width: '25rem' }">
+    <form class="dialog-content" [formGroup]="familyFg">
         <span class="dialog-subtitle">Ingresa la información solicitada</span>
         <div class="dialog-input">
             <label for="nombre" class="dialog-labels">Nombre(s)</label>
-            <input pInputText id="nombre" autocomplete="off" />
+            <div style="display: flex; flex-direction: column;">
+                <input pInputText id="nombre" autocomplete="off" formControlName="nombre"
+                class="{{familyFg.controls.nombre.invalid && familyFg.controls.nombre.touched ? 'ng-invalid ng-dirty' : ''}}"/>
+                @if (familyFg.controls.nombre.getError('required') && familyFg.controls.nombre.touched) {
+                    <small class="label-error">Este campo es requerido</small>
+                }
+            </div>
         </div>
         <div class="dialog-input">
             <label for="lastname" class="dialog-labels">Apellidos</label>
-            <input pInputText id="lastname" autocomplete="off" />
+            <div style="display: flex; flex-direction: column;">
+                <input pInputText id="lastname" autocomplete="off" formControlName="apellidos"
+                class="{{familyFg.controls.apellidos.invalid && familyFg.controls.apellidos.touched ? 'ng-invalid ng-dirty' : ''}}"/>
+                @if (familyFg.controls.apellidos.getError('required') && familyFg.controls.apellidos.touched) {
+                    <small class="label-error">Este campo es requerido</small>
+                }
+            </div>
+        </div>
+        <div class="dialog-checkbox">
+            <label for="admin" class="dialog-labels">¿Es administrador?</label>
+            <p-checkbox id="admin" name="admin" [binary]="true" formControlName="admin"/>
         </div>
         <div class="dialog-buttons">
-            <p-button label="Cancelar" severity="secondary" (click)="dialogFormVisible = false" />
-            <p-button label="Guardar" (click)="dialogFormVisible = false" />
+            <p-button label="Cancelar" severity="secondary" (click)="cancelDialog()" />
+            <p-button label="Guardar" [loading]="loading$()" (click)="submitDialog()" />
         </div>
-    </div>
+    </form>
 </p-dialog>

@@ -2,8 +2,10 @@ import { inject, Injectable, Signal, signal } from '@angular/core';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
+import { Utils } from '../Utils/utils';
 
 export interface Family {
+  id?: string,
   nombres: string,
   apellidos: string,
   foto?: string,
@@ -18,17 +20,20 @@ const PATH = 'familiares';
 export class FamilyService {
   private readonly _firestore = inject(Firestore);
   private readonly _collectionRef = collection(this._firestore, PATH);
+  private readonly _utils = inject(Utils);
 
   family$ = signal<Family[]>([]);
   loading$ = signal(false);
 
   mockFamifly$ = signal<Family[]>([
     {
+      id: 'asg24w2g',
       nombres: 'Saul Emmanuel',
       apellidos: 'Moedano Miguel',
       admin: true
     },
     {
+      id: '43grh3a',
       nombres: 'Diana Laura',
       apellidos: 'Cortes Zarate',
       admin: false
@@ -37,7 +42,7 @@ export class FamilyService {
 
   getFamilyList(): Signal<Family[]> {
     this.loading$.set(true);
-    if (enviroment.mockUp) { 
+    if (enviroment.mockUp) {
       setTimeout(() => {
         this.loading$.set(false);  // Desactivar estado de carga después de 2 segundos
       }, 2000);
@@ -57,6 +62,31 @@ export class FamilyService {
       }
     });
     return this.family$;
+  }
+
+  async addFamily(pepole: Family): Promise<void> {
+    this.loading$.set(true);
+    if (enviroment.mockUp) {
+      await this._utils.delay(1).then(res =>{
+        this.mockFamifly$.set(this.mockFamifly$().concat(pepole));
+        this.loading$.set(false);
+        return res
+      });
+    }
+  }
+
+  async updateFamily(pepole: Family): Promise<void> {
+    this.loading$.set(true);
+    if (enviroment.mockUp) {
+      await this._utils.delay(1).then(res =>{
+        const index = this.mockFamifly$().findIndex(f => f.id === pepole.id);
+        const updatedList = this.mockFamifly$();
+        updatedList[index] = pepole;
+        this.mockFamifly$.set(updatedList);
+        this.loading$.set(false);
+        return res
+      });
+    }
   }
 
 }
