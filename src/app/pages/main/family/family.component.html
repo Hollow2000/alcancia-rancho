@@ -2,7 +2,7 @@
     <ng-template #header>
         <div class="header">
             <h3>Familiares registrados</h3>
-            <p-button label="Nuevo familiar" />
+            <p-button label="Nuevo familiar" (onClick)="dialogFormVisible = true; dialogIsEdit = false;" />
         </div>
         <div class="header">
             <p-iconfield>
@@ -38,7 +38,7 @@
                         @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
                     </div>
                     <div class="item-controls">
-                        <p-button icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
+                        <p-button (onClick)="dialogFormVisible = true; dialogIsEdit = true;" icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
                         <p-button icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                             @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
                         </div>
                         <div class="item-controls">
-                            <p-button icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
+                            <p-button (onClick)="dialogFormVisible = true; dialogIsEdit = true;" icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
                             <p-button icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
                         </div>
                     </p-card>
@@ -82,3 +82,22 @@
         </div>
     </ng-template>
 </p-dataview>
+
+
+<p-dialog header="{{dialogIsEdit ? 'Editar familiar' : 'Nuevo familiar'}}" [modal]="true" [(visible)]="dialogFormVisible" [style]="{ width: '25rem' }">
+    <div class="dialog-content">
+        <span class="dialog-subtitle">Ingresa la información solicitada</span>
+        <div class="dialog-input">
+            <label for="nombre" class="dialog-labels">Nombre(s)</label>
+            <input pInputText id="nombre" autocomplete="off" />
+        </div>
+        <div class="dialog-input">
+            <label for="lastname" class="dialog-labels">Apellidos</label>
+            <input pInputText id="lastname" autocomplete="off" />
+        </div>
+        <div class="dialog-buttons">
+            <p-button label="Cancelar" severity="secondary" (click)="dialogFormVisible = false" />
+            <p-button label="Guardar" (click)="dialogFormVisible = false" />
+        </div>
+    </div>
+</p-dialog>

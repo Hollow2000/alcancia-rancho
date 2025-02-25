@@ -12,12 +12,15 @@ import { Family, FamilyService } from '../../../services/family.service';
 import { InputText } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { Utils } from '../../../Utils/utils';
+import { DialogModule } from 'primeng/dialog';
 
 
 @Component({
   selector: 'app-family',
   standalone: true,
-  imports: [Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, InputText, FormsModule, Skeleton],
+  imports: [
+    Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, 
+    InputText, FormsModule, Skeleton, DialogModule],
   templateUrl: './family.component.html',
   styleUrl: './family.component.css'
 })
@@ -32,6 +35,10 @@ export class FamilyComponent implements OnInit, OnDestroy {
 
   private subscription?: Subscription;
   layout: 'list' | 'grid' = 'list';
+
+  dialogFormVisible = true;
+  dialogIsEdit = false;
+
 
   ngOnInit(): void {
     this.subscription = this._deviceService.isMobile$.subscribe(
