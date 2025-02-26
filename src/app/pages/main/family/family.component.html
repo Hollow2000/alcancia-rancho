@@ -39,7 +39,7 @@
                     </div>
                     <div class="item-controls">
                         <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
-                        <p-button icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
+                        <p-button (onClick)="confirmDelete($event,pepole)" icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
                     </div>
                 </div>
             } 
@@ -74,7 +74,7 @@
                         </div>
                         <div class="item-controls">
                             <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
-                            <p-button icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
+                            <p-button (onClick)="confirmDelete($event,pepole)" icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
                         </div>
                     </p-card>
                 }
@@ -113,7 +113,9 @@
         </div>
         <div class="dialog-buttons">
             <p-button label="Cancelar" severity="secondary" (click)="cancelDialog()" />
-            <p-button label="Guardar" [loading]="loading$()" (click)="submitDialog()" />
+            <p-button label="{{dialogIsNew ? 'Agregar' : 'Modificar'}}" [loading]="loading$()" (click)="submitDialog()" />
         </div>
     </form>
 </p-dialog>
+
+<p-confirmPopup />

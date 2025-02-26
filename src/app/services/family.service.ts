@@ -1,5 +1,5 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Utils } from '../Utils/utils';
@@ -66,17 +66,28 @@ export class FamilyService {
 
   async addFamily(pepole: Family): Promise<void> {
     this.loading$.set(true);
+
     if (enviroment.mockUp) {
       await this._utils.delay(1).then(res =>{
         this.mockFamifly$.set(this.mockFamifly$().concat(pepole));
         this.loading$.set(false);
-        return res
+        return res;
       });
     }
+    console.log('nuevo');
+    
+    await setDoc(doc(this._collectionRef),pepole).then(res => {
+      this.loading$.set(false);
+      return res;
+    }).catch(error =>{
+      this.loading$.set(false);
+      throw error;
+    })
   }
 
   async updateFamily(pepole: Family): Promise<void> {
     this.loading$.set(true);
+
     if (enviroment.mockUp) {
       await this._utils.delay(1).then(res =>{
         const index = this.mockFamifly$().findIndex(f => f.id === pepole.id);
@@ -87,6 +98,47 @@ export class FamilyService {
         return res
       });
     }
+    console.log('editar');
+    
+    await updateDoc(doc(this._collectionRef,pepole.id), {
+      nombres: pepole.nombres,
+      apellidos: pepole.apellidos,
+      admin: pepole.admin,
+      foto: pepole.foto
+    }).then(res => {
+      this.loading$.set(false);
+      return res;
+    }).catch(error => {
+      this.loading$.set(false);
+      throw error;
+    });
+  }
+
+  async deleteFamily(familyId: string): Promise<void> {
+    this.loading$.set(true);
+
+    if (enviroment.mockUp) {
+      await this._utils.delay(1).then(res => {
+        try {
+          const updatedList = this.mockFamifly$();
+          updatedList.filter(f => f.id !== familyId)
+          this.mockFamifly$.set(updatedList);
+          this.loading$.set(false);
+          return res;
+        } catch (error) {
+          this.loading$.set(false);
+          throw error;
+        }
+      })
+    }
+
+    await deleteDoc(doc(this._collectionRef,familyId)).then(res => {
+      this.loading$.set(false);
+      return res;
+    }).catch(error => {
+      this.loading$.set(false);
+      throw error;
+    })
   }
 
 }

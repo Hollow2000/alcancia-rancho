@@ -14,20 +14,24 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Utils } from '../../../Utils/utils';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ConfirmationService } from 'primeng/api';
 
 
 @Component({
   selector: 'app-family',
   standalone: true,
   imports: [
-    Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule,
+    Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, ConfirmPopupModule,
     InputText, FormsModule, ReactiveFormsModule, Skeleton, DialogModule, CheckboxModule],
   templateUrl: './family.component.html',
-  styleUrl: './family.component.css'
+  styleUrl: './family.component.css',
+  providers: [ConfirmationService]
 })
 export class FamilyComponent implements OnInit, OnDestroy {
   private readonly _deviceService = inject(DeviceService);
   private readonly _familyService = inject(FamilyService);
+  private readonly _confirmationService = inject(ConfirmationService);
   readonly _utils = inject(Utils);
 
   family$ = this._familyService.getFamilyList();
@@ -44,7 +48,8 @@ export class FamilyComponent implements OnInit, OnDestroy {
     id: new FormControl<string | null>(null),
     nombre: new FormControl<string>('', [Validators.required]),
     apellidos: new FormControl<string>('', [Validators.required]),
-    admin: new FormControl<boolean>(false, [Validators.required])
+    admin: new FormControl<boolean>(false, [Validators.required]),
+    foto: new FormControl<string | null>(null)
   });
 
   ngOnInit(): void {
@@ -79,8 +84,10 @@ export class FamilyComponent implements OnInit, OnDestroy {
       id: pepole.id,
       nombre: pepole.nombres,
       apellidos: pepole.apellidos,
-      admin: pepole.admin
+      admin: pepole.admin,
+      foto: pepole.foto
     })
+    this.dialogIsNew = false;
     this.dialogFormVisible = true;
   }
 
@@ -91,20 +98,49 @@ export class FamilyComponent implements OnInit, OnDestroy {
         await this._familyService.addFamily({
           nombres: this.familyFg.value.nombre!.trim(),
           apellidos: this.familyFg.value.apellidos!.trim(),
-          admin: this.familyFg.value.admin!
+          admin: this.familyFg.value.admin!,
+          foto: this.familyFg.value.foto!
         })
       } else {
-        this._familyService.updateFamily({
+        await this._familyService.updateFamily({
           id: this.familyFg.value.id!,
           nombres: this.familyFg.value.nombre!.trim(),
           apellidos: this.familyFg.value.apellidos!.trim(),
-          admin: this.familyFg.value.admin!
+          admin: this.familyFg.value.admin!,
+          foto: this.familyFg.value.foto!
         })
       }
       this.familyFg.reset({nombre: '', apellidos: '', admin: false})
       this.dialogFormVisible = false;
     }
   }
+
+  async deleteFamily(familyId: string){
+    await this._familyService.deleteFamily(familyId);
+  }
+
+  confirmDelete(event: Event, pepole: Family) {
+    this._confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: `¿Desea eliminar a ${pepole.nombres}?`,
+        icon: 'pi pi-info-circle',
+        rejectButtonProps: {
+            label: 'Cancelar',
+            severity: 'secondary',
+            outlined: true
+        },
+        acceptButtonProps: {
+            label: 'Si, eliminar',
+            severity: 'danger'
+        },
+        accept: () => {
+            this.deleteFamily(pepole.id!)
+        },
+        reject: () => {
+            
+        }
+    });
+}
 
   cancelDialog(){
     this.familyFg.reset({nombre: '', apellidos: '', admin: false})
