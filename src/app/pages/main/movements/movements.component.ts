@@ -7,7 +7,7 @@ import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
 import { FilterDropdown, Movement, MovementService, TypeMovementEnum } from '../../../services/movement.service';
 import { CurrencyPipe } from '@angular/common';
-import { Saving, SavingService } from '../../../services/saving.service';
+import { FilterSaving, Saving, SavingService } from '../../../services/saving.service';
 import { Button } from 'primeng/button';
 import { ActivatedRoute } from '@angular/router';
 import { Skeleton } from 'primeng/skeleton';
@@ -38,7 +38,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
   layout: 'list' | 'grid' = 'list';
   
   filterSaving?: Saving | undefined;
-  savings$ = this._savingService.getSavings();
+  savingsEnables$ = this._savingService.getSavings();
+  allSavings$ = this._savingService.getSavings(FilterSaving.ALL);
 
   filterType?: FilterDropdown | undefined;
   filterTypeOptions: FilterDropdown[] | undefined = [
@@ -60,7 +61,7 @@ export class MovementsComponent implements OnInit, OnDestroy {
     );
     this._activatedRouter.queryParams.subscribe(params => {
       this.filterType = this.filterTypeOptions?.find(type => type.id === params['type']);
-      this.filterSaving = this.savings$().find(saving => saving.id === params['saving'])
+      this.filterSaving = this.savingsEnables$().find(saving => saving.id === params['saving'])
       this.notifyFilter();
     });
   }
@@ -75,8 +76,12 @@ export class MovementsComponent implements OnInit, OnDestroy {
     return movement.tipo === TypeMovementEnum.into;
   }
 
+  isDisable(movement: Movement): boolean {
+    return this.savingsEnables$().find(s => s.id === movement.idAhorros) ? false : true
+  }
+
   getSavingName(idAhorro: string) {
-    return this.savings$().find(saving => saving.id === idAhorro)?.nombre;
+    return this.allSavings$().find(saving => saving.id === idAhorro)?.nombre;
   }
 
   notifyFilter(){

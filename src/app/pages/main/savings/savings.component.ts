@@ -110,7 +110,7 @@ export class SavingsComponent {
   confirmDelete(event: Event, saving: Saving) {
     this._confirmationService.confirm({
       target: event.target as EventTarget,
-      message: `¿Desea eliminar ${this._utils.addElipsis(saving.nombre,15)}?`,
+      message: `¿Desea desactivar ${this._utils.addElipsis(saving.nombre,15)}?`,
       icon: 'pi pi-info-circle',
       rejectButtonProps: {
         label: 'Cancelar',
@@ -138,14 +138,16 @@ export class SavingsComponent {
         await this._savingService.addSaving({
           nombre: this.savingForm.value.nombre!.trim(),
           meta: this.savingForm.value.meta!,
-          cantidad: this.savingForm.value.cantidad!
+          cantidad: this.savingForm.value.cantidad!,
+          activo: true
         });
       } else {
         await this._savingService.updateSaving({
           id: this.savingForm.value.id!,
           nombre: this.savingForm.value.nombre!.trim(),
           meta: this.savingForm.value.meta!,
-          cantidad: this.savingForm.value.cantidad!
+          cantidad: this.savingForm.value.cantidad!,
+          activo: true
         });
       }
       this.savingForm.reset({ nombre: '', cantidad: 0, meta: null });
@@ -155,6 +157,7 @@ export class SavingsComponent {
 
   async deleteSaving(savingId: string){
     await this._savingService.deleteSaving(savingId);
+    this.savings$ = this._savingService.getSavings();
   }
 
 }

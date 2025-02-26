@@ -14,7 +14,7 @@
                     }
                     <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
                         optionLabel="nombre" placeholder="Filtrar por tipo" />
-                    <p-select size="small" (onChange)="notifyFilter()" [options]="savings$()"
+                    <p-select size="small" (onChange)="notifyFilter()" [options]="savingsEnables$()"
                         [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre"
                         placeholder="Filtrar por ahorro" />
                 </div>
@@ -33,7 +33,7 @@
                     }
                     <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
                         optionLabel="nombre" placeholder="Filtrar por tipo" />
-                    <p-select size="small" (onChange)="notifyFilter()" [options]="savings$()"
+                    <p-select size="small" (onChange)="notifyFilter()" [options]="savingsEnables$()"
                         [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre"
                         placeholder="Filtrar por ahorro" />
                 </div>
@@ -69,7 +69,7 @@
                         <h3>{{movement.fecha}}</h3>
                     </div>
                     <div class="item-body">
-                        <span><strong>Nombre del ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
+                        <span class="{{isDisable(movement) ? 'saving-disable' : ''}}"><strong>Nombre del ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
                         <span><strong>Aportado por:</strong> {{movement.familiar}}</span>
                         <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
                     </div>
@@ -107,7 +107,7 @@
                             <h3>{{movement.fecha}}</h3>
                         </div>
                         <div class="item-body">
-                            <span><strong>Nombre del ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
+                            <span class="{{isDisable(movement) ? 'saving-disable' : ''}}"><strong>Nombre del ahorro: </strong>{{getSavingName(movement.idAhorros)}}</span>
                             <span><strong>Aportado por:</strong> {{movement.familiar}}</span>
                             <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
                         </div>

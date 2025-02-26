@@ -71,6 +71,10 @@ h3{
     color: red;
 }
 
+.saving-disable {
+    text-decoration: line-through;
+}
+
 @media (max-width: 1000px) {
     .grid-container{
         display: grid;
