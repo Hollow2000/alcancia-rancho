@@ -66,20 +66,18 @@ export class FamilyService {
 
   async addFamily(pepole: Family): Promise<void> {
     this.loading$.set(true);
-
+    pepole.id = this._utils.generateId();
     if (enviroment.mockUp) {
-      await this._utils.delay(1).then(res =>{
-        this.mockFamifly$.set(this.mockFamifly$().concat(pepole));
-        this.loading$.set(false);
-        return res;
-      });
+      await this._utils.delay(1);
+      this.mockFamifly$.set(this.mockFamifly$().concat(pepole));
+      this.loading$.set(false);
+      return;
     }
-    console.log('nuevo');
-    
-    await setDoc(doc(this._collectionRef),pepole).then(res => {
+
+    await setDoc(doc(this._collectionRef), pepole).then(res => {
       this.loading$.set(false);
       return res;
-    }).catch(error =>{
+    }).catch(error => {
       this.loading$.set(false);
       throw error;
     })
@@ -89,18 +87,16 @@ export class FamilyService {
     this.loading$.set(true);
 
     if (enviroment.mockUp) {
-      await this._utils.delay(1).then(res =>{
-        const index = this.mockFamifly$().findIndex(f => f.id === pepole.id);
-        const updatedList = this.mockFamifly$();
-        updatedList[index] = pepole;
-        this.mockFamifly$.set(updatedList);
-        this.loading$.set(false);
-        return res
-      });
+      await this._utils.delay(1);
+      const index = this.mockFamifly$().findIndex(f => f.id === pepole.id);
+      const updatedList = this.mockFamifly$();
+      updatedList[index] = pepole;
+      this.mockFamifly$.set(updatedList);
+      this.loading$.set(false);
+      return;
     }
-    console.log('editar');
-    
-    await updateDoc(doc(this._collectionRef,pepole.id), {
+
+    await updateDoc(doc(this._collectionRef, pepole.id), {
       nombres: pepole.nombres,
       apellidos: pepole.apellidos,
       admin: pepole.admin,
@@ -118,21 +114,21 @@ export class FamilyService {
     this.loading$.set(true);
 
     if (enviroment.mockUp) {
-      await this._utils.delay(1).then(res => {
-        try {
-          const updatedList = this.mockFamifly$();
-          updatedList.filter(f => f.id !== familyId)
-          this.mockFamifly$.set(updatedList);
-          this.loading$.set(false);
-          return res;
-        } catch (error) {
-          this.loading$.set(false);
-          throw error;
-        }
-      })
+      await this._utils.delay(1);
+      try {
+        const index = this.mockFamifly$().findIndex(f => f.id === familyId);
+        const updatedList = this.mockFamifly$();
+        updatedList.splice(index, 1);
+        this.mockFamifly$.set(updatedList);
+        this.loading$.set(false);
+        return;
+      } catch (error) {
+        this.loading$.set(false);
+        throw error;
+      }
     }
 
-    await deleteDoc(doc(this._collectionRef,familyId)).then(res => {
+    await deleteDoc(doc(this._collectionRef, familyId)).then(res => {
       this.loading$.set(false);
       return res;
     }).catch(error => {

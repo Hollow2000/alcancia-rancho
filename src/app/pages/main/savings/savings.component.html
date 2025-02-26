@@ -3,7 +3,7 @@
         <div class="header">
             <h3>Ahorros activos</h3>
             <div class="controls">
-                <p-button label="Nuevo ahorro" icon="pi pi-plus" />
+                <p-button (onClick)="openDialog()" label="Nuevo ahorro" icon="pi pi-plus" />
             </div>
         </div>
         <div class="header-bottom">
@@ -16,7 +16,7 @@
                 <div class="border-bottom item-list">
                     <div class="item-header">
                         <div style="display: flex; gap: 0.5rem;">
-                            <i class="pi pi-wallet"></i> 
+                            <i class="pi pi-wallet"></i>
                             <p-skeleton width="6rem" height="2rem" />
                         </div>
                     </div>
@@ -31,28 +31,30 @@
                         <p-button disabled="true" icon="pi pi-trash" severity="danger" />
                     </div>
                 </div>
-            } 
+            }
         }@else {
             @for (saving of savings; track $index) {
-                <div class="border-bottom item-list" (click)="details(saving)">
-                    <div class="item-header">
-                        <h3>
-                            <i class="pi pi-wallet"></i> 
-                            {{saving.cantidad | currency}}
-                        </h3>
-                    </div>
-                    <div class="item-body">
-                        <span><strong>Nombre: </strong>{{saving.nombre}}</span>
-                        <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
+                <div class="border-bottom item-list">
+                    <div  (click)="details(saving)">
+                        <div class="item-header">
+                            <h3>
+                                <i class="pi pi-wallet"></i>
+                                {{saving.cantidad | currency}}
+                            </h3>
+                        </div>
+                        <div class="item-body">
+                            <span><strong>Nombre: </strong>{{saving.nombre}}</span>
+                            <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
+                        </div>
                     </div>
                     <div class="item-footer">
                         <p-button icon="pi pi-download" label="Guardar" />
                         <p-button icon="pi pi-upload" label="Retriar" />
-                        <p-button icon="pi pi-pencil" severity="secondary" />
-                        <p-button icon="pi pi-trash" severity="danger" />
+                        <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" />
+                        <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger" />
                     </div>
                 </div>
-            } 
+            }
         }
     </ng-template>
     <ng-template #grid let-savings>
@@ -62,7 +64,7 @@
                     <p-card [style]="{height: '100%'}">
                         <div class="item-header">
                             <div style="display: flex; gap: 0.5rem;">
-                                <i class="pi pi-wallet"></i> 
+                                <i class="pi pi-wallet"></i>
                                 <p-skeleton width="6rem" height="2rem" />
                             </div>
                         </div>
@@ -80,22 +82,24 @@
                 }
             }@else {
                 @for (saving of savings; track $index) {
-                    <p-card [style]="{height: '100%'}" (click)="details(saving)">
-                        <div class="item-header">
-                            <h3>
-                                <i class="pi pi-wallet"></i> 
-                                {{saving.cantidad | currency}}
-                            </h3>
-                        </div>
-                        <div class="item-body">
-                            <span><strong>Nombre: </strong>{{saving.nombre}}</span>
-                            <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
+                    <p-card [style]="{height: '100%'}">
+                        <div (click)="details(saving)">
+                            <div class="item-header">
+                                <h3>
+                                    <i class="pi pi-wallet"></i>
+                                    {{saving.cantidad | currency}}
+                                </h3>
+                            </div>
+                            <div class="item-body">
+                                <span><strong>Nombre: </strong>{{saving.nombre}}</span>
+                                <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
+                            </div>
                         </div>
                         <div class="item-footer">
                             <p-button icon="pi pi-download" label="Guardar" size="small" />
                             <p-button icon="pi pi-upload" label="Retriar" size="small" />
-                            <p-button icon="pi pi-pencil" severity="secondary" size="small" />
-                            <p-button icon="pi pi-trash" severity="danger" size="small" />
+                            <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" size="small" />
+                            <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger" size="small" />
                         </div>
                     </p-card>
                 }
@@ -103,3 +107,35 @@
         </div>
     </ng-template>
 </p-dataview>
+
+<p-dialog header="{{dialogIsNew ? 'Nuevo ahorro' : 'Editar ahorro'}}" [modal]="true" closable="false" [(visible)]="dialogFormVisible" [style]="{ width: '25rem' }">
+    <form class="dialog-content" [formGroup]="savingForm">
+        <span class="dialog-subtitle">Ingresa la información solicitada</span>
+        <div class="dialog-input">
+            <label for="nombre" class="dialog-labels">Nombre</label>
+            <div style="display: flex; flex-direction: column;">
+                <input pInputText id="nombre" autocomplete="off" formControlName="nombre"
+                class="{{savingForm.controls.nombre.invalid && savingForm.controls.nombre.touched ? 'ng-invalid ng-dirty' : ''}}"/>
+                @if (savingForm.controls.nombre.getError('required') && savingForm.controls.nombre.touched) {
+                    <small class="label-error">Este campo es requerido</small>
+                }
+            </div>
+        </div>
+        <div class="dialog-input">
+            <label for="lastname" class="dialog-labels">Meta</label>
+            <div style="display: flex; flex-direction: column;">
+                <p-inputnumber inputId="lastname" mode="currency" currency="MXN" locale="es-MX" autocomplete="off" formControlName="meta"
+                class="{{savingForm.controls.meta.invalid && savingForm.controls.meta.touched ? 'ng-invalid ng-dirty' : ''}}" />
+                @if (savingForm.controls.meta.invalid && savingForm.controls.meta.touched) {
+                    <small class="label-error">Este campo es requerido</small>
+                }
+            </div>
+        </div>
+        <div class="dialog-buttons">
+            <p-button label="Cancelar" severity="secondary" (click)="cancelDialog()" />
+            <p-button label="{{dialogIsNew ? 'Agregar' : 'Modificar'}}" [loading]="loading$()" (click)="submitDialog()" />
+        </div>
+    </form>
+</p-dialog>
+
+<p-confirmPopup />

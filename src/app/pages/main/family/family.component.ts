@@ -57,7 +57,7 @@ export class FamilyComponent implements OnInit, OnDestroy {
       (isMobile) => {
         this.layout = isMobile ? 'list' : 'grid';
       }
-    ); 
+    );
   }
 
   ngOnDestroy(): void {
@@ -79,7 +79,7 @@ export class FamilyComponent implements OnInit, OnDestroy {
     );
   }
 
-  openEditFamily(pepole: Family){
+  openEditFamily(pepole: Family) {
     this.familyFg.patchValue({
       id: pepole.id,
       nombre: pepole.nombres,
@@ -91,9 +91,9 @@ export class FamilyComponent implements OnInit, OnDestroy {
     this.dialogFormVisible = true;
   }
 
-  async submitDialog(){
+  async submitDialog() {
     this.familyFg.markAllAsTouched();
-    if(this.familyFg.valid){
+    if (this.familyFg.valid) {
       if (this.dialogIsNew) {
         await this._familyService.addFamily({
           nombres: this.familyFg.value.nombre!.trim(),
@@ -110,40 +110,40 @@ export class FamilyComponent implements OnInit, OnDestroy {
           foto: this.familyFg.value.foto!
         })
       }
-      this.familyFg.reset({nombre: '', apellidos: '', admin: false})
+      this.familyFg.reset({ nombre: '', apellidos: '', admin: false })
       this.dialogFormVisible = false;
     }
   }
 
-  async deleteFamily(familyId: string){
+  async deleteFamily(familyId: string) {
     await this._familyService.deleteFamily(familyId);
   }
 
   confirmDelete(event: Event, pepole: Family) {
     this._confirmationService.confirm({
-        target: event.target as EventTarget,
-        message: `¿Desea eliminar a ${pepole.nombres}?`,
-        icon: 'pi pi-info-circle',
-        rejectButtonProps: {
-            label: 'Cancelar',
-            severity: 'secondary',
-            outlined: true
-        },
-        acceptButtonProps: {
-            label: 'Si, eliminar',
-            severity: 'danger'
-        },
-        accept: () => {
-            this.deleteFamily(pepole.id!)
-        },
-        reject: () => {
-            
-        }
-    });
-}
+      target: event.target as EventTarget,
+      message: `¿Desea eliminar a ${this._utils.addElipsis(pepole.nombres,15)}?`,
+      icon: 'pi pi-info-circle',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Si, eliminar',
+        severity: 'danger'
+      },
+      accept: () => {
+        this.deleteFamily(pepole.id!)
+      },
+      reject: () => {
 
-  cancelDialog(){
-    this.familyFg.reset({nombre: '', apellidos: '', admin: false})
+      }
+    });
+  }
+
+  cancelDialog() {
+    this.familyFg.reset({ nombre: '', apellidos: '', admin: false })
     this.dialogFormVisible = false;
   }
 }
