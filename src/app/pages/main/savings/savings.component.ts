@@ -118,7 +118,7 @@ export class SavingsComponent {
         outlined: true
       },
       acceptButtonProps: {
-        label: 'Si, eliminar',
+        label: 'Si, desactivar',
         severity: 'danger'
       },
       accept: () => {
