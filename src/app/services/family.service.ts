@@ -66,9 +66,9 @@ export class FamilyService {
 
   async addFamily(pepole: Family): Promise<void> {
     this.loading$.set(true);
-    pepole.id = this._utils.generateId();
     if (enviroment.mockUp) {
       await this._utils.delay(1);
+      pepole.id = this._utils.generateId();
       this.mockFamifly$.set(this.mockFamifly$().concat(pepole));
       this.loading$.set(false);
       return;
@@ -80,7 +80,7 @@ export class FamilyService {
     }).catch(error => {
       this.loading$.set(false);
       throw error;
-    })
+    });
   }
 
   async updateFamily(pepole: Family): Promise<void> {

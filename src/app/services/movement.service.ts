@@ -1,11 +1,12 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { DocumentReference, Firestore, Timestamp, collection, collectionData, query, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, collection, collectionData, doc, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Saving } from './saving.service';
+import { Utils } from '../Utils/utils';
 
 export interface MovementDTO {
-  id: string;
+  id?: string;
   cantidad: number;
   tipo: TypeMovementEnum,
   descripcion: string,
@@ -15,7 +16,7 @@ export interface MovementDTO {
 }
 
 export interface Movement {
-  id: string;
+  id?: string;
   cantidad: number;
   tipo: TypeMovementEnum,
   descripcion: string,
@@ -24,7 +25,7 @@ export interface Movement {
   idAhorros: string
 }
 
-export type NewMovement = Omit<MovementDTO, 'id'>;
+export type NewMovement = Omit<Omit<Movement,'tipo'>, 'id'>;
 
 export enum TypeMovementEnum {
   into = 'deposito',
@@ -44,6 +45,7 @@ const PATH = 'movimientos';
 export class MovementService {
   private readonly _firestore = inject(Firestore);
   private readonly _collectionRef = collection(this._firestore, PATH);
+  private readonly _utils = inject(Utils);
 
   private movements$ = signal<Movement[]>([]);
   loading$ = signal(false);
@@ -146,5 +148,65 @@ export class MovementService {
     });
 
     return this.movements$;
+  }
+
+  async withDraw(movement: NewMovement): Promise<void>{
+    this.loading$.set(true);
+
+    if (enviroment.mockUp) {
+      await this._utils.delay(1);
+      const mov: Movement = {
+        ...movement,
+        id: this._utils.generateId(),
+        tipo: TypeMovementEnum.out
+      }
+      this.mockMovements.set(this.mockMovements().concat(mov));
+      this.loading$.set(false);
+      return;
+    }
+
+    const movDTO: MovementDTO = {
+      ...movement,
+      fecha: Timestamp.fromDate(new Date(movement.fecha)),
+      tipo: TypeMovementEnum.out
+    }
+
+    await setDoc(doc(this._collectionRef),movDTO).then(res => {
+      this.loading$.set(false);
+      return res;
+    }).catch(error => {
+      this.loading$.set(false);
+      throw error;
+    });
+  }
+
+  async save(movement: NewMovement): Promise<void>{
+    this.loading$.set(true);
+
+    if (enviroment.mockUp) {
+      await this._utils.delay(1);
+      const mov: Movement = {
+        ...movement,
+        id: this._utils.generateId(),
+        tipo: TypeMovementEnum.into
+      }
+      this.mockMovements.set(this.mockMovements().concat(mov));
+      this.loading$.set(false);
+      return;
+    }
+
+    const movDTO: MovementDTO = {
+      ...movement,
+      fecha: Timestamp.fromDate(new Date(movement.fecha)),
+      tipo: TypeMovementEnum.into
+    }
+
+    await setDoc(doc(this._collectionRef),movDTO).then(res => {
+      this.loading$.set(false);
+      return res;
+    }).catch(error => {
+      this.loading$.set(false);
+      throw error;
+    });
   }
 }

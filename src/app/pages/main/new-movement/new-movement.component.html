@@ -1,0 +1,29 @@
+<form [formGroup]="movementForm">
+    <p-floatlabel variant="over">
+        <p-select [options]="family$()" optionLabel="nombres" [filter]="true" filterBy="nombres, apellidos"
+            inputId="family" [showClear]="true" class="select" formControlName="familiar">
+            <ng-template #selectedItem let-pepole>
+                <div class="select-item">
+                    @if (pepole.foto) {
+                    <p-avatar [image]="pepole.foto" shape="circle" />
+                    }@else {
+                    <p-avatar [label]="getIniciales(pepole)" shape="circle" />
+                    }
+                    <span>{{ pepole.nombres }}</span>
+                </div>
+            </ng-template>
+            <ng-template let-pepole #item>
+                <div class="select-item">
+                    @if (pepole.foto) {
+                    <p-avatar [image]="pepole.foto" shape="circle" />
+                    }@else {
+                    <p-avatar [label]="getIniciales(pepole)" shape="circle" />
+                    }
+                    <span>{{ pepole.nombres }}</span>
+                </div>
+            </ng-template>
+        </p-select>
+        <label for="family">{{labelFamily}}</label>
+    </p-floatlabel>
+    <p-datepicker formControlName="fecha" [iconDisplay]="'input'" [showIcon]="true" [showButtonBar]="true" inputId="fecha" />
+</form>

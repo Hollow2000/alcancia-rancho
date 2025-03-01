@@ -1,8 +1,9 @@
 import { inject, Injectable, signal, Signal } from '@angular/core';
 import { enviroment } from '../env/enviroment';
-import { Firestore, Query, collection, collectionData, deleteDoc, doc, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Query, collection, collectionData, doc, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Utils } from '../Utils/utils';
+import { TypeMovementEnum } from './movement.service';
 
 export interface Saving {
   id?: string,
@@ -30,6 +31,9 @@ export class SavingService {
 
   savings$ = signal<Saving[]>([]);
   loading$ = signal(false);
+
+  savingRequest?: Saving;
+  typeRequest?: TypeMovementEnum;
 
   mockSavings$ = signal<Saving[]>([
     {
@@ -102,9 +106,9 @@ export class SavingService {
   async addSaving(saving: Saving): Promise<void> {
     this.loading$.set(true);
 
-    saving.id = this._utils.generateId();
     if (enviroment.mockUp) {
       await this._utils.delay(1);
+      saving.id = this._utils.generateId();
       this.mockSavings$.set(this.mockSavings$().concat(saving));
       this.loading$.set(false);
       return;
