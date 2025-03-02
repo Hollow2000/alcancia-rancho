@@ -154,6 +154,7 @@ export class MovementService {
     this.loading$.set(true);
 
     if (enviroment.mockUp) {
+      movement.fecha = new Date(movement.fecha).toLocaleDateString('es-ES',{dateStyle: 'long'});
       await this._utils.delay(1);
       const mov: Movement = {
         ...movement,
@@ -184,6 +185,7 @@ export class MovementService {
     this.loading$.set(true);
 
     if (enviroment.mockUp) {
+      movement.fecha = new Date(movement.fecha).toLocaleDateString('es-ES',{dateStyle: 'long'});
       await this._utils.delay(1);
       const mov: Movement = {
         ...movement,

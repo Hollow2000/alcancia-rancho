@@ -19,11 +19,11 @@ export const appConfig: ApplicationConfig = {
       },
       translation:{
         dayNames: ['Domigno','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
-        dayNamesShort: ['Do','Lun','Mar','Mier','Juv','Vi','Sab'],
-        dayNamesMin: ['D','L','M','m','J','V','S'],
+        dayNamesShort: ['Dom','Lun','Mar','Mier','Juv','Vier','Sab'],
+        dayNamesMin: ['D','L','M','M','J','V','S'],
         today: 'Hoy',
         clear: 'Limpiar',
-        monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+        monthNames: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
       }
     }), provideFirebaseApp(() => initializeApp({"projectId":"alcancia-rancho","appId":"1:104072247493:web:5446afad379a7db55498ac","storageBucket":"alcancia-rancho.firebasestorage.app","apiKey":"AIzaSyAlOltMaH3ElCCYdRWH1bHcHsUe6MD7f5c","authDomain":"alcancia-rancho.firebaseapp.com","messagingSenderId":"104072247493","measurementId":"G-JX9NG8HHCK"})), provideAuth(() => getAuth()), provideFirestore(() => getFirestore())
   ]

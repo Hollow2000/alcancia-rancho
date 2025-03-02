@@ -1,15 +1,17 @@
-<p-card [header]="title" [style]="{margin: '1rem', maxWidth: '120}0px'}">
-        <form [formGroup]="movementForm">
-            <div class="content">
+<p-card [header]="title" [style]="{margin: '1rem'}">
+    <form [formGroup]="movementForm">
+        <div class="content">
+            <div>
                 <p-floatlabel class="input-group">
                     <p-select [options]="family$()" optionLabel="nombres" [filter]="true" filterBy="nombres,apellidos"
-                    inputId="family" [showClear]="true" class="w-full" formControlName="familiar">
-                    <ng-template #selectedItem let-pepole>
-                        <div class="select-item">
-                            @if (pepole.foto) {
+                        inputId="family" [showClear]="true" class="w-full" formControlName="familiar"
+                        class="{{movementForm.controls.familiar.invalid && movementForm.controls.familiar.touched ? 'ng-invalid ng-dirty' : ''}}">
+                        <ng-template #selectedItem let-pepole>
+                            <div class="select-item">
+                                @if (pepole.foto) {
                                 <p-avatar [style]="avatarClass" [image]="pepole.foto" shape="circle" />
                                 }@else {
-                                    <p-avatar [style]="avatarClass" [label]="getIniciales(pepole)" shape="circle" />
+                                <p-avatar [style]="avatarClass" [label]="getIniciales(pepole)" shape="circle" />
                                 }
                                 <span>{{pepole.nombres}} {{pepole.apellidos}}</span>
                             </div>
@@ -17,9 +19,9 @@
                         <ng-template let-pepole #item>
                             <div class="select-item">
                                 @if (pepole.foto) {
-                                    <p-avatar [style]="avatarClass" [image]="pepole.foto" shape="circle" />
+                                <p-avatar [style]="avatarClass" [image]="pepole.foto" shape="circle" />
                                 }@else {
-                                    <p-avatar [style]="avatarClass" [label]="getIniciales(pepole)" shape="circle" />
+                                <p-avatar [style]="avatarClass" [label]="getIniciales(pepole)" shape="circle" />
                                 }
                                 <span>{{pepole.nombres}} {{pepole.apellidos}}</span>
                             </div>
@@ -27,36 +29,81 @@
                     </p-select>
                     <label for="family">{{labelFamily}}</label>
                 </p-floatlabel>
-                <div class="desktop">
-                    <p-floatlabel class="input-group">
-                        <p-datepicker [dateFormat]="formatDate" formControlName="fecha" [iconDisplay]="'input'" [showIcon]="true" [showButtonBar]="true"
-                            inputId="fecha" [fluid]="true" [readonlyInput]="true"/>
-                        <label for="fecha">Fecha del {{type}}</label>
-                    </p-floatlabel>
-                    <p-floatlabel class="input-group">
-                        <p-inputnumber [fluid]="true" inputId="cantidad" mode="currency" currency="MXN" locale="es-MX" autocomplete="off" formControlName="cantidad" />
-                        <label for="cantidad">Cantidad del {{type}}</label>
-                    </p-floatlabel>
-                </div>
-                <p-floatlabel class="input-group mobile">
-                    <p-datepicker [dateFormat]="formatDate" formControlName="fecha" [iconDisplay]="'input'" [showIcon]="true" [showButtonBar]="true"
-                        inputId="fecha" [fluid]="true" [readonlyInput]="true"/>
+                @if (movementForm.controls.familiar.invalid && movementForm.controls.familiar.touched) {
+                <small class="label-error">Este campo es requerido.</small>
+                }
+            </div>
+            @if (isMobile) {
+            <div>
+                <p-floatlabel class="input-group">
+                    <p-datepicker [dateFormat]="formatDate" formControlName="fecha" [iconDisplay]="'input'"
+                        [showIcon]="true" [showButtonBar]="true" inputId="fecha" [fluid]="true" [readonlyInput]="true"
+                        class="{{movementForm.controls.fecha.invalid && movementForm.controls.fecha.touched ? 'ng-invalid ng-dirty' : ''}}" />
                     <label for="fecha">Fecha del {{type}}</label>
                 </p-floatlabel>
-                <p-floatlabel class="input-group mobile">
-                    <p-inputnumber [fluid]="true" inputId="cantidad" mode="currency" currency="MXN" locale="es-MX" autocomplete="off" formControlName="cantidad" />
+                @if (movementForm.controls.fecha.invalid && movementForm.controls.fecha.touched) {
+                <small class="label-error">Este campo es requerido.</small>
+                }
+            </div>
+            <div>
+                <p-floatlabel class="input-group">
+                    <p-inputnumber [fluid]="true" inputId="cantidad" mode="currency" currency="MXN" locale="es-MX"
+                        autocomplete="off" formControlName="cantidad"
+                        class="{{movementForm.controls.cantidad.invalid && movementForm.controls.cantidad.touched ? 'ng-invalid ng-dirty' : ''}}" />
                     <label for="cantidad">Cantidad del {{type}}</label>
                 </p-floatlabel>
+                @if (movementForm.controls.cantidad.invalid && movementForm.controls.cantidad.touched) {
+                <small class="label-error">Este campo es requerido.</small>
+                }
             </div>
-            <div class="content">
-                <p-floatlabel class="input-group">
-                    <textarea [fluid]="true" id="descripcion" rows="5" cols="30" pTextarea formControlName="descripcion"></textarea>
-                    <label for="descripcion">Descripcion</label>
-                </p-floatlabel>
+            } @else {
+            <div class="desktop">
+                <div>
+                    <p-floatlabel class="input-group">
+                        <p-datepicker [dateFormat]="formatDate" formControlName="fecha" [iconDisplay]="'input'"
+                            [showIcon]="true" [showButtonBar]="true" inputId="fecha" [fluid]="true"
+                            [readonlyInput]="true"
+                            class="{{movementForm.controls.fecha.invalid && movementForm.controls.fecha.touched ? 'ng-invalid ng-dirty' : ''}}" />
+                        <label for="fecha">Fecha del {{type}}</label>
+                    </p-floatlabel>
+                    @if (movementForm.controls.fecha.invalid && movementForm.controls.fecha.touched) {
+                    <small class="label-error">Este campo es requerido.</small>
+                    }
+                </div>
+                <div>
+                    <p-floatlabel class="input-group">
+                        <p-inputnumber [fluid]="true" inputId="cantidad" mode="currency" currency="MXN" locale="es-MX"
+                            autocomplete="off" formControlName="cantidad"
+                            class="{{movementForm.controls.cantidad.invalid && movementForm.controls.cantidad.touched ? 'ng-invalid ng-dirty' : ''}}" />
+                        <label for="cantidad">Cantidad del {{type}}</label>
+                    </p-floatlabel>
+                    @if (movementForm.controls.cantidad.invalid && movementForm.controls.cantidad.touched) {
+                    <small class="label-error">Este campo es requerido.</small>
+                    }
+                </div>
             </div>
-        </form>
-        <div class="button-content desktop">
-            <p-button [style]="{paddingLeft: '5rem', paddingRight: '5rem'}" [icon]="icon" iconPos="right" label="Registrar {{type}}"/>
+            }
         </div>
-        <p-button class="mobile" [icon]="icon" iconPos="right" label="Registrar {{type}}" [fluid]="true"/>
+        <div class="content">
+            <div>
+                <p-floatlabel class="input-group">
+                    <textarea [fluid]="true" id="descripcion" rows="5" cols="30" pTextarea
+                        formControlName="descripcion"></textarea>
+                    <label for="descripcion">Descripción (opcional)</label>
+                </p-floatlabel>
+                @if (movementForm.controls.descripcion.invalid) {
+                <small class="label-error">Superaste el maximo de 100 caracteres.</small>
+                }
+            </div>
+        </div>
+    </form>
+    @if (isMobile) {
+    <p-button (onClick)="submit()" class="mobile" [icon]="icon" iconPos="right" label="Registrar {{type}}"
+        [fluid]="true" />
+    } @else {
+    <div class="button-content">
+        <p-button [style]="{paddingLeft: '5rem', paddingRight: '5rem'}" [icon]="icon" iconPos="right"
+            label="Registrar {{type}}" (onClick)="submit()" />
+    </div>
+    }
 </p-card>

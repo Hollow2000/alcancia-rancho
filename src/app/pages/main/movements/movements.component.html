@@ -74,7 +74,7 @@
                             <span class="{{isDisable(movement) ? 'saving-disable' : ''}}">{{getSavingName(movement.idAhorros)}}</span>
                             {{isDisable(movement) ? '(Inactivo)' : ''}}
                         </span>
-                        <span><strong>Aportado por:</strong> {{movement.familiar}}</span>
+                        <span><strong>{{isDeposit(movement) ? 'Aportado por:' : 'Retirado por:'}}</strong> {{movement.familiar}}</span>
                         <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                                 <span class="{{isDisable(movement) ? 'saving-disable' : ''}}">{{getSavingName(movement.idAhorros)}}</span>
                                 {{isDisable(movement) ? '(Inactivo)' : ''}}
                             </span>
-                            <span><strong>Aportado por:</strong> {{movement.familiar}}</span>
+                            <span><strong>{{isDeposit(movement) ? 'Aportado por:' : 'Retirado por:'}}</strong> {{movement.familiar}}</span>
                             <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
                         </div>
                     </p-card>

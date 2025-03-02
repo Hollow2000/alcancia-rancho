@@ -30,13 +30,14 @@ export class NewMovementComponent implements OnInit {
   private readonly _movementService = inject(MovementService);
   private readonly _familyService = inject(FamilyService);
   private readonly _activatedRouter = inject(ActivatedRoute)
+  private readonly _deviceService = inject(DeviceService);
   private readonly _fb = inject(FormBuilder);
 
   saving?: Saving;
   type?: TypeMovementEnum;
   family$ = this._familyService.getFamilyList();
   avatarClass = {width: '25px', height:'25px'};
-  formatDate = `DD d 'de' MM 'del' yy`;
+  formatDate = `D d 'de' MM 'del' yy`;
 
   isMobile = false;
 
@@ -44,8 +45,8 @@ export class NewMovementComponent implements OnInit {
     ahorroId: new FormControl<string | null>(null),
     cantidad: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
     descripcion: new FormControl<string | null>(null, [Validators.maxLength(100)]),
-    fecha: new FormControl<string | null>(null, [Validators.required]),
-    familiar: new FormControl<string | null>(null, [Validators.required])
+    fecha: new FormControl<Date | null>(null, [Validators.required]),
+    familiar: new FormControl<Family | null>(null, [Validators.required])
   });
 
   ngOnInit(): void {
@@ -57,6 +58,8 @@ export class NewMovementComponent implements OnInit {
       default: this.type = TypeMovementEnum.into;
         break;
     }
+
+    this._deviceService.isMobile$.subscribe(value => { this.isMobile = value });
 
     this._activatedRouter.queryParams.subscribe(params => {
       this.saving = this._savingService.getSavings()().find(s => {
@@ -81,5 +84,33 @@ export class NewMovementComponent implements OnInit {
 
   get labelFamily() {
     return this.type === TypeMovementEnum.into ? '¿Quien aportó?' : '¿Quien retiró?'
+  }
+
+  async submit(){
+    this.movementForm.markAllAsTouched();
+    if (this.movementForm.valid) {
+      switch (this.type) {
+        case TypeMovementEnum.into: {
+          await this._movementService.save({
+            idAhorros: this.saving?.id!,
+            cantidad: this.movementForm.value.cantidad!,
+            familiar: this.movementForm.value.familiar!.nombres + this.movementForm.value.familiar!.nombres,
+            descripcion: this.movementForm.value.descripcion!,
+            fecha: this.movementForm.value.fecha!.toDateString()
+          });
+        }
+          break;
+        case TypeMovementEnum.out:{
+          await this._movementService.withDraw({
+            idAhorros: this.saving?.id!,
+            cantidad: this.movementForm.value.cantidad!,
+            familiar: this.movementForm.value.familiar!.nombres + this.movementForm.value.familiar!.nombres,
+            descripcion: this.movementForm.value.descripcion!,
+            fecha: this.movementForm.value.fecha!.toDateString()
+          });
+        }
+          break;
+      }
+    }
   }
 }

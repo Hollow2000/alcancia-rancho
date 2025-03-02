@@ -34,11 +34,6 @@
         display: none;
     }
 
-    :host {
-        display: flex;
-        justify-content: center;
-    }
-
     .button-content {
         display: flex;
         justify-content: center;
