@@ -48,8 +48,8 @@
                         </div>
                     </div>
                     <div class="item-footer">
-                        <p-button (onClick)="openDialogNewMovement(true,saving)" icon="pi pi-download" label="Guardar" />
-                        <p-button (onClick)="openDialogNewMovement(false,saving)" icon="pi pi-upload" label="Retriar" />
+                        <p-button (onClick)="goToNewMovement('deposito',saving)" icon="pi pi-download" label="Guardar" />
+                        <p-button (onClick)="goToNewMovement('retiro',saving)" icon="pi pi-upload" label="Retriar" />
                         <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" />
                         <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger" />
                     </div>
@@ -96,8 +96,8 @@
                             </div>
                         </div>
                         <div class="item-footer">
-                            <p-button (onClick)="openDialogNewMovement(true,saving)" icon="pi pi-download" label="Guardar" size="small" />
-                            <p-button (onClick)="openDialogNewMovement(false,saving)" icon="pi pi-upload" label="Retiar" size="small" />
+                            <p-button (onClick)="goToNewMovement('deposito',saving)" icon="pi pi-download" label="Guardar" size="small" />
+                            <p-button (onClick)="goToNewMovement('retiro',saving)" icon="pi pi-upload" label="Retiar" size="small" />
                             <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" size="small" />
                             <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger" size="small" />
                         </div>

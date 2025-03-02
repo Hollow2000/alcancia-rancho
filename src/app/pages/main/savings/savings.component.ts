@@ -15,9 +15,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { NewMovementComponent } from '../new-movement/new-movement.component';
-import { TypeMovementEnum } from '../../../services/movement.service';
+import { DialogService } from 'primeng/dynamicdialog';
 
 interface FilterDropdown {
   id: string,
@@ -92,10 +90,8 @@ export class SavingsComponent {
     return total;
   }
 
-  openDialogNewMovement(isDeposit:boolean, saving: Saving){
-    this._savingService.savingRequest = saving;
-    this._savingService.typeRequest = isDeposit ? TypeMovementEnum.into : TypeMovementEnum.out;
-    this._router.navigateByUrl('/movimientos/nuevo');
+  goToNewMovement(type: 'deposito'|'retiro', saving: Saving){
+    this._router.navigateByUrl(`/movimientos/${type}?ahorroId=${saving.id}`);
   }
 
   openDialog(saving?: Saving) {

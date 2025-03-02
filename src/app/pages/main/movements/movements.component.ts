@@ -9,7 +9,7 @@ import { FilterDropdown, Movement, MovementService, TypeMovementEnum } from '../
 import { CurrencyPipe } from '@angular/common';
 import { FilterSaving, Saving, SavingService } from '../../../services/saving.service';
 import { Button } from 'primeng/button';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Skeleton } from 'primeng/skeleton';
 import { Utils } from '../../../Utils/utils';
 
@@ -26,8 +26,9 @@ import { Utils } from '../../../Utils/utils';
 export class MovementsComponent implements OnInit, OnDestroy {
   private readonly _movementService = inject(MovementService);
   private readonly _savingService = inject(SavingService);
-  private readonly _deviceService = inject(DeviceService)
-  private readonly _activatedRouter = inject(ActivatedRoute)
+  private readonly _deviceService = inject(DeviceService);
+  private readonly _activatedRouter = inject(ActivatedRoute);
+  private readonly _router = inject(Router);
   readonly _utils = inject(Utils);
 
   movements$ = this._movementService.getMovement(this.filterSaving, this.filterType);
@@ -70,6 +71,10 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  goToNewMovement(type: 'deposito'|'retiro', saving: Saving){
+    this._router.navigateByUrl(`/movimientos/${type}?ahorroId=${saving.id!}`);
   }
 
   isDeposit(movement: Movement): boolean{

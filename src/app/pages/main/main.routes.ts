@@ -11,7 +11,10 @@ export const mainRoutes: Routes = [
         path: 'familia', loadComponent: () => import('./family/family.component').then(c => c.FamilyComponent)
     },
     {
-        path: 'movimientos/nuevo', loadComponent: () => import('./new-movement/new-movement.component').then(c => c.NewMovementComponent)
+        path: 'movimientos/retiro', loadComponent: () => import('./new-movement/new-movement.component').then(c => c.NewMovementComponent)
+    },
+    {
+        path: 'movimientos/deposito', loadComponent: () => import('./new-movement/new-movement.component').then(c => c.NewMovementComponent)
     },
     {
         path: '', redirectTo: 'movimientos', pathMatch: 'full'

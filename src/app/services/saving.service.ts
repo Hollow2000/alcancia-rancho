@@ -32,9 +32,6 @@ export class SavingService {
   savings$ = signal<Saving[]>([]);
   loading$ = signal(false);
 
-  savingRequest?: Saving;
-  typeRequest?: TypeMovementEnum;
-
   mockSavings$ = signal<Saving[]>([
     {
       id: '5Z3RBEfu05n1EA8DBtO1',

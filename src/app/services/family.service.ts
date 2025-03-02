@@ -30,6 +30,7 @@ export class FamilyService {
       id: 'asg24w2g',
       nombres: 'Saul Emmanuel',
       apellidos: 'Moedano Miguel',
+      foto: 'https://lh3.googleusercontent.com/a/ACg8ocJ7ZbUYuyq1H169amNmFLN8jsIkriChMWqZnF3lfunnqPdlNF6x=s96-c',
       admin: true
     },
     {

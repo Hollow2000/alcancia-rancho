@@ -1,29 +1,62 @@
-<form [formGroup]="movementForm">
-    <p-floatlabel variant="over">
-        <p-select [options]="family$()" optionLabel="nombres" [filter]="true" filterBy="nombres, apellidos"
-            inputId="family" [showClear]="true" class="select" formControlName="familiar">
-            <ng-template #selectedItem let-pepole>
-                <div class="select-item">
-                    @if (pepole.foto) {
-                    <p-avatar [image]="pepole.foto" shape="circle" />
-                    }@else {
-                    <p-avatar [label]="getIniciales(pepole)" shape="circle" />
-                    }
-                    <span>{{ pepole.nombres }}</span>
+<p-card [header]="title" [style]="{margin: '1rem', maxWidth: '120}0px'}">
+        <form [formGroup]="movementForm">
+            <div class="content">
+                <p-floatlabel class="input-group">
+                    <p-select [options]="family$()" optionLabel="nombres" [filter]="true" filterBy="nombres,apellidos"
+                    inputId="family" [showClear]="true" class="w-full" formControlName="familiar">
+                    <ng-template #selectedItem let-pepole>
+                        <div class="select-item">
+                            @if (pepole.foto) {
+                                <p-avatar [style]="avatarClass" [image]="pepole.foto" shape="circle" />
+                                }@else {
+                                    <p-avatar [style]="avatarClass" [label]="getIniciales(pepole)" shape="circle" />
+                                }
+                                <span>{{pepole.nombres}} {{pepole.apellidos}}</span>
+                            </div>
+                        </ng-template>
+                        <ng-template let-pepole #item>
+                            <div class="select-item">
+                                @if (pepole.foto) {
+                                    <p-avatar [style]="avatarClass" [image]="pepole.foto" shape="circle" />
+                                }@else {
+                                    <p-avatar [style]="avatarClass" [label]="getIniciales(pepole)" shape="circle" />
+                                }
+                                <span>{{pepole.nombres}} {{pepole.apellidos}}</span>
+                            </div>
+                        </ng-template>
+                    </p-select>
+                    <label for="family">{{labelFamily}}</label>
+                </p-floatlabel>
+                <div class="desktop">
+                    <p-floatlabel class="input-group">
+                        <p-datepicker [dateFormat]="formatDate" formControlName="fecha" [iconDisplay]="'input'" [showIcon]="true" [showButtonBar]="true"
+                            inputId="fecha" [fluid]="true" [readonlyInput]="true"/>
+                        <label for="fecha">Fecha del {{type}}</label>
+                    </p-floatlabel>
+                    <p-floatlabel class="input-group">
+                        <p-inputnumber [fluid]="true" inputId="cantidad" mode="currency" currency="MXN" locale="es-MX" autocomplete="off" formControlName="cantidad" />
+                        <label for="cantidad">Cantidad del {{type}}</label>
+                    </p-floatlabel>
                 </div>
-            </ng-template>
-            <ng-template let-pepole #item>
-                <div class="select-item">
-                    @if (pepole.foto) {
-                    <p-avatar [image]="pepole.foto" shape="circle" />
-                    }@else {
-                    <p-avatar [label]="getIniciales(pepole)" shape="circle" />
-                    }
-                    <span>{{ pepole.nombres }}</span>
-                </div>
-            </ng-template>
-        </p-select>
-        <label for="family">{{labelFamily}}</label>
-    </p-floatlabel>
-    <p-datepicker formControlName="fecha" [iconDisplay]="'input'" [showIcon]="true" [showButtonBar]="true" inputId="fecha" />
-</form>
+                <p-floatlabel class="input-group mobile">
+                    <p-datepicker [dateFormat]="formatDate" formControlName="fecha" [iconDisplay]="'input'" [showIcon]="true" [showButtonBar]="true"
+                        inputId="fecha" [fluid]="true" [readonlyInput]="true"/>
+                    <label for="fecha">Fecha del {{type}}</label>
+                </p-floatlabel>
+                <p-floatlabel class="input-group mobile">
+                    <p-inputnumber [fluid]="true" inputId="cantidad" mode="currency" currency="MXN" locale="es-MX" autocomplete="off" formControlName="cantidad" />
+                    <label for="cantidad">Cantidad del {{type}}</label>
+                </p-floatlabel>
+            </div>
+            <div class="content">
+                <p-floatlabel class="input-group">
+                    <textarea [fluid]="true" id="descripcion" rows="5" cols="30" pTextarea formControlName="descripcion"></textarea>
+                    <label for="descripcion">Descripcion</label>
+                </p-floatlabel>
+            </div>
+        </form>
+        <div class="button-content desktop">
+            <p-button [style]="{paddingLeft: '5rem', paddingRight: '5rem'}" [icon]="icon" iconPos="right" label="Registrar {{type}}"/>
+        </div>
+        <p-button class="mobile" [icon]="icon" iconPos="right" label="Registrar {{type}}" [fluid]="true"/>
+</p-card>
