@@ -2,40 +2,12 @@ import { inject, Injectable, Signal, signal } from '@angular/core';
 import { Firestore, Timestamp, collection, collectionData, doc, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
-import { Saving } from './saving.service';
 import { Utils } from '../Utils/utils';
-
-export interface MovementDTO {
-  id?: string;
-  cantidad: number;
-  tipo: TypeMovementEnum,
-  descripcion: string,
-  fecha: Timestamp,
-  familiar: string,
-  idAhorros: string
-}
-
-export interface Movement {
-  id?: string;
-  cantidad: number;
-  tipo: TypeMovementEnum,
-  descripcion: string,
-  fecha: string,
-  familiar: string,
-  idAhorros: string
-}
-
-export type NewMovement = Omit<Omit<Movement,'tipo'>, 'id'>;
-
-export enum TypeMovementEnum {
-  into = 'deposito',
-  out = 'retiro'
-}
-
-export interface FilterDropdown {
-  id: string,
-  nombre: string,
-}
+import { Mocks } from '../core/constants/mocks';
+import { TypeMovementEnum } from '../core/enums/type-movement.enum';
+import { Movement, MovementDTO, NewMovement } from '../core/interfaces/movements.interface';
+import { FilterDropdown } from '../core/interfaces/filter-dropdown.interface';
+import { Saving } from '../core/interfaces/saving.interface';
 
 const PATH = 'movimientos';
 
@@ -50,35 +22,7 @@ export class MovementService {
   private movements$ = signal<Movement[]>([]);
   loading$ = signal(false);
 
-  mockMovements = signal<Movement[]>([
-    {
-      id: '122t4f5g4q3',
-      cantidad: 100,
-      descripcion: "Primer ahorro",
-      familiar: "Saul Moedano",
-      fecha: "10 de enero de 2025",
-      idAhorros: "5Z3RBEfu05n1EA8DBtO1",
-      tipo: TypeMovementEnum.into
-    },
-    {
-      id: 'hq45tbrt435',
-      cantidad: 2500,
-      descripcion: "asmdñamsñm amsldmñamsd ñasmdñ malsd",
-      familiar: "Saul Emmanuel Moedano Miguel",
-      fecha: "10 de enero de 2025",
-      idAhorros: "5Z3RBEfu05n1EA8DBtO1",
-      tipo: TypeMovementEnum.into
-    },
-    {
-      id: 'qa3hbe534t',
-      cantidad: 2300,
-      descripcion: "Retiro para el marco de la puerta",
-      familiar: "Saul Moedano",
-      fecha: "10 de enero de 2025",
-      idAhorros: "df3RBEfu05n1EA8DB123",
-      tipo: TypeMovementEnum.out
-    }
-  ]);
+  mockMovements = signal<Movement[]>(Mocks.Movements);
 
   getMovement(filterSaving?: Saving | undefined, filterType?: FilterDropdown | undefined): Signal<Movement[]> {
     this.loading$.set(true)

@@ -5,13 +5,18 @@ import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
 import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
-import { FilterDropdown, Movement, MovementService, TypeMovementEnum } from '../../../services/movement.service';
+import { MovementService } from '../../../services/movement.service';
 import { CurrencyPipe } from '@angular/common';
-import { FilterSaving, Saving, SavingService } from '../../../services/saving.service';
+import { SavingService } from '../../../services/saving.service';
 import { Button } from 'primeng/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Skeleton } from 'primeng/skeleton';
 import { Utils } from '../../../Utils/utils';
+import { TypeMovementEnum } from '../../../core/enums/type-movement.enum';
+import { Movement } from '../../../core/interfaces/movements.interface';
+import { FilterDropdown } from '../../../core/interfaces/filter-dropdown.interface';
+import { Saving } from '../../../core/interfaces/saving.interface';
+import { FilterSaving } from '../../../core/enums/saving-filter.enum';
 
 @Component({
   selector: 'app-home',

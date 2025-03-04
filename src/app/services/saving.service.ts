@@ -3,21 +3,9 @@ import { enviroment } from '../env/enviroment';
 import { Firestore, Query, collection, collectionData, doc, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Utils } from '../Utils/utils';
-import { TypeMovementEnum } from './movement.service';
-
-export interface Saving {
-  id?: string,
-  cantidad?: number,
-  nombre: string,
-  meta: number,
-  activo: boolean
-}
-
-export enum FilterSaving {
-  ALL,
-  ENABLE,
-  DISABLE
-}
+import { Mocks } from '../core/constants/mocks';
+import { Saving } from '../core/interfaces/saving.interface';
+import { FilterSaving } from '../core/enums/saving-filter.enum';
 
 const PATH = 'ahorros';
 
@@ -31,23 +19,8 @@ export class SavingService {
 
   savings$ = signal<Saving[]>([]);
   loading$ = signal(false);
-
-  mockSavings$ = signal<Saving[]>([
-    {
-      id: '5Z3RBEfu05n1EA8DBtO1',
-      nombre: 'Puerta',
-      cantidad: 5920,
-      meta: 6200,
-      activo: true
-    },
-    {
-      id: 'df3RBEfu05n1EA8DB123',
-      nombre: 'Reparacion de loseta del baño',
-      cantidad: 3021,
-      meta: 102300,
-      activo: true
-    }
-  ]);
+  
+  mockSavings$ = signal<Saving[]>(Mocks.Savings);
 
   getSavings(filter: FilterSaving = FilterSaving.ENABLE): Signal<Saving[]> {
     this.loading$.set(true)

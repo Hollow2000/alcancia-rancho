@@ -8,7 +8,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { Skeleton } from 'primeng/skeleton';
 import { Subscription } from 'rxjs';
 import { DeviceService } from '../../../services/device.service';
-import { Family, FamilyService } from '../../../services/family.service';
+import { FamilyService } from '../../../services/family.service';
 import { InputText } from 'primeng/inputtext';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Utils } from '../../../Utils/utils';
@@ -16,6 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from 'primeng/api';
+import { Family } from '../../../core/interfaces/family.interface';
 
 
 @Component({

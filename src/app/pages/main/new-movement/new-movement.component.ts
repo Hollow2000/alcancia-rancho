@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { MovementService, TypeMovementEnum } from '../../../services/movement.service';
-import { Saving, SavingService } from '../../../services/saving.service';
+import { MovementService } from '../../../services/movement.service';
+import { SavingService } from '../../../services/saving.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { Family, FamilyService } from '../../../services/family.service';
+import { FamilyService } from '../../../services/family.service';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Avatar } from 'primeng/avatar';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -14,6 +14,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
 import { Button } from 'primeng/button';
 import { DeviceService } from '../../../services/device.service';
+import { TypeMovementEnum } from '../../../core/enums/type-movement.enum';
+import { Family } from '../../../core/interfaces/family.interface';
+import { Saving } from '../../../core/interfaces/saving.interface';
 
 @Component({
   selector: 'app-new-movement',

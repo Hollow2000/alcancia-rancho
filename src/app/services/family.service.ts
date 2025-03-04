@@ -3,14 +3,8 @@ import { Firestore, collection, collectionData, deleteDoc, doc, setDoc, updateDo
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Utils } from '../Utils/utils';
-
-export interface Family {
-  id?: string,
-  nombres: string,
-  apellidos: string,
-  foto?: string,
-  admin: boolean
-}
+import { Mocks } from '../core/constants/mocks';
+import { Family } from '../core/interfaces/family.interface';
 
 const PATH = 'familiares';
 
@@ -25,21 +19,7 @@ export class FamilyService {
   family$ = signal<Family[]>([]);
   loading$ = signal(false);
 
-  mockFamifly$ = signal<Family[]>([
-    {
-      id: 'asg24w2g',
-      nombres: 'Saul Emmanuel',
-      apellidos: 'Moedano Miguel',
-      foto: 'https://lh3.googleusercontent.com/a/ACg8ocJ7ZbUYuyq1H169amNmFLN8jsIkriChMWqZnF3lfunnqPdlNF6x=s96-c',
-      admin: true
-    },
-    {
-      id: '43grh3a',
-      nombres: 'Diana Laura',
-      apellidos: 'Cortes Zarate',
-      admin: false
-    }
-  ]);
+  mockFamifly$ = signal<Family[]>(Mocks.Family);
 
   getFamilyList(): Signal<Family[]> {
     this.loading$.set(true);

@@ -5,7 +5,7 @@ import { CardModule } from 'primeng/card';
 import { DataViewModule } from 'primeng/dataview';
 import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
-import { Saving, SavingService } from '../../../services/saving.service';
+import { SavingService } from '../../../services/saving.service';
 import { Button } from 'primeng/button';
 import { Router } from '@angular/router';
 import { Skeleton } from 'primeng/skeleton';
@@ -16,11 +16,7 @@ import { ConfirmationService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogService } from 'primeng/dynamicdialog';
-
-interface FilterDropdown {
-  id: string,
-  nombre: string,
-}
+import { Saving } from '../../../core/interfaces/saving.interface';
 
 @Component({
   selector: 'app-savings',
