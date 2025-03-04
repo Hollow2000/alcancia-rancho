@@ -118,6 +118,34 @@ export class SavingService {
     });
   }
 
+  async save(savingId: string, amount: number): Promise<void> {
+    this.loading$.set(true);
+
+    if (enviroment.mockUp) {
+      await this._utils.delay(1);
+      const index = this.mockSavings$().findIndex(f => f.id === savingId);
+      const updatedList = this.mockSavings$();
+      updatedList[index].cantidad! += amount;
+      this.mockSavings$.set(updatedList);
+      this.loading$.set(false);
+      return;
+    }
+  }
+
+  async withdraw(savingId: string, amount: number): Promise<void> {
+    this.loading$.set(true);
+
+    if (enviroment.mockUp) {
+      await this._utils.delay(1);
+      const index = this.mockSavings$().findIndex(f => f.id === savingId);
+      const updatedList = this.mockSavings$();
+      updatedList[index].cantidad! -= amount;
+      this.mockSavings$.set(updatedList);
+      this.loading$.set(false);
+      return;
+    }
+  }
+
   async deleteSaving(savingId: string): Promise<void> {
     this.loading$.set(true);
     if (enviroment.mockUp) {

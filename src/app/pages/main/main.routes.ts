@@ -17,6 +17,6 @@ export const mainRoutes: Routes = [
         path: 'movimientos/deposito', loadComponent: () => import('./new-movement/new-movement.component').then(c => c.NewMovementComponent)
     },
     {
-        path: '', redirectTo: 'movimientos', pathMatch: 'full'
+        path: '', redirectTo: 'ahorros', pathMatch: 'full'
     }
 ]

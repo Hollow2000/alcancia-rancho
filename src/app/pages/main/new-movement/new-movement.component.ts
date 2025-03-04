@@ -8,7 +8,7 @@ import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angu
 import { Avatar } from 'primeng/avatar';
 import { FloatLabel } from 'primeng/floatlabel';
 import { DatePickerModule } from 'primeng/datepicker';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TextareaModule } from 'primeng/textarea';
@@ -17,13 +17,15 @@ import { DeviceService } from '../../../services/device.service';
 import { TypeMovementEnum } from '../../../core/enums/type-movement.enum';
 import { Family } from '../../../core/interfaces/family.interface';
 import { Saving } from '../../../core/interfaces/saving.interface';
+import { CurrencyPipe } from '@angular/common';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-new-movement',
   standalone: true,
   imports: [
     InputTextModule, SelectModule, Avatar, ReactiveFormsModule, FloatLabel, DatePickerModule,
-    CardModule, InputNumberModule, TextareaModule, Button
+    CardModule, InputNumberModule, TextareaModule, Button, CurrencyPipe
   ],
   templateUrl: './new-movement.component.html',
   styleUrl: './new-movement.component.css'
@@ -34,6 +36,8 @@ export class NewMovementComponent implements OnInit {
   private readonly _familyService = inject(FamilyService);
   private readonly _activatedRouter = inject(ActivatedRoute)
   private readonly _deviceService = inject(DeviceService);
+  private readonly _messageService = inject(MessageService);
+  private readonly router = inject(Router);
   private readonly _fb = inject(FormBuilder);
 
   saving?: Saving;
@@ -41,6 +45,10 @@ export class NewMovementComponent implements OnInit {
   family$ = this._familyService.getFamilyList();
   avatarClass = {width: '25px', height:'25px'};
   formatDate = `D d 'de' MM 'del' yy`;
+
+  savingLoading$ = this._savingService.loading$;
+  familyLoading$ = this._familyService.loading$;
+  movementLoading$ = this._movementService.loading$;
 
   isMobile = false;
 
@@ -70,6 +78,10 @@ export class NewMovementComponent implements OnInit {
       });
       this.movementForm.value.ahorroId = params['ahorroId'];
     });
+
+    if(this.type === TypeMovementEnum.out && this.saving) {
+      this.movementForm.controls.cantidad.addValidators(Validators.max(this.saving.cantidad!));
+    }
   }
 
   get title() {
@@ -94,26 +106,68 @@ export class NewMovementComponent implements OnInit {
     if (this.movementForm.valid) {
       switch (this.type) {
         case TypeMovementEnum.into: {
-          await this._movementService.save({
-            idAhorros: this.saving?.id!,
-            cantidad: this.movementForm.value.cantidad!,
-            familiar: this.movementForm.value.familiar!.nombres + this.movementForm.value.familiar!.nombres,
-            descripcion: this.movementForm.value.descripcion!,
-            fecha: this.movementForm.value.fecha!.toDateString()
-          });
+          await this.save();
         }
-          break;
+        break;
         case TypeMovementEnum.out:{
-          await this._movementService.withDraw({
-            idAhorros: this.saving?.id!,
-            cantidad: this.movementForm.value.cantidad!,
-            familiar: this.movementForm.value.familiar!.nombres + this.movementForm.value.familiar!.nombres,
-            descripcion: this.movementForm.value.descripcion!,
-            fecha: this.movementForm.value.fecha!.toDateString()
-          });
+          await this.withdraw();
         }
           break;
       }
     }
+  }
+
+  private async withdraw() {
+    this.movementForm.disable();
+    try {
+      await this._movementService.withDraw({
+        idAhorros: this.saving?.id!,
+        cantidad: this.movementForm.value.cantidad!,
+        familiar: this.movementForm.value.familiar!.nombres + ' ' + this.movementForm.value.familiar!.apellidos,
+        descripcion: this.movementForm.value.descripcion!,
+        fecha: this.movementForm.value.fecha!.toDateString()
+      });
+      await this._savingService.withdraw(this.saving!.id!,this.movementForm.value.cantidad!);
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Retiro registrado con exito.',
+      });
+      this.router.navigateByUrl(`ahorros`);
+    } catch (error) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error al registar el retiro',
+        text: error,
+        sticky: true
+      });
+    }
+    this.movementForm.enable();
+  }
+
+  private async save(){
+    this.movementForm.disable();
+    try {
+      await this._movementService.save({
+        idAhorros: this.saving?.id!,
+        cantidad: this.movementForm.value.cantidad!,
+        familiar: this.movementForm.value.familiar!.nombres + ' ' + this.movementForm.value.familiar!.apellidos,
+        descripcion: this.movementForm.value.descripcion!,
+        fecha: this.movementForm.value.fecha!.toDateString()
+      });
+      await this._savingService.save(this.saving!.id!,this.movementForm.value.cantidad!)
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Deposito registrado con exito.',
+      });
+      this.router.navigateByUrl(`ahorros`);
+    } catch (error) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error al registar el deposito',
+        text: error,
+        sticky: true
+      });
+    }
+    this.movementForm.enable();
   }
 }
