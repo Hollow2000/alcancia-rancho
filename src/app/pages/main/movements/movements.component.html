@@ -25,10 +25,10 @@
                 <div class="controls">
                     @if (filterSaving) {
                         @if(filterType?.id === 'retiro' || !filterType){
-                            <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Retirar" size="small" />
+                            <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Retirar" size="small" />
                         }
                         @if(filterType?.id === 'deposito' || !filterType){
-                            <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Guardar" size="small" />
+                            <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Guardar" size="small" />
                         }
                     }
                     <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
