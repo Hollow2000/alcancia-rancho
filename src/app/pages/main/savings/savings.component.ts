@@ -17,6 +17,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Saving } from '../../../core/interfaces/saving.interface';
+import { enviroment } from '../../../env/enviroment';
 
 @Component({
   selector: 'app-savings',
@@ -153,12 +154,17 @@ export class SavingsComponent {
       }
       this.savingForm.reset({ nombre: '', cantidad: 0, meta: null });
       this.dialogFormVisible = false;
+      if (enviroment.mockUp){
+        this.savings$ = this._savingService.getSavings();
+      }
     }
   }
 
   async deleteSaving(savingId: string){
     await this._savingService.deleteSaving(savingId);
-    this.savings$ = this._savingService.getSavings();
+    if (enviroment.mockUp) {
+      this.savings$ = this._savingService.getSavings();
+    }
   }
 
 }
