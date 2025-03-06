@@ -118,32 +118,52 @@ export class SavingService {
     });
   }
 
-  async save(savingId: string, amount: number): Promise<void> {
+  async save(saving: Saving, amount: number): Promise<void> {
     this.loading$.set(true);
 
     if (enviroment.mockUp) {
       await this._utils.delay(1);
-      const index = this.mockSavings$().findIndex(f => f.id === savingId);
+      const index = this.mockSavings$().findIndex(f => f.id === saving.id);
       const updatedList = this.mockSavings$();
       updatedList[index].cantidad! += amount;
       this.mockSavings$.set(updatedList);
       this.loading$.set(false);
       return;
     }
+
+    await updateDoc(doc(this._collectionRef, saving.id), {
+      cantidad: saving.cantidad! + amount
+    }).then(res => {
+      this.loading$.set(false);
+      return res;
+    }).catch(error => {
+      this.loading$.set(false);
+      throw error;
+    });
   }
 
-  async withdraw(savingId: string, amount: number): Promise<void> {
+  async withdraw(saving: Saving, amount: number): Promise<void> {
     this.loading$.set(true);
 
     if (enviroment.mockUp) {
       await this._utils.delay(1);
-      const index = this.mockSavings$().findIndex(f => f.id === savingId);
+      const index = this.mockSavings$().findIndex(f => f.id === saving.id);
       const updatedList = this.mockSavings$();
       updatedList[index].cantidad! -= amount;
       this.mockSavings$.set(updatedList);
       this.loading$.set(false);
       return;
     }
+
+    await updateDoc(doc(this._collectionRef, saving.id), {
+      cantidad: saving.cantidad! - amount
+    }).then(res => {
+      this.loading$.set(false);
+      return res;
+    }).catch(error => {
+      this.loading$.set(false);
+      throw error;
+    });
   }
 
   async deleteSaving(savingId: string): Promise<void> {

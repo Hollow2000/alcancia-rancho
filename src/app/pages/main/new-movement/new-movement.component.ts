@@ -127,7 +127,7 @@ export class NewMovementComponent implements OnInit {
         descripcion: this.movementForm.value.descripcion!,
         fecha: this.movementForm.value.fecha!.toDateString()
       });
-      await this._savingService.withdraw(this.saving!.id!,this.movementForm.value.cantidad!);
+      await this._savingService.withdraw(this.saving!,this.movementForm.value.cantidad!);
       this._messageService.add({
         severity: 'success',
         summary: 'Retiro registrado con exito.',
@@ -154,7 +154,7 @@ export class NewMovementComponent implements OnInit {
         descripcion: this.movementForm.value.descripcion!,
         fecha: this.movementForm.value.fecha!.toDateString()
       });
-      await this._savingService.save(this.saving!.id!,this.movementForm.value.cantidad!)
+      await this._savingService.save(this.saving!,this.movementForm.value.cantidad!)
       this._messageService.add({
         severity: 'success',
         summary: 'Deposito registrado con exito.',
