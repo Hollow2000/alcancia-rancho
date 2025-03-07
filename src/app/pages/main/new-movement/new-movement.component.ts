@@ -40,7 +40,12 @@ export class NewMovementComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly _fb = inject(FormBuilder);
 
-  saving?: Saving;
+  saving$ = signal<Saving>({
+    nombre: 'Cargando...',
+    cantidad: 0,
+    meta: 0,
+    activo: true
+  });
   type?: TypeMovementEnum;
   family$: Signal<Family[]> = signal([]);
   avatarClass = {width: '25px', height:'25px'};
@@ -74,19 +79,21 @@ export class NewMovementComponent implements OnInit {
 
     this._activatedRouter.queryParams.subscribe(params => {
       this._savingService.getSaving(params['ahorroId']).then(saving => {
-        this.saving = saving;
+        this.saving$.set(saving!);
       });
       this.movementForm.value.ahorroId = params['ahorroId'];
     });
 
-    if(this.type === TypeMovementEnum.out && this.saving) {
-      this.movementForm.controls.cantidad.addValidators(Validators.max(this.saving.cantidad!));
+    this.family$ = this._familyService.getFamilyList();
+
+    if(this.type === TypeMovementEnum.out) {
+      this.movementForm.controls.cantidad.addValidators(Validators.max(this.saving$().cantidad!));
     }
   }
 
   get title() {
     const typeStr = this.type === TypeMovementEnum.into ? 'Depositar en' : 'Retirar de';
-    return `${typeStr} ${this.saving!.nombre}`
+    return `${typeStr} ${this.saving$().nombre}`
   }
 
   get icon() {
@@ -121,13 +128,13 @@ export class NewMovementComponent implements OnInit {
     this.movementForm.disable();
     try {
       await this._movementService.withDraw({
-        idAhorros: this.saving?.id!,
+        idAhorros: this.saving$().id!,
         cantidad: this.movementForm.value.cantidad!,
         familiar: this.movementForm.value.familiar!.nombres + ' ' + this.movementForm.value.familiar!.apellidos,
         descripcion: this.movementForm.value.descripcion!,
         fecha: this.movementForm.value.fecha!.toDateString()
       });
-      await this._savingService.withdraw(this.saving!,this.movementForm.value.cantidad!);
+      await this._savingService.withdraw(this.saving$(),this.movementForm.value.cantidad!);
       this._messageService.add({
         severity: 'success',
         summary: 'Retiro registrado con exito.',
@@ -148,13 +155,13 @@ export class NewMovementComponent implements OnInit {
     this.movementForm.disable();
     try {
       await this._movementService.save({
-        idAhorros: this.saving?.id!,
+        idAhorros: this.saving$().id!,
         cantidad: this.movementForm.value.cantidad!,
         familiar: this.movementForm.value.familiar!.nombres + ' ' + this.movementForm.value.familiar!.apellidos,
         descripcion: this.movementForm.value.descripcion!,
         fecha: this.movementForm.value.fecha!.toDateString()
       });
-      await this._savingService.save(this.saving!,this.movementForm.value.cantidad!)
+      await this._savingService.save(this.saving$(),this.movementForm.value.cantidad!)
       this._messageService.add({
         severity: 'success',
         summary: 'Deposito registrado con exito.',

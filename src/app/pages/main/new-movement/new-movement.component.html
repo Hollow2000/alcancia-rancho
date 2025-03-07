@@ -1,5 +1,5 @@
 <p-card [header]="title" [style]="{margin: '1rem'}">
-    <span>Cantidad ahorrada: {{saving?.cantidad | currency}}</span>
+    <span>Cantidad ahorrada: {{saving$().cantidad | currency}}</span>
     <form [formGroup]="movementForm">
         <div class="content">
             <div>
