@@ -46,8 +46,21 @@ export class FamilyService {
     return this.family$;
   }
 
-  async getFamily(familyId: string): Promise<Family> {
-    return (await getDoc(doc(this._firestore, PATH, familyId))).data() as Family;
+  async getFamily(familyId: string): Promise<Family | undefined> {
+    this.loading$.set(true);
+    if (enviroment.mockUp) {
+      await this._utils.delay(1);
+      this.loading$.set(false);
+      return this.mockFamifly$().find(family => {return family.id === familyId});
+    }
+
+    try {
+      return (await getDoc(doc(this._firestore, PATH, familyId))).data() as Family;
+    } catch (error) {
+      throw error;
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
   async addFamily(pepole: Family): Promise<void> {
@@ -60,7 +73,6 @@ export class FamilyService {
       return;
     }
 
-    //TODO: Replicar esto en todos los servicios para el manejo de errores
     try {
       if (pepole.id) {
         const path = pepole.id;
@@ -70,7 +82,7 @@ export class FamilyService {
         await setDoc(doc(this._collectionRef), pepole);
       }
     } catch (error) {
-      throw error
+      throw error;
     } finally {
       this.loading$.set(false);
     }
@@ -90,18 +102,18 @@ export class FamilyService {
       return;
     }
 
-    await updateDoc(doc(this._collectionRef, pepole.id), {
-      nombres: pepole.nombres,
-      apellidos: pepole.apellidos,
-      admin: pepole.admin,
-      foto: pepole.foto
-    }).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await updateDoc(doc(this._collectionRef, pepole.id), {
+        nombres: pepole.nombres,
+        apellidos: pepole.apellidos,
+        admin: pepole.admin,
+        foto: pepole.foto
+      });
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
   async deleteFamily(familyId: string): Promise<void> {
@@ -114,21 +126,21 @@ export class FamilyService {
         const updatedList = this.mockFamifly$();
         updatedList.splice(index, 1);
         this.mockFamifly$.set(updatedList);
-        this.loading$.set(false);
         return;
       } catch (error) {
-        this.loading$.set(false);
         throw error;
+      } finally {
+        this.loading$.set(false);
       }
     }
 
-    await deleteDoc(doc(this._collectionRef, familyId)).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await deleteDoc(doc(this._collectionRef, familyId));
+    } catch (error) {
       throw error;
-    })
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
 }

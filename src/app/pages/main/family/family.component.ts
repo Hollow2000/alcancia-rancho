@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Signal, signal } from '@angular/core';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DataView } from 'primeng/dataview';
@@ -37,7 +37,7 @@ export class FamilyComponent implements OnInit, OnDestroy {
   private readonly _confirmationService = inject(ConfirmationService);
   readonly _utils = inject(Utils);
 
-  family$ = this._familyService.getFamilyList();
+  family$: Signal<Family[]> = signal([]);
   loading$ = this._familyService.loading$;
   filter = '';
 
@@ -55,7 +55,17 @@ export class FamilyComponent implements OnInit, OnDestroy {
     foto: new FormControl<string | null>(null)
   });
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    try {
+      this.family$ = await this._familyService.getFamilyList();
+    } catch (error) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error al obtener la lista de familiares.',
+        detail: (error as FirebaseError).message,
+        sticky: true
+      });
+    }
     this.subscription = this._deviceService.isMobile$.subscribe(
       (isMobile) => {
         this.layout = isMobile ? 'list' : 'grid';
@@ -109,19 +119,28 @@ export class FamilyComponent implements OnInit, OnDestroy {
         } catch (error) {
           this._messageService.add({
             severity: 'error',
-            summary: 'Ocurrio un error, contacta al desarrollador.',
+            summary: 'Ocurrio un error al agregar el familiar.',
             detail: (error as FirebaseError).message,
             sticky: true
           });
         }
       } else {
-        await this._familyService.updateFamily({
-          id: this.familyFg.value.id!,
-          nombres: this.familyFg.value.nombre!.trim(),
-          apellidos: this.familyFg.value.apellidos!.trim(),
-          admin: this.familyFg.value.admin!,
-          foto: this.familyFg.value.foto!
-        })
+        try {
+          await this._familyService.updateFamily({
+            id: this.familyFg.value.id!,
+            nombres: this.familyFg.value.nombre!.trim(),
+            apellidos: this.familyFg.value.apellidos!.trim(),
+            admin: this.familyFg.value.admin!,
+            foto: this.familyFg.value.foto!
+          });
+        } catch (error) {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Ocurrio un error al actualizar el familiar.',
+            detail: (error as FirebaseError).message,
+            sticky: true
+          });
+        }
       }
       this.familyFg.reset({ nombre: '', apellidos: '', admin: false })
       this.dialogFormVisible = false;
@@ -129,7 +148,16 @@ export class FamilyComponent implements OnInit, OnDestroy {
   }
 
   async deleteFamily(familyId: string) {
-    await this._familyService.deleteFamily(familyId);
+    try {
+      await this._familyService.deleteFamily(familyId);
+    } catch (error) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error al eliminar el familiar.',
+        detail: (error as FirebaseError).message,
+        sticky: true
+      });
+    }
   }
 
   confirmDelete(event: Event, pepole: Family) {

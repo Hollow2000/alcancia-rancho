@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, Signal } from '@angular/core';
 import { MovementService } from '../../../services/movement.service';
 import { SavingService } from '../../../services/saving.service';
 import { InputTextModule } from 'primeng/inputtext';
@@ -42,7 +42,7 @@ export class NewMovementComponent implements OnInit {
 
   saving?: Saving;
   type?: TypeMovementEnum;
-  family$ = this._familyService.getFamilyList();
+  family$: Signal<Family[]> = signal([]);
   avatarClass = {width: '25px', height:'25px'};
   formatDate = `D d 'de' MM 'del' yy`;
 
@@ -60,7 +60,7 @@ export class NewMovementComponent implements OnInit {
     familiar: new FormControl<Family | null>(null, [Validators.required])
   });
 
-  ngOnInit(): void {
+   ngOnInit(): void {
     switch (this._activatedRouter.snapshot.routeConfig?.path?.split('/')[1]) {
       case 'deposito': this.type = TypeMovementEnum.into;
         break;
@@ -73,8 +73,8 @@ export class NewMovementComponent implements OnInit {
     this._deviceService.isMobile$.subscribe(value => { this.isMobile = value });
 
     this._activatedRouter.queryParams.subscribe(params => {
-      this.saving = this._savingService.getSavings()().find(s => {
-        return s.id === params['ahorroId'];
+      this._savingService.getSaving(params['ahorroId']).then(saving => {
+        this.saving = saving;
       });
       this.movementForm.value.ahorroId = params['ahorroId'];
     });

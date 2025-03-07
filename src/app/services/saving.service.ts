@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, Signal } from '@angular/core';
 import { enviroment } from '../env/enviroment';
-import { Firestore, Query, collection, collectionData, doc, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Query, collection, collectionData, doc, getDoc, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Utils } from '../Utils/utils';
 import { Mocks } from '../core/constants/mocks';
@@ -19,7 +19,7 @@ export class SavingService {
 
   savings$ = signal<Saving[]>([]);
   loading$ = signal(false);
-  
+
   mockSavings$ = signal<Saving[]>(Mocks.Savings);
 
   getSavings(filter: FilterSaving = FilterSaving.ENABLE): Signal<Saving[]> {
@@ -50,11 +50,11 @@ export class SavingService {
         document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<Saving[]>;
         break;
       case FilterSaving.ENABLE:
-        q = query(this._collectionRef, where('activo','==',true));
+        q = query(this._collectionRef, where('activo', '==', true));
         document = collectionData(q, { idField: 'id' }) as Observable<Saving[]>;
         break;
       case FilterSaving.DISABLE:
-        q = query(this._collectionRef, where('activo','==',false));
+        q = query(this._collectionRef, where('activo', '==', false));
         document = collectionData(q, { idField: 'id' }) as Observable<Saving[]>;
         break;
     }
@@ -73,6 +73,23 @@ export class SavingService {
     return this.savings$;
   }
 
+  async getSaving(savingId: string): Promise<Saving | undefined> {
+    this.loading$.set(true);
+    if (enviroment.mockUp) {
+      await this._utils.delay(1);
+      this.loading$.set(false);
+      return this.mockSavings$().find(saving => {return saving.id === savingId});
+    }
+
+    try {
+      return (await getDoc(doc(this._firestore, PATH, savingId))).data() as Saving;;
+    } catch (error) {
+      throw error;
+    } finally {
+      this.loading$.set(false);
+    }
+  }
+
   async addSaving(saving: Saving): Promise<void> {
     this.loading$.set(true);
 
@@ -84,13 +101,13 @@ export class SavingService {
       return;
     }
 
-    await setDoc(doc(this._collectionRef), saving).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await setDoc(doc(this._collectionRef), saving);
+    } catch (error) {
       throw error;
-    })
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
   async updateSaving(saving: Saving): Promise<void> {
@@ -106,16 +123,16 @@ export class SavingService {
       return;
     }
 
-    await updateDoc(doc(this._collectionRef, saving.id), {
-      nombre: saving.nombre,
-      menta: saving.meta
-    }).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await updateDoc(doc(this._collectionRef, saving.id), {
+        nombre: saving.nombre,
+        menta: saving.meta
+      });
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
   async save(saving: Saving, amount: number): Promise<void> {
@@ -131,15 +148,15 @@ export class SavingService {
       return;
     }
 
-    await updateDoc(doc(this._collectionRef, saving.id), {
-      cantidad: saving.cantidad! + amount
-    }).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await updateDoc(doc(this._collectionRef, saving.id), {
+        cantidad: saving.cantidad! + amount
+      });
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
   async withdraw(saving: Saving, amount: number): Promise<void> {
@@ -155,15 +172,15 @@ export class SavingService {
       return;
     }
 
-    await updateDoc(doc(this._collectionRef, saving.id), {
-      cantidad: saving.cantidad! - amount
-    }).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await updateDoc(doc(this._collectionRef, saving.id), {
+        cantidad: saving.cantidad! - amount
+      });
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
   async deleteSaving(savingId: string): Promise<void> {
@@ -175,18 +192,17 @@ export class SavingService {
       updatedList[index].activo = false;
       this.mockSavings$.set(updatedList);
       this.loading$.set(false);
-      
       return;
     }
 
-    await updateDoc(doc(this._collectionRef, savingId), {
-      activo: false
-    }).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await updateDoc(doc(this._collectionRef, savingId), {
+        activo: false
+      });
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this.loading$.set(false);
+    }
   }
 }

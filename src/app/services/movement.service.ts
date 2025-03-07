@@ -116,13 +116,13 @@ export class MovementService {
       tipo: TypeMovementEnum.out
     }
 
-    await setDoc(doc(this._collectionRef),movDTO).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await setDoc(doc(this._collectionRef),movDTO);
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this.loading$.set(false);
+    }
   }
 
   async save(movement: NewMovement): Promise<void>{
@@ -147,12 +147,12 @@ export class MovementService {
       tipo: TypeMovementEnum.into
     }
 
-    await setDoc(doc(this._collectionRef),movDTO).then(res => {
-      this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
+    try {
+      await setDoc(doc(this._collectionRef),movDTO);
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this.loading$.set(false);
+    }
   }
 }

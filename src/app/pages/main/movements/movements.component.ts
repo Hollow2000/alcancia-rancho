@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, Signal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataViewModule } from 'primeng/dataview';
 import { SelectModule } from 'primeng/select';
@@ -17,6 +17,8 @@ import { Movement } from '../../../core/interfaces/movements.interface';
 import { FilterDropdown } from '../../../core/interfaces/filter-dropdown.interface';
 import { Saving } from '../../../core/interfaces/saving.interface';
 import { FilterSaving } from '../../../core/enums/saving-filter.enum';
+import { MessageService } from 'primeng/api';
+import { FirebaseError } from '@angular/fire/app';
 
 @Component({
   selector: 'app-home',
@@ -33,10 +35,11 @@ export class MovementsComponent implements OnInit, OnDestroy {
   private readonly _savingService = inject(SavingService);
   private readonly _deviceService = inject(DeviceService);
   private readonly _activatedRouter = inject(ActivatedRoute);
+  private readonly _messageService = inject(MessageService);
   private readonly _router = inject(Router);
   readonly _utils = inject(Utils);
 
-  movements$ = this._movementService.getMovement(this.filterSaving, this.filterType);
+  movements$: Signal<Movement[]> = signal([]);
   loading$ = this._movementService.loading$;
   
   private subscription?: Subscription;
@@ -44,8 +47,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
   layout: 'list' | 'grid' = 'list';
   
   filterSaving?: Saving | undefined;
-  savingsEnables$ = this._savingService.getSavings();
-  allSavings$ = this._savingService.getSavings(FilterSaving.ALL);
+  savingsEnables$: Signal<Saving[]> = signal([]);
+  allSavings$: Signal<Saving[]> = signal([]);
 
   filterType?: FilterDropdown | undefined;
   filterTypeOptions: FilterDropdown[] | undefined = [
@@ -59,17 +62,28 @@ export class MovementsComponent implements OnInit, OnDestroy {
     },
   ];
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.subscription = this._deviceService.isMobile$.subscribe(
       (isMobile) => {
         this.layout = isMobile ? 'list' : 'grid';
       }
     );
-    this._activatedRouter.queryParams.subscribe(params => {
-      this.filterType = this.filterTypeOptions?.find(type => type.id === params['type']);
-      this.filterSaving = this.savingsEnables$().find(saving => saving.id === params['saving'])
-      this.notifyFilter();
-    });
+    try {
+      this.savingsEnables$ = await this._savingService.getSavings();
+      this.allSavings$ = await this._savingService.getSavings(FilterSaving.ALL);
+      this._activatedRouter.queryParams.subscribe(params => {
+        this.filterType = this.filterTypeOptions?.find(type => type.id === params['type']);
+        this.filterSaving = this.savingsEnables$().find(saving => saving.id === params['saving'])
+      });
+      this.movements$ = await this._movementService.getMovement(this.filterSaving, this.filterType);
+    } catch (error) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error',
+        detail: (error as FirebaseError).message,
+        sticky: true
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -94,7 +108,16 @@ export class MovementsComponent implements OnInit, OnDestroy {
     return this.allSavings$().find(saving => saving.id === idAhorro)?.nombre;
   }
 
-  notifyFilter(){
-    this.movements$ = this._movementService.getMovement(this.filterSaving, this.filterType);
+  async notifyFilter(){
+    try {
+      this.movements$ = await this._movementService.getMovement(this.filterSaving, this.filterType);
+    }catch (error) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error al obtener el listado de ahorros',
+        detail: (error as FirebaseError).message,
+        sticky: true
+      });
+    }
   }
 }
