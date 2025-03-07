@@ -15,8 +15,9 @@ import { Utils } from '../../../Utils/utils';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Family } from '../../../core/interfaces/family.interface';
+import { FirebaseError } from '@angular/fire/app';
 
 
 @Component({
@@ -31,6 +32,7 @@ import { Family } from '../../../core/interfaces/family.interface';
 })
 export class FamilyComponent implements OnInit, OnDestroy {
   private readonly _deviceService = inject(DeviceService);
+  private readonly _messageService = inject(MessageService);
   private readonly _familyService = inject(FamilyService);
   private readonly _confirmationService = inject(ConfirmationService);
   readonly _utils = inject(Utils);
@@ -96,12 +98,22 @@ export class FamilyComponent implements OnInit, OnDestroy {
     this.familyFg.markAllAsTouched();
     if (this.familyFg.valid) {
       if (this.dialogIsNew) {
-        await this._familyService.addFamily({
-          nombres: this.familyFg.value.nombre!.trim(),
-          apellidos: this.familyFg.value.apellidos!.trim(),
-          admin: this.familyFg.value.admin!,
-          foto: this.familyFg.value.foto!
-        })
+        //TODO: Replicar esto en todos los servicios para el manejo de errores
+        try {
+          await this._familyService.addFamily({
+            nombres: this.familyFg.value.nombre!.trim(),
+            apellidos: this.familyFg.value.apellidos!.trim(),
+            admin: this.familyFg.value.admin!,
+            foto: this.familyFg.value.foto!
+          });
+        } catch (error) {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Ocurrio un error, contacta al desarrollador.',
+            detail: (error as FirebaseError).message,
+            sticky: true
+          });
+        }
       } else {
         await this._familyService.updateFamily({
           id: this.familyFg.value.id!,
@@ -123,7 +135,7 @@ export class FamilyComponent implements OnInit, OnDestroy {
   confirmDelete(event: Event, pepole: Family) {
     this._confirmationService.confirm({
       target: event.target as EventTarget,
-      message: `¿Desea eliminar a ${this._utils.addElipsis(pepole.nombres,15)}?`,
+      message: `¿Desea eliminar a ${this._utils.addElipsis(pepole.nombres, 15)}?`,
       icon: 'pi pi-info-circle',
       rejectButtonProps: {
         label: 'Cancelar',

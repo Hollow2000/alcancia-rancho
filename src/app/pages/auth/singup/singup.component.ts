@@ -83,9 +83,9 @@ export default class SingupComponent {
   }
 
   private async createAccount() {
-    const { name, email, password } = this.form.value;
+    const { name, lastName, email, password } = this.form.value;
     await this._authService.singUp(email!, password!).then(()=>{
-      this._authService.updateName(name!).then(() =>{
+      this._authService.updateName(name!, lastName!).then(() =>{
         this._messageService.add({
           severity: 'success',
           summary: 'Registro exitoso',

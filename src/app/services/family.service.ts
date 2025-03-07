@@ -1,10 +1,11 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Firestore, collection, collectionData, deleteDoc, doc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, deleteDoc, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Utils } from '../Utils/utils';
 import { Mocks } from '../core/constants/mocks';
 import { Family } from '../core/interfaces/family.interface';
+import { MessageService } from 'primeng/api';
 
 const PATH = 'familiares';
 
@@ -45,23 +46,35 @@ export class FamilyService {
     return this.family$;
   }
 
+  async getFamily(familyId: string): Promise<Family> {
+    return (await getDoc(doc(this._firestore, PATH, familyId))).data() as Family;
+  }
+
   async addFamily(pepole: Family): Promise<void> {
     this.loading$.set(true);
     if (enviroment.mockUp) {
       await this._utils.delay(1);
-      pepole.id = this._utils.generateId();
+      if (!pepole.id) { pepole.id = this._utils.generateId(); }
       this.mockFamifly$.set(this.mockFamifly$().concat(pepole));
       this.loading$.set(false);
       return;
     }
 
-    await setDoc(doc(this._collectionRef), pepole).then(res => {
+    //TODO: Replicar esto en todos los servicios para el manejo de errores
+    try {
+      if (pepole.id) {
+        const path = pepole.id;
+        pepole.id = undefined;
+        await setDoc(doc(this._collectionRef, path), pepole);
+      } else {
+        await setDoc(doc(this._collectionRef), pepole);
+      }
+    } catch (error) {
+      throw error
+    } finally {
       this.loading$.set(false);
-      return res;
-    }).catch(error => {
-      this.loading$.set(false);
-      throw error;
-    });
+    }
+
   }
 
   async updateFamily(pepole: Family): Promise<void> {
