@@ -1,3 +1,13 @@
+-Verificar porque no se estan creando los familiares al registrarse.
+-Hacer las consultas de movimientos en orden de fechas
+-Hacer las consultas de ahorros y familiares en orden del mas reciente.
+-Crear seccion de mi cuenta para cambiar foto, nombre y cerrar sesion
+-Crear el flujo de recuperar contraseña
+-Crear la funcion para corroborar la clave secreta de forma remota.
+
+
+
+
 Crear varios ahorros (nombre, cantidad, meta),
 cada ahorro tendra sus movimientos (idAhorros, cantidad,descripcion,fecha,familiar,tipo)
 seleccionando un familiar de la lista de familiares que tambien se podran agregar (admin, apellidos, nombre)

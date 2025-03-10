@@ -82,7 +82,9 @@ export class SavingService {
     }
 
     try {
-      return (await getDoc(doc(this._firestore, PATH, savingId))).data() as Saving;;
+      const saving = (await getDoc(doc(this._firestore, PATH, savingId))).data() as Saving;
+      saving.id = savingId;
+      return saving;
     } catch (error) {
       throw error;
     } finally {
@@ -126,7 +128,7 @@ export class SavingService {
     try {
       await updateDoc(doc(this._collectionRef, saving.id), {
         nombre: saving.nombre,
-        menta: saving.meta
+        meta: saving.meta
       });
     } catch (error) {
       throw error;

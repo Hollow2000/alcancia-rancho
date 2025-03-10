@@ -80,6 +80,7 @@ export class MainComponent {
         severity: "error",
         summary: "Ocurrio un error al cerrar sesión.",
         detail: "Contacta al desarrollador. Codigo: " + error.code,
+        sticky: true
       });
     });
   }

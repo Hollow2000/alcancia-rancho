@@ -47,7 +47,6 @@ export class MovementsComponent implements OnInit, OnDestroy {
   layout: 'list' | 'grid' = 'list';
   
   filterSaving?: Saving | undefined;
-  savingsEnables$: Signal<Saving[]> = signal([]);
   allSavings$: Signal<Saving[]> = signal([]);
 
   filterType?: FilterDropdown | undefined;
@@ -69,13 +68,12 @@ export class MovementsComponent implements OnInit, OnDestroy {
       }
     );
     try {
-      this.savingsEnables$ = await this._savingService.getSavings();
       this.allSavings$ = await this._savingService.getSavings(FilterSaving.ALL);
       this._activatedRouter.queryParams.subscribe(params => {
         this.filterType = this.filterTypeOptions?.find(type => type.id === params['type']);
-        this.filterSaving = this.savingsEnables$().find(saving => saving.id === params['saving'])
+        this.filterSaving = this.allSavings$().find(saving => saving.id === params['saving'])
       });
-      this.movements$ = await this._movementService.getMovement(this.filterSaving, this.filterType);
+      this.notifyFilter();
     } catch (error) {
       this._messageService.add({
         severity: 'error',
@@ -100,8 +98,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
     return movement.tipo === TypeMovementEnum.into;
   }
 
-  isDisable(movement: Movement): boolean {
-    return this.savingsEnables$().find(s => s.id === movement.idAhorros) ? false : true
+  isActive(movement: Movement): boolean {
+    return this.allSavings$().find(s => s.id === movement.idAhorros)?.activo!
   }
 
   getSavingName(idAhorro: string) {

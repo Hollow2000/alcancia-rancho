@@ -60,6 +60,15 @@ h2 {
     gap: 2rem;
 }
 
+.version {
+    font-size: 12px;
+    position: absolute;
+    text-align: center;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
 @media (min-width: 750px) {
     .wrapper {
         flex-direction: row;

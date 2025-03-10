@@ -77,7 +77,7 @@ export default class SingupComponent {
         severity: 'error',
         summary: 'Error al crear cuenta',
         detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
-        life: 3000
+        sticky: true
       });
     });
   }
@@ -97,7 +97,7 @@ export default class SingupComponent {
           severity: 'error',
           summary: 'Error al crear cuenta',
           detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
-          life: 3000
+          sticky: true
         });
       });
       this.router.navigateByUrl('');
@@ -106,7 +106,7 @@ export default class SingupComponent {
         severity: 'error',
         summary: 'Error al crear cuenta',
         detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
-        life: 3000
+        sticky: true
       });
     });;
   }

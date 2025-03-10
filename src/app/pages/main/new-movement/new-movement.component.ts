@@ -19,6 +19,7 @@ import { Family } from '../../../core/interfaces/family.interface';
 import { Saving } from '../../../core/interfaces/saving.interface';
 import { CurrencyPipe } from '@angular/common';
 import { MessageService } from 'primeng/api';
+import { FirebaseError } from '@angular/fire/app';
 
 @Component({
   selector: 'app-new-movement',
@@ -48,7 +49,7 @@ export class NewMovementComponent implements OnInit {
   });
   type?: TypeMovementEnum;
   family$: Signal<Family[]> = signal([]);
-  avatarClass = {width: '25px', height:'25px'};
+  avatarClass = { width: '25px', height: '25px' };
   formatDate = `D d 'de' MM 'del' yy`;
 
   savingLoading$ = this._savingService.loading$;
@@ -65,7 +66,7 @@ export class NewMovementComponent implements OnInit {
     familiar: new FormControl<Family | null>(null, [Validators.required])
   });
 
-   ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     switch (this._activatedRouter.snapshot.routeConfig?.path?.split('/')[1]) {
       case 'deposito': this.type = TypeMovementEnum.into;
         break;
@@ -78,15 +79,24 @@ export class NewMovementComponent implements OnInit {
     this._deviceService.isMobile$.subscribe(value => { this.isMobile = value });
 
     this._activatedRouter.queryParams.subscribe(params => {
-      this._savingService.getSaving(params['ahorroId']).then(saving => {
-        this.saving$.set(saving!);
-      });
-      this.movementForm.value.ahorroId = params['ahorroId'];
+      this.movementForm.patchValue({ahorroId: params['ahorroId']});
     });
+    
+    const saving = await this._savingService.getSaving(this.movementForm.value.ahorroId!);
+    if (saving) {
+      this.saving$.set(saving);
+    } else {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'No fue posble encontrar este ahorro.',
+        sticky: true
+      });
+      this.router.navigateByUrl('ahorros');
+    }
 
     this.family$ = this._familyService.getFamilyList();
 
-    if(this.type === TypeMovementEnum.out) {
+    if (this.type === TypeMovementEnum.out) {
       this.movementForm.controls.cantidad.addValidators(Validators.max(this.saving$().cantidad!));
     }
   }
@@ -108,15 +118,15 @@ export class NewMovementComponent implements OnInit {
     return this.type === TypeMovementEnum.into ? '¿Quien aportó?' : '¿Quien retiró?'
   }
 
-  async submit(){
+  async submit() {
     this.movementForm.markAllAsTouched();
     if (this.movementForm.valid) {
       switch (this.type) {
         case TypeMovementEnum.into: {
           await this.save();
         }
-        break;
-        case TypeMovementEnum.out:{
+          break;
+        case TypeMovementEnum.out: {
           await this.withdraw();
         }
           break;
@@ -128,13 +138,13 @@ export class NewMovementComponent implements OnInit {
     this.movementForm.disable();
     try {
       await this._movementService.withDraw({
-        idAhorros: this.saving$().id!,
+        idAhorros: this.movementForm.value.ahorroId!,
         cantidad: this.movementForm.value.cantidad!,
         familiar: this.movementForm.value.familiar!.nombres + ' ' + this.movementForm.value.familiar!.apellidos,
         descripcion: this.movementForm.value.descripcion!,
         fecha: this.movementForm.value.fecha!.toDateString()
       });
-      await this._savingService.withdraw(this.saving$(),this.movementForm.value.cantidad!);
+      await this._savingService.withdraw(this.saving$(), this.movementForm.value.cantidad!);
       this._messageService.add({
         severity: 'success',
         summary: 'Retiro registrado con exito.',
@@ -144,24 +154,25 @@ export class NewMovementComponent implements OnInit {
       this._messageService.add({
         severity: 'error',
         summary: 'Ocurrio un error al registar el retiro',
-        text: error,
+        detail: (error as FirebaseError).message,
         sticky: true
       });
     }
     this.movementForm.enable();
   }
 
-  private async save(){
+  private async save() {
     this.movementForm.disable();
     try {
       await this._movementService.save({
-        idAhorros: this.saving$().id!,
+        idAhorros: this.movementForm.value.ahorroId!,
         cantidad: this.movementForm.value.cantidad!,
         familiar: this.movementForm.value.familiar!.nombres + ' ' + this.movementForm.value.familiar!.apellidos,
         descripcion: this.movementForm.value.descripcion!,
         fecha: this.movementForm.value.fecha!.toDateString()
       });
-      await this._savingService.save(this.saving$(),this.movementForm.value.cantidad!)
+      
+      await this._savingService.save(this.saving$(), this.movementForm.value.cantidad!)
       this._messageService.add({
         severity: 'success',
         summary: 'Deposito registrado con exito.',
@@ -171,7 +182,7 @@ export class NewMovementComponent implements OnInit {
       this._messageService.add({
         severity: 'error',
         summary: 'Ocurrio un error al registar el deposito',
-        text: error,
+        detail: (error as FirebaseError).message,
         sticky: true
       });
     }
