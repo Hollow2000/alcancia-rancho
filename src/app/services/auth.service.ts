@@ -41,13 +41,15 @@ export class AuthService {
       this.mockIsLogged = true;
       return Promise.resolve();
     }
-    await createUserWithEmailAndPassword(this._auth, email, password).then(user => {
-      this._loaderService.hide()
+
+    try {
+      const user = await createUserWithEmailAndPassword(this._auth, email, password);
       return user;
-    }).catch(error => {
-      this._loaderService.hide()
+    } catch (error) {
       throw error;
-    });
+    } finally {
+      this._loaderService.hide();
+    }
   }
 
   async login(email: string, password: string): Promise<UserCredential | void> {
@@ -67,21 +69,11 @@ export class AuthService {
     })
   }
 
-  async updateName(name: string, lastname: string) {
+  async updateName(name: string) {
     if (this._auth.currentUser && !enviroment.mockUp) {
-      updateProfile(this._auth.currentUser, { displayName: name })
+      await updateProfile(this._auth.currentUser, { displayName: name })
     }
-    
-    const family = await this._familyService.getFamily(this._auth.currentUser?.uid!);
-    if (!family) {
-      this._familyService.addFamily({
-        id: enviroment.mockUp ? this._utils.generateId() : this._auth.currentUser?.uid,
-        nombres: name,
-        apellidos: lastname,
-        admin: false,
-      });
-    }
-    
+
   }
 
   getUserName() {
@@ -101,21 +93,20 @@ export class AuthService {
       return Promise.resolve();
     }
     const user = await signInWithPopup(this._auth, new GoogleAuthProvider);
-debugger
     const family = await this._familyService.getFamily(this._auth.currentUser?.uid!);
-      if (!family) {
-        const { name, lastname } = this.getNames(user.user.displayName);
-        this._familyService.addFamily({
-          id: enviroment.mockUp ? this._utils.generateId() : this._auth.currentUser?.uid,
-          nombres: name,
-          apellidos: lastname,
-          admin: false,
-          foto: user.user.photoURL ?? undefined
-        });
-      }
+    if (!family) {
+      const { name, lastname } = this.getNames(user.user.displayName);
+      this._familyService.addFamily({
+        id: enviroment.mockUp ? this._utils.generateId() : this._auth.currentUser?.uid!,
+        nombres: name,
+        apellidos: lastname,
+        admin: false,
+        foto: user.user.photoURL ?? undefined
+      });
+    }
 
-      this._loaderService.hide()
-      return user;
+    this._loaderService.hide()
+    return user;
   }
 
   private getNames(displayName: string | null) {

@@ -76,7 +76,7 @@ export class FamilyService {
     try {
       if (pepole.id) {
         const path = pepole.id;
-        pepole.id = undefined;
+        delete pepole.id;
         await setDoc(doc(this._collectionRef, path), pepole);
       } else {
         await setDoc(doc(this._collectionRef), pepole);

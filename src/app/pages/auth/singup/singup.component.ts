@@ -9,6 +9,9 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from '../../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { FirebaseError } from '@angular/fire/app';
+import { FamilyService } from '../../../services/family.service';
+import { Utils } from '../../../Utils/utils';
+import { enviroment } from '../../../env/enviroment';
 
 interface FormRegister {
   name: FormControl<string | null>;
@@ -29,11 +32,13 @@ export default class SingupComponent {
   private readonly _fb = inject(FormBuilder);
   private readonly _messageService = inject(MessageService);
   private readonly _authService = inject(AuthService);
+  private readonly _familyService = inject(FamilyService);
+  private readonly _utils = inject(Utils);
   private readonly router = inject(Router);
 
   form = this._fb.group<FormRegister>({
     name: this._fb.control('', [Validators.required]),
-    lastName: this._fb.control('',[Validators.required]),
+    lastName: this._fb.control('', [Validators.required]),
     email: this._fb.control('', [Validators.required, Validators.email]),
     password: this._fb.control('', [Validators.required]),
     secretKey: this._fb.control('', [Validators.required])
@@ -42,9 +47,9 @@ export default class SingupComponent {
   async submit() {
     this.form.markAllAsTouched();
     if (this.form.valid) {
-      if(this.form.value.secretKey === '123456'){
+      if (this.form.value.secretKey === '123456') {
         await this.createAccount();
-      }else{
+      } else {
         this._messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -52,8 +57,8 @@ export default class SingupComponent {
           life: 3000
         });
       }
-      
-    }else{
+
+    } else {
       this._messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -63,7 +68,7 @@ export default class SingupComponent {
     }
   }
 
-  async signInWithGoogle(){
+  async signInWithGoogle() {
     await this._authService.signInWithGoogle().then(() => {
       this._messageService.add({
         severity: 'success',
@@ -84,31 +89,38 @@ export default class SingupComponent {
 
   private async createAccount() {
     const { name, lastName, email, password } = this.form.value;
-    await this._authService.singUp(email!, password!).then(()=>{
-      this._authService.updateName(name!, lastName!).then(() =>{
+    try {
+      const user = await this._authService.singUp(email!, password!);
+
+      if (!enviroment.mockUp && user) {
+        this.router.navigateByUrl('');
+        
+        await this._authService.updateName(name!);
         this._messageService.add({
           severity: 'success',
           summary: 'Registro exitoso',
           detail: '¡Bienvenido a la Alcancia del Rancho!',
           life: 3000
         });
-      }).catch((error: FirebaseError) => {
-        this._messageService.add({
-          severity: 'error',
-          summary: 'Error al crear cuenta',
-          detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
-          sticky: true
-        });
-      });
-      this.router.navigateByUrl('');
-    }).catch((error: FirebaseError) => {
+
+        const family = await this._familyService.getFamily(user.user.uid!);
+        if (!family) {
+          this._familyService.addFamily({
+            id: user.user.uid,
+            nombres: name!,
+            apellidos: lastName!,
+            admin: false,
+          });
+        }
+      }
+    } catch (error) {
       this._messageService.add({
         severity: 'error',
         summary: 'Error al crear cuenta',
-        detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
+        detail: (error as FirebaseError).message,
         sticky: true
       });
-    });;
+    }
   }
 
 }
