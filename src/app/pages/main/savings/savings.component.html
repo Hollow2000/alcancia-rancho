@@ -12,128 +12,170 @@
     </ng-template>
     <ng-template #list let-savings>
         @if (loading$()) {
-            @for (_ of _utils.arrayOf(8); track $index) {
-                <div class="border-bottom item-list">
-                    <div class="item-header">
-                        <div style="display: flex; gap: 0.5rem;">
+        @for (_ of _utils.arrayOf(8); track $index) {
+        <div class="border-bottom item-list">
+            <div class="details">
+                <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1.5rem" />
+                <p-skeleton width="100%" height="1rem" />
+                <div class="item-header">
+                    <div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
                             <i class="pi pi-wallet"></i>
-                            <p-skeleton width="6rem" height="2rem" />
+                            <p-skeleton width="6rem" height="1.5rem" />
                         </div>
+                        <span style="font-size: small;">Ahorrado</span>
                     </div>
-                    <div class="item-body">
-                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                    </div>
-                    <div class="item-footer">
-                        <p-button disabled="true" icon="pi pi-download" label="Guardar" />
-                        <p-button disabled="true" icon="pi pi-upload" label="Retriar" />
-                        <p-button disabled="true" icon="pi pi-pencil" severity="secondary" />
-                        <p-button disabled="true" icon="pi pi-trash" severity="danger" />
+                    <div style="text-align: end;">
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <p-skeleton width="6rem" height="1.5rem" />
+                            <i class="pi pi-flag"></i>
+                        </div>
+                        <span style="font-size: small;">Meta</span>
                     </div>
                 </div>
-            }
+            </div>
+            <div class="item-footer">
+                <p-button disabled="true" icon="pi pi-download" label="Guardar" />
+                <p-button disabled="true" icon="pi pi-upload" label="Retriar" />
+                <p-button disabled="true" icon="pi pi-pencil" severity="secondary" />
+                <p-button disabled="true" icon="pi pi-trash" severity="danger" />
+            </div>
+        </div>
+        }
         }@else {
-            @for (saving of savings; track $index) {
-                <div class="border-bottom item-list">
-                    <div  (click)="details(saving)">
-                        <div class="item-header">
-                            <h3>
-                                <i class="pi pi-wallet"></i>
-                                {{saving.cantidad | currency}}
-                            </h3>
-                        </div>
-                        <div class="item-body">
-                            <span><strong>Nombre: </strong>{{saving.nombre}}</span>
-                            <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
-                        </div>
+        @for (saving of savings; track $index) {
+        <div class="border-bottom item-list">
+            <div (click)="details(saving)" class="details">
+                <h3>{{saving.nombre}}</h3>
+                <p-progressbar [value]="getProgress(saving)" [showValue]="false" />
+                <div class="item-header">
+                    <div>
+                        <h3>
+                            <i class="pi pi-wallet"></i>
+                            {{saving.cantidad | currency}}
+                        </h3>
+                        <span style="font-size: small;">Ahorrado</span>
                     </div>
-                    <div class="item-footer">
-                        <p-button (onClick)="goToNewMovement('deposito',saving)" icon="pi pi-download" label="Guardar" />
-                        <p-button (onClick)="goToNewMovement('retiro',saving)" icon="pi pi-upload" label="Retriar" />
-                        <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" />
-                        <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger" />
+                    <div style="text-align: end;">
+                        <h3>
+                            {{saving.meta | currency}}
+                            <i class="pi pi-flag"></i>
+                        </h3>
+                        <span style="font-size: small;">Meta</span>
                     </div>
                 </div>
-            }
+            </div>
+            <div class="item-footer">
+                <p-button (onClick)="goToNewMovement('deposito',saving)" icon="pi pi-download" label="Guardar" />
+                <p-button (onClick)="goToNewMovement('retiro',saving)" icon="pi pi-upload" label="Retriar" />
+                <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" />
+                <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger" />
+            </div>
+        </div>
+        }
         }
     </ng-template>
     <ng-template #grid let-savings>
         <div class="grid-container">
             @if (loading$()) {
-                @for (_ of _utils.arrayOf(8); track $index) {
-                    <p-card [style]="{height: '100%'}">
-                        <div class="item-header">
-                            <div style="display: flex; gap: 0.5rem;">
+            @for (_ of _utils.arrayOf(8); track $index) {
+            <p-card [style]="{height: '100%'}">
+                <div class="details">
+                    <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1.5rem" />
+                    <p-skeleton width="100%" height="1rem" />
+                    <div class="item-header">
+                        <div>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
                                 <i class="pi pi-wallet"></i>
-                                <p-skeleton width="6rem" height="2rem" />
+                                <p-skeleton width="6rem" height="1.5rem" />
                             </div>
+                            <span style="font-size: small;">Ahorrado</span>
                         </div>
-                        <div class="item-body">
-                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                        <div style="text-align: end;">
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <p-skeleton width="6rem" height="1.5rem" />
+                                <i class="pi pi-flag"></i>
+                            </div>
+                            <span style="font-size: small;">Meta</span>
                         </div>
-                        <div class="item-footer">
-                            <p-button icon="pi pi-download" disabled="true" label="Guardar" size="small" />
-                            <p-button icon="pi pi-upload" disabled="true" label="Retriar" size="small" />
-                            <p-button icon="pi pi-pencil" disabled="true" severity="secondary" size="small" />
-                            <p-button icon="pi pi-trash" disabled="true" severity="danger" size="small" />
-                        </div>
-                    </p-card>
-                }
+                    </div>
+                </div>
+                <div class="item-footer">
+                    <p-button icon="pi pi-download" disabled="true" label="Guardar" size="small" />
+                    <p-button icon="pi pi-upload" disabled="true" label="Retriar" size="small" />
+                    <p-button icon="pi pi-pencil" disabled="true" severity="secondary" size="small" />
+                    <p-button icon="pi pi-trash" disabled="true" severity="danger" size="small" />
+                </div>
+            </p-card>
+            }
             }@else {
-                @for (saving of savings; track $index) {
-                    <p-card [style]="{height: '100%'}">
-                        <div (click)="details(saving)">
-                            <div class="item-header">
-                                <h3>
-                                    <i class="pi pi-wallet"></i>
-                                    {{saving.cantidad | currency}}
-                                </h3>
-                            </div>
-                            <div class="item-body">
-                                <span><strong>Nombre: </strong>{{saving.nombre}}</span>
-                                <span><strong>Meta:</strong> {{saving.meta | currency }}</span>
-                            </div>
+            @for (saving of savings; track $index) {
+            <p-card [style]="{height: '100%'}">
+                <div (click)="details(saving)" class="details">
+                    <h3>{{saving.nombre}}</h3>
+                    <p-progressbar [value]="getProgress(saving)" [showValue]="false" />
+                    <div class="item-header">
+                        <div>
+                            <h3>
+                                <i class="pi pi-wallet"></i>
+                                {{saving.cantidad | currency}}
+                            </h3>
+                            <span style="font-size: small;">Ahorrado</span>
                         </div>
-                        <div class="item-footer">
-                            <p-button (onClick)="goToNewMovement('deposito',saving)" icon="pi pi-download" label="Guardar" size="small" />
-                            <p-button (onClick)="goToNewMovement('retiro',saving)" icon="pi pi-upload" label="Retiar" size="small" />
-                            <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" size="small" />
-                            <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger" size="small" />
+                        <div style="text-align: end;">
+                            <h3>
+                                {{saving.meta | currency}}
+                                <i class="pi pi-flag"></i>
+                            </h3>
+                            <span style="font-size: small;">Meta</span>
                         </div>
-                    </p-card>
-                }
+                    </div>
+                </div>
+                <div class="item-footer">
+                    <p-button (onClick)="goToNewMovement('deposito',saving)" icon="pi pi-download" label="Guardar"
+                        size="small" />
+                    <p-button (onClick)="goToNewMovement('retiro',saving)" icon="pi pi-upload" label="Retiar"
+                        size="small" />
+                    <p-button (onClick)="openDialog(saving)" icon="pi pi-pencil" severity="secondary" size="small" />
+                    <p-button (onClick)="confirmDelete($event, saving)" icon="pi pi-trash" severity="danger"
+                        size="small" />
+                </div>
+            </p-card>
+            }
             }
         </div>
     </ng-template>
 </p-dataview>
 
-<p-dialog header="{{dialogIsNew ? 'Nuevo ahorro' : 'Editar ahorro'}}" [modal]="true" closable="false" [(visible)]="dialogFormVisible" [style]="{ width: '25rem' }">
+<p-dialog header="{{dialogIsNew ? 'Nuevo ahorro' : 'Editar ahorro'}}" [modal]="true" closable="false"
+    [(visible)]="dialogFormVisible" [style]="{ width: '25rem' }">
     <form class="dialog-content" [formGroup]="savingForm">
         <span class="dialog-subtitle">Ingresa la información solicitada</span>
         <div class="dialog-input">
             <label for="nombre" class="dialog-labels">Nombre</label>
             <div style="display: flex; flex-direction: column;">
                 <input pInputText id="nombre" autocomplete="off" formControlName="nombre"
-                class="{{savingForm.controls.nombre.invalid && savingForm.controls.nombre.touched ? 'ng-invalid ng-dirty' : ''}}"/>
+                    class="{{savingForm.controls.nombre.invalid && savingForm.controls.nombre.touched ? 'ng-invalid ng-dirty' : ''}}" />
                 @if (savingForm.controls.nombre.getError('required') && savingForm.controls.nombre.touched) {
-                    <small class="label-error">Este campo es requerido</small>
+                <small class="label-error">Este campo es requerido</small>
                 }
             </div>
         </div>
         <div class="dialog-input">
             <label for="lastname" class="dialog-labels">Meta</label>
             <div style="display: flex; flex-direction: column;">
-                <p-inputnumber inputId="lastname" mode="currency" currency="MXN" locale="es-MX" autocomplete="off" formControlName="meta"
-                class="{{savingForm.controls.meta.invalid && savingForm.controls.meta.touched ? 'ng-invalid ng-dirty' : ''}}" />
+                <p-inputnumber inputId="lastname" mode="currency" currency="MXN" locale="es-MX" autocomplete="off"
+                    formControlName="meta"
+                    class="{{savingForm.controls.meta.invalid && savingForm.controls.meta.touched ? 'ng-invalid ng-dirty' : ''}}" />
                 @if (savingForm.controls.meta.invalid && savingForm.controls.meta.touched) {
-                    <small class="label-error">Este campo es requerido</small>
+                <small class="label-error">Este campo es requerido</small>
                 }
             </div>
         </div>
         <div class="dialog-buttons">
             <p-button label="Cancelar" severity="secondary" (click)="cancelDialog()" />
-            <p-button label="{{dialogIsNew ? 'Agregar' : 'Modificar'}}" [loading]="loading$()" (click)="submitDialog()" />
+            <p-button label="{{dialogIsNew ? 'Agregar' : 'Modificar'}}" [loading]="loading$()"
+                (click)="submitDialog()" />
         </div>
     </form>
 </p-dialog>

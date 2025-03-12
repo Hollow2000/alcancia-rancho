@@ -14,6 +14,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressBarModule } from 'primeng/progressbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Saving } from '../../../core/interfaces/saving.interface';
@@ -34,7 +35,8 @@ import { FirebaseError } from '@angular/fire/app';
     ReactiveFormsModule,
     DialogModule,
     InputTextModule,
-    InputNumberModule
+    InputNumberModule,
+    ProgressBarModule
   ],
   templateUrl: './savings.component.html',
   styleUrl: './savings.component.css',
@@ -97,6 +99,10 @@ export class SavingsComponent {
       total += Number(saving.cantidad);
     });
     return total;
+  }
+
+  getProgress(saving: Saving): number {
+    return saving.cantidad! * 100 / saving.meta;
   }
 
   goToNewMovement(type: 'deposito' | 'retiro', saving: Saving) {

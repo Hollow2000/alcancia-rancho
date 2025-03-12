@@ -43,6 +43,12 @@ h4{
     padding: 1rem;
 }
 
+.details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .item-header{
     display: flex;
     flex-direction: row;
