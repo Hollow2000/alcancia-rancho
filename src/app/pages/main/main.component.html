@@ -1,11 +1,12 @@
-<p-menubar class="menu" [model]="items" breakpoint="705px">
-        <div class="account">
+<p-menubar class="menu" [model]="itemsNavigator" breakpoint="705px">
+        <div class="account" (click)="menu.toggle($event)">
                 <h4>Hola, {{userName}}</h4>
                 @if (userImage) {
                         <p-avatar [image]="userImage" shape="circle" />
                 }@else {
                         <p-avatar icon="pi pi-user" shape="circle" />
                 }
+                <p-menu #menu [model]="itemsAccount" [popup]="true" [style]="{left: '0'}" />
         </div>
 </p-menubar>
 <router-outlet/>

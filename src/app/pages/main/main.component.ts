@@ -4,12 +4,13 @@ import { AuthService } from '../../services/auth.service';
 import { FirebaseError } from '@angular/fire/app';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Menubar } from 'primeng/menubar';
+import { Menu } from 'primeng/menu';
 import { AvatarModule } from 'primeng/avatar';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [RouterOutlet, Menubar, AvatarModule],
+  imports: [RouterOutlet, Menubar, AvatarModule, Menu],
   providers: [],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
@@ -18,10 +19,11 @@ export class MainComponent {
   private readonly router = inject(Router);
   private readonly _authService = inject(AuthService);
   private readonly _messageService = inject(MessageService);
-  items: MenuItem[] | undefined;
+  itemsNavigator: MenuItem[] | undefined;
+  itemsAccount: MenuItem[] | undefined;
 
   ngOnInit() {
-    this.items = [
+    this.itemsNavigator = [
       {
         label: 'Ahorros',
         icon: 'pi pi-wallet',
@@ -30,7 +32,7 @@ export class MainComponent {
       {
         label: 'Familiares',
         icon: 'pi pi-user',
-        command: () => {this.router.navigateByUrl('familia')}
+        command: () => { this.router.navigateByUrl('familia') }
       },
       {
         label: 'Movimientos',
@@ -39,26 +41,37 @@ export class MainComponent {
           {
             label: 'Todos',
             icon: 'pi pi-arrow-right-arrow-left',
-            command: () => {this.router.navigateByUrl('movimientos')}
+            command: () => { this.router.navigateByUrl('movimientos') }
           },
           {
             label: 'Retiros',
             icon: 'pi pi-upload',
-            command: () => {this.router.navigateByUrl('movimientos?type=retiro')}
+            command: () => { this.router.navigateByUrl('movimientos?type=retiro') }
           },
           {
             label: 'Depositos',
             icon: 'pi pi-download',
-            command: () => {this.router.navigateByUrl('movimientos?type=deposito')}
+            command: () => { this.router.navigateByUrl('movimientos?type=deposito') }
           }
         ]
+      }
+    ];
+
+    this.itemsAccount = [
+      {
+        label: 'Modificar nombre',
+        icon: 'pi pi-pencil'
+      },
+      {
+        label: 'Cambiar imagen',
+        icon: 'pi pi-user'
       },
       {
         label: 'Cerrar sesión',
         icon: 'pi pi-sign-out',
-        command: () => {this.logOut()}
+        command: () => { this.logOut() }
       }
-    ]
+    ];
   }
 
   get userName() {

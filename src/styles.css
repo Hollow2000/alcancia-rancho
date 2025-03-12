@@ -12,6 +12,10 @@ html, body {
     --error-light: #dc2626;
 }
 
+.p-progressbar-determinate .p-progressbar-value {
+    border-radius: var(--p-progressbar-border-radius); /* Ajusta el valor según lo que necesites */
+}
+
 /* Modo claro */
 @media (prefers-color-scheme: light) {
     :root{
