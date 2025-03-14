@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperación de Contraseña - Alcancía del Rancho</title>
+    <style>
+        /* Estilo para los temas claro y oscuro */
+        :root {
+            --primary-color: #34d399;
+            /* Color principal */
+            --background-light: #ffffff;
+            /* Fondo claro */
+            --background-dark: #121212;
+            /* Fondo oscuro */
+            --text-light: #000000;
+            /* Texto claro */
+            --text-dark: #ffffff;
+            /* Texto oscuro */
+        }
+
+        /* Estilo base */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-light);
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Estilo para modo oscuro */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: var(--background-dark);
+                color: var(--text-dark);
+            }
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-light);
+            border-radius: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .email-container {
+                background-color: var(--background-dark);
+            }
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #2bbf84;
+            /* Color al pasar el ratón */
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .footer a {
+            color: var(--text-light);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .footer {
+                color: var(--text-dark);
+            }
+
+            .footer a {
+                color: var(--text-dark);
+            }
+        }
+
+        /* Estilo para el icono */
+        .email-icon {
+            display: block;
+            margin: 0 auto 20px;
+            width: 60px;
+            /* Puedes ajustar el tamaño */
+            height: auto;
+            animation: bounce 5s ease infinite;
+            /* Animación de rebote */
+        }
+
+        /* Animación de rebote */
+        @keyframes bounce {
+            0% {
+                transform: rotateY(0deg);
+            }
+
+            25% {
+                transform: rotateY(720deg);
+                /* Gira 2 vueltas en el sentido horario */
+            }
+
+            50% {
+                transform: rotateY(720deg);
+                /* Mantiene la posición después de las 2 vueltas */
+            }
+
+            75% {
+                transform: rotateY(0deg);
+                /* Gira 2 vueltas en sentido contrario */
+            }
+
+            100% {
+                transform: rotateY(0deg);
+                /* Mantiene la posición después de las 2 vueltas en sentido contrario */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <!-- Icono de la aplicación -->
+        <img src="https://img.icons8.com/officexs/80/password.png" alt="Alcancía del Rancho" class="email-icon">
+
+        <h1>Recuperación de Contraseña</h1>
+        <p>Hola, <strong>[Correo Electrónico]</strong></p>
+        <p>Has solicitado recuperar tu contraseña para la aplicación <strong>Alcancía del Rancho</strong>. Haz clic en
+            el siguiente botón para restablecerla:</p>
+        <div class="button-container">
+            <a href="[LINK_DE_RECUPERACION]" class="button">Restablecer Contraseña</a>
+        </div>
+        <p>Si no has solicitado este cambio, por favor ignora este mensaje.</p>
+
+        <div class="footer">
+            <p>&copy; 2025 Alcancía del Rancho. Todos los derechos reservados.</p>
+            <p>Icono obtenido de <a href="https://iconos8.es/">Icons8</a></p>
+        </div>
+    </div>
+</body>
+
+</html>
