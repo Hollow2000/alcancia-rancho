@@ -3,125 +3,130 @@
         <div class="header">
             <h3>{{filterType?.nombre ?? 'Movimientos'}} {{filterSaving ? 'de '+filterSaving.nombre :'recientes'}}</h3>
             @if (layout === 'grid') {
-                <div class="controls">
-                    @if (filterSaving) {
-                        @if(filterType?.id === 'retiro' || !filterType){
-                            <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Retirar" size="small" />
-                        }
-                        @if(filterType?.id === 'deposito' || !filterType){
-                            <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Guardar" size="small" />
-                        }
-                    }
-                    <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
-                        optionLabel="nombre" placeholder="Filtrar por tipo" />
-                    <p-select size="small" (onChange)="notifyFilter()" [options]="allSavings$()"
-                        [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre"
-                        placeholder="Filtrar por ahorro" />
-                </div>
+            <div class="controls">
+                @if (filterSaving) {
+                @if(filterType?.id === 'retiro' || !filterType){
+                <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Retirar" size="small" />
+                }
+                @if(filterType?.id === 'deposito' || !filterType){
+                <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Guardar" size="small" />
+                }
+                }
+                <p-button [badge]="numFiltersON" (onClick)="filterOP.toggle($event)" icon="pi {{filterSaving || filterType ? 'pi-filter-fill' : 'pi-filter'}}" [rounded]="true" [text]="true" />
+            </div>
             }
         </div>
         @if (layout === 'list') {
         <div class="header-bottom">
-                <div class="controls">
-                    @if (filterSaving) {
-                        @if(filterType?.id === 'retiro' || !filterType){
-                            <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Retirar" size="small" />
-                        }
-                        @if(filterType?.id === 'deposito' || !filterType){
-                            <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Guardar" size="small" />
-                        }
-                    }
-                    <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType" showClear="true" variant="filled"
-                        optionLabel="nombre" placeholder="Filtrar por tipo" />
-                    <p-select size="small" (onChange)="notifyFilter()" [options]="allSavings$()"
-                        [(ngModel)]="filterSaving" showClear="true" variant="filled" optionLabel="nombre"
-                        placeholder="Filtrar por ahorro" />
-                </div>
+            <div class="controls">
+                @if (filterSaving) {
+                @if(filterType?.id === 'retiro' || !filterType){
+                <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Retirar" size="small" />
+                }
+                @if(filterType?.id === 'deposito' || !filterType){
+                <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Guardar" size="small" />
+                }
+                }
             </div>
+            <p-button [badge]="numFiltersON" (onClick)="filterOP.toggle($event)" icon="pi {{filterSaving || filterType ? 'pi-filter-fill' : 'pi-filter'}}" [rounded]="true" [text]="true" />
+        </div>
         }
     </ng-template>
     <ng-template #list let-movements>
         @if (loading$()) {
-            @for (_ of _utils.arrayOf(6); track $index) {
-                <div class="border-bottom item-list">
-                    <div class="item-header">
-                        <div style="display: flex; gap: 0.5rem;">
-                            <p-skeleton width="1rem" height="1rem" shape="circle" size="2rem" />
-                            <p-skeleton width="6rem" height="2rem" />
-                        </div>
-                        <p-skeleton width="10rem" height="2rem" />
-                    </div>
-                    <div class="item-body">
-                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                        <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                    </div>
+        @for (_ of _utils.arrayOf(6); track $index) {
+        <div class="border-bottom item-list">
+            <div class="item-header">
+                <div style="display: flex; gap: 0.5rem;">
+                    <p-skeleton width="1rem" height="1rem" shape="circle" size="2rem" />
+                    <p-skeleton width="6rem" height="2rem" />
                 </div>
-            } 
+                <p-skeleton width="10rem" height="2rem" />
+            </div>
+            <div class="item-body">
+                <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+            </div>
+        </div>
+        }
         }@else {
-            @for (movement of movements; track $index) {
-                <div class="border-bottom item-list">
-                    <div class="item-header">
-                        <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
-                            <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i>
-                            {{movement.cantidad | currency}}
-                        </h3>
-                        <h3>{{movement.fecha}}</h3>
-                    </div>
-                    <div class="item-body">
-                        <span>
-                            <strong>Nombre del ahorro: </strong>
-                            <span class="{{isActive(movement) ? '' : 'saving-disable'}}">{{getSavingName(movement.idAhorros)}}</span>
-                            {{isActive(movement) ? '' : '(Inactivo)'}}
-                        </span>
-                        <span><strong>{{isDeposit(movement) ? 'Aportado por:' : 'Retirado por:'}}</strong> {{movement.familiar}}</span>
-                        <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
-                    </div>
-                </div>
-            } 
+        @for (movement of movements; track $index) {
+        <div class="border-bottom item-list">
+            <div class="item-header">
+                <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
+                    <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i>
+                    {{movement.cantidad | currency}}
+                </h3>
+                <h3>{{movement.fecha}}</h3>
+            </div>
+            <div class="item-body">
+                <span>
+                    <strong>Nombre del ahorro: </strong>
+                    <span
+                        class="{{isActive(movement) ? '' : 'saving-disable'}}">{{getSavingName(movement.idAhorros)}}</span>
+                    {{isActive(movement) ? '' : '(Inactivo)'}}
+                </span>
+                <span><strong>{{isDeposit(movement) ? 'Aportado por:' : 'Retirado por:'}}</strong>
+                    {{movement.familiar}}</span>
+                <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
+            </div>
+        </div>
+        }
         }
     </ng-template>
     <ng-template #grid let-movements>
         <div class="grid-container">
             @if (loading$()) {
-                @for (_ of _utils.arrayOf(6); track $index) {
-                    <p-card [style]="{height: '100%'}">
-                        <div class="item-header">
-                            <div style="display: flex; gap: 0.5rem;">
-                                <p-skeleton width="1rem" height="1rem" shape="circle" size="2rem" />
-                                <p-skeleton width="6rem" height="2rem" />
-                            </div>
-                            <p-skeleton width="10rem" height="2rem" />
-                        </div>
-                        <div class="item-body">
-                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                            <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
-                        </div>
-                    </p-card>
-                }
+            @for (_ of _utils.arrayOf(6); track $index) {
+            <p-card [style]="{height: '100%'}">
+                <div class="item-header">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <p-skeleton width="1rem" height="1rem" shape="circle" size="2rem" />
+                        <p-skeleton width="6rem" height="2rem" />
+                    </div>
+                    <p-skeleton width="10rem" height="2rem" />
+                </div>
+                <div class="item-body">
+                    <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                    <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                    <p-skeleton [width]="_utils.randomNumberInt(6,15).toString() + 'rem'" height="1rem" />
+                </div>
+            </p-card>
+            }
             }@else {
-                @for (movement of movements; track $index) {
-                    <p-card [style]="{height: '100%'}">
-                        <div class="item-header">
-                            <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
-                                <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i> 
-                                {{movement.cantidad | currency}}
-                            </h3>
-                            <h3>{{movement.fecha}}</h3>
-                        </div>
-                        <div class="item-body">
-                            <span>
-                                <strong>Nombre del ahorro: </strong>
-                                <span class="{{isActive(movement) ? '' : 'saving-disable'}}">{{getSavingName(movement.idAhorros)}}</span>
-                                {{isActive(movement) ?'' : '(Inactivo)'}}
-                            </span>
-                            <span><strong>{{isDeposit(movement) ? 'Aportado por:' : 'Retirado por:'}}</strong> {{movement.familiar}}</span>
-                            <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
-                        </div>
-                    </p-card>
-                }
+            @for (movement of movements; track $index) {
+            <p-card [style]="{height: '100%'}">
+                <div class="item-header">
+                    <h3 class="{{isDeposit(movement) ? 'deposit' : 'out'}}">
+                        <i class="pi {{isDeposit(movement) ? 'pi-arrow-circle-down' : 'pi-arrow-circle-up'}}"></i>
+                        {{movement.cantidad | currency}}
+                    </h3>
+                    <h3>{{movement.fecha}}</h3>
+                </div>
+                <div class="item-body">
+                    <span>
+                        <strong>Nombre del ahorro: </strong>
+                        <span
+                            class="{{isActive(movement) ? '' : 'saving-disable'}}">{{getSavingName(movement.idAhorros)}}</span>
+                        {{isActive(movement) ?'' : '(Inactivo)'}}
+                    </span>
+                    <span><strong>{{isDeposit(movement) ? 'Aportado por:' : 'Retirado por:'}}</strong>
+                        {{movement.familiar}}</span>
+                    <span><strong>Descripción: </strong>{{movement.descripcion}}</span>
+                </div>
+            </p-card>
+            }
             }
         </div>
     </ng-template>
 </p-dataview>
+
+<p-popover #filterOP>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <p-select size="small" (onChange)="notifyFilter()" [options]="filterTypeOptions" [(ngModel)]="filterType"
+            showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por tipo" />
+        <p-select size="small" (onChange)="notifyFilter()" [options]="allSavings$()" [(ngModel)]="filterSaving"
+            showClear="true" variant="filled" optionLabel="nombre" placeholder="Filtrar por ahorro" />
+    </div>
+</p-popover>

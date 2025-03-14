@@ -8,6 +8,10 @@
         </div>
         <div class="header-bottom">
             <h4>Total de ahorro: {{totalSaving | currency}}</h4>
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+                <input type="text" pInputText placeholder="Buscar" pSize="small" [(ngModel)]="filter" (input)="onFilter()"/>
+            </p-iconfield>
         </div>
     </ng-template>
     <ng-template #list let-savings>

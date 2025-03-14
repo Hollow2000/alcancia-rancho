@@ -20,6 +20,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Saving } from '../../../core/interfaces/saving.interface';
 import { enviroment } from '../../../env/enviroment';
 import { FirebaseError } from '@angular/fire/app';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-savings',
@@ -36,7 +38,9 @@ import { FirebaseError } from '@angular/fire/app';
     DialogModule,
     InputTextModule,
     InputNumberModule,
-    ProgressBarModule
+    ProgressBarModule,
+    IconFieldModule, 
+    InputIconModule,
   ],
   templateUrl: './savings.component.html',
   styleUrl: './savings.component.css',
@@ -52,6 +56,7 @@ export class SavingsComponent {
 
   savings$: Signal<Saving[]> = signal([]) ;
   loading$ = this._savingService.loading$;
+  filter = '';
 
   private subscription?: Subscription;
 
@@ -149,6 +154,14 @@ export class SavingsComponent {
       }
     });
   }
+
+  onFilter() {
+      this.savings$ = signal<Saving[]>(
+        this._savingService.getSavings()().filter(saving =>
+          saving.nombre.toLowerCase().includes(this.filter.toLowerCase())
+        )
+      );
+    }
 
   async submitDialog() {
     this.savingForm.markAllAsTouched();

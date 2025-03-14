@@ -19,13 +19,14 @@ import { Saving } from '../../../core/interfaces/saving.interface';
 import { FilterSaving } from '../../../core/enums/saving-filter.enum';
 import { MessageService } from 'primeng/api';
 import { FirebaseError } from '@angular/fire/app';
+import { PopoverModule } from 'primeng/popover';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     DataViewModule, SelectModule, FormsModule, CardModule,
-    Button ,CurrencyPipe, Skeleton
+    Button ,CurrencyPipe, Skeleton, PopoverModule
   ],
   templateUrl: './movements.component.html',
   styleUrl: './movements.component.css'
@@ -88,6 +89,13 @@ export class MovementsComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  get numFiltersON(): string {
+    let count = 0;
+    if (this.filterSaving) {count++;}
+    if (this.filterType) {count++;}
+    return count > 0 ? count.toString() : '';
   }
 
   goToNewMovement(type: 'deposito'|'retiro', saving: Saving){
