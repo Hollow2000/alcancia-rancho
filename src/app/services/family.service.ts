@@ -1,5 +1,5 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Firestore, collection, collectionData, deleteDoc, doc, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, deleteDoc, doc, getDoc, orderBy, query, setDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Utils } from '../Utils/utils';
@@ -31,7 +31,10 @@ export class FamilyService {
       return this.mockFamifly$;
     }
 
-    const document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<Family[]>;
+    const document = collectionData(
+      query(this._collectionRef,orderBy("nombres", "desc")), 
+      { idField: 'id' }
+    ) as Observable<Family[]>;
 
     document.subscribe({
       next: (data) => {

@@ -1,6 +1,6 @@
 import { inject, Injectable, signal, Signal } from '@angular/core';
 import { enviroment } from '../env/enviroment';
-import { Firestore, Query, collection, collectionData, doc, getDoc, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Query, collection, collectionData, doc, getDoc, orderBy, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Utils } from '../Utils/utils';
 import { Mocks } from '../core/constants/mocks';
@@ -47,18 +47,17 @@ export class SavingService {
     let q: Query;
     switch (filter) {
       case FilterSaving.ALL:
-        document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<Saving[]>;
+        q = query(this._collectionRef, orderBy("nombre", "desc"));
         break;
       case FilterSaving.ENABLE:
-        q = query(this._collectionRef, where('activo', '==', true));
-        document = collectionData(q, { idField: 'id' }) as Observable<Saving[]>;
+        q = query(this._collectionRef, where('activo', '==', true), orderBy("nombre", "desc"));
         break;
       case FilterSaving.DISABLE:
-        q = query(this._collectionRef, where('activo', '==', false));
-        document = collectionData(q, { idField: 'id' }) as Observable<Saving[]>;
+        q = query(this._collectionRef, where('activo', '==', false), orderBy("nombre", "desc"));
         break;
-    }
-
+      }
+      
+    document = collectionData(q, { idField: 'id' }) as Observable<Saving[]>;
     document.subscribe({
       next: (data) => {
         this.savings$.set(data);

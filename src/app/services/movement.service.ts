@@ -1,5 +1,5 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Firestore, Timestamp, collection, collectionData, doc, query, setDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, collection, collectionData, doc, orderBy, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Utils } from '../Utils/utils';
@@ -53,17 +53,29 @@ export class MovementService {
       const q = query(
         this._collectionRef, 
         where('idAhorros', '==', filterSaving.id),
-        where('tipo', '==', filterType.id)
+        where('tipo', '==', filterType.id),
+        orderBy("fecha", "desc")
       );
       document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     } else if (filterType){
-      const q = query(this._collectionRef, where('tipo', '==', filterType.id));
+      const q = query(
+        this._collectionRef, 
+        where('tipo', '==', filterType.id), 
+        orderBy("fecha", "desc")
+      );
       document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     } else if (filterSaving){
-      const q = query(this._collectionRef, where('idAhorros', '==', filterSaving.id));
+      const q = query(
+        this._collectionRef, 
+        where('idAhorros', '==', filterSaving.id), 
+        orderBy("fecha", "desc")
+      );
       document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     } else {
-      document = collectionData(this._collectionRef, { idField: 'id' }) as Observable<MovementDTO[]>;
+      const q = query(
+        this._collectionRef,orderBy("fecha", "desc")
+      );
+      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     }
     
     document.subscribe({
