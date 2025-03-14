@@ -6,5 +6,8 @@ export const authRoutes: Routes = [
     },
     {
         path: 'register', loadComponent: () => import('./singup/singup.component')
+    },
+    {
+        path: 'recuperar-contrasena', loadComponent: () => import('./recover-password/recover-password.component')
     }
 ]

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User, UserCredential } from '@angular/fire/auth';
+import { Auth, authState, createUserWithEmailAndPassword, GoogleAuthProvider, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile, User, UserCredential } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { LoaderService } from './loader.service';
@@ -15,6 +15,10 @@ export class AuthService {
   private readonly _loaderService = inject(LoaderService);
   private readonly _familyService = inject(FamilyService);
   mockIsLogged = enviroment.isLogged;
+
+  constructor() {
+    this._auth.useDeviceLanguage();
+  }
 
   get authState$(): Observable<User | null> {
     return authState(this._auth);
@@ -67,6 +71,17 @@ export class AuthService {
       this._loaderService.hide()
       throw error;
     })
+  }
+
+  async recoverPassword(email: string): Promise<void> {
+    this._loaderService.show();
+    try {
+      await sendPasswordResetEmail(this._auth, email);
+    } catch (error) {
+      throw error;
+    }finally {
+      this._loaderService.hide();
+    }
   }
 
   async updateName(name: string) {
