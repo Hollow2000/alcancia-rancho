@@ -32,7 +32,7 @@ export default class RecoverPasswordComponent {
       try {
         await this._authService.recoverPassword(this.emailForm.value.email!);
         this._messageService.add({
-          severity: 'successful',
+          severity: 'success',
           summary: 'Correo de recuperación enviado correctamente',
           detail: 'Ve a tu correo electronico y sigue las instrucciones. (Verifica la bandeja de spam)'
         });

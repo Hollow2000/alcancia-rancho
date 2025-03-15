@@ -32,7 +32,7 @@ export class FamilyService {
     }
 
     const document = collectionData(
-      query(this._collectionRef,orderBy("nombres", "desc")), 
+      query(this._collectionRef,orderBy("nombres", "asc")), 
       { idField: 'id' }
     ) as Observable<Family[]>;
 
@@ -110,7 +110,7 @@ export class FamilyService {
         nombres: pepole.nombres,
         apellidos: pepole.apellidos,
         admin: pepole.admin,
-        foto: pepole.foto
+        foto: pepole.foto ?? null
       });
     } catch (error) {
       throw error;

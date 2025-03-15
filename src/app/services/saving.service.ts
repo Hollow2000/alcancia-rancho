@@ -47,13 +47,13 @@ export class SavingService {
     let q: Query;
     switch (filter) {
       case FilterSaving.ALL:
-        q = query(this._collectionRef, orderBy("nombre", "desc"));
+        q = query(this._collectionRef, orderBy("nombre", "asc"));
         break;
       case FilterSaving.ENABLE:
-        q = query(this._collectionRef, where('activo', '==', true), orderBy("nombre", "desc"));
+        q = query(this._collectionRef, where('activo', '==', true), orderBy("nombre", "asc"));
         break;
       case FilterSaving.DISABLE:
-        q = query(this._collectionRef, where('activo', '==', false), orderBy("nombre", "desc"));
+        q = query(this._collectionRef, where('activo', '==', false), orderBy("nombre", "asc"));
         break;
       }
       
