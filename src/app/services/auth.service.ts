@@ -24,6 +24,15 @@ export class AuthService {
     return authState(this._auth);
   }
 
+  async isAdmin(): Promise<boolean> {
+    if (this._auth.currentUser?.uid) {
+      const familiar = await this._familyService.getFamily(this._auth.currentUser?.uid)
+      return familiar?.admin ?? false;
+    } else {
+      return false;
+    }
+  }
+
   async logOut(): Promise<void> {
     this._loaderService.show()
     if (enviroment.mockUp) {

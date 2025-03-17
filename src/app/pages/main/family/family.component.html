@@ -2,7 +2,9 @@
     <ng-template #header>
         <div class="header">
             <h3>Familiares registrados</h3>
-            <p-button label="Nuevo familiar" (onClick)="dialogFormVisible = true; dialogIsNew = true;" />
+            @if (isAdmin | async) {
+                <p-button label="Nuevo familiar" (onClick)="dialogFormVisible = true; dialogIsNew = true;" />
+            }
         </div>
         <div class="header">
             <p-iconfield>
@@ -37,10 +39,12 @@
                         <h4>{{pepole.nombres}} {{pepole.apellidos}}</h4>
                         @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
                     </div>
-                    <div class="item-controls">
-                        <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
-                        <p-button (onClick)="confirmDelete($event,pepole)" icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
-                    </div>
+                    @if (isAdmin | async) {
+                        <div class="item-controls">
+                            <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" rounded="true" [style]="{width:'30px', height:'30px'}"/>
+                            <p-button (onClick)="confirmDelete($event,pepole)" icon="pi pi-trash" severity="danger" rounded="true" [style]="{width:'30px', height:'30px'}" />
+                        </div>
+                    }
                 </div>
             } 
         }
@@ -72,10 +76,12 @@
                             <h4>{{pepole.nombres}} {{pepole.apellidos}}</h4>
                             @if (pepole.admin) {<i class="pi pi-verified" style="color: green;"></i>}
                         </div>
-                        <div class="item-controls">
-                            <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
-                            <p-button (onClick)="confirmDelete($event,pepole)" icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
-                        </div>
+                        @if (isAdmin | async) {
+                            <div class="item-controls">
+                                <p-button (onClick)="openEditFamily(pepole)" icon="pi pi-pencil" label="Editar" rounded="true" size="small"/>
+                                <p-button (onClick)="confirmDelete($event,pepole)" icon="pi pi-trash" label="Eliminar" severity="danger" rounded="true" size="small" />
+                            </div>
+                        }
                     </p-card>
                 }
             }

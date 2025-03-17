@@ -1,5 +1,5 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Firestore, Timestamp, collection, collectionData, doc, orderBy, query, setDoc, where } from '@angular/fire/firestore';
+import { Firestore, Query, Timestamp, collection, collectionData, doc, orderBy, query, setDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Utils } from '../Utils/utils';
@@ -48,60 +48,61 @@ export class MovementService {
       }
     }
     
-    let document;
+    let q: Query;
     if (filterSaving && filterType){
-      const q = query(
+      q = query(
         this._collectionRef, 
         where('idAhorros', '==', filterSaving.id),
         where('tipo', '==', filterType.id),
         orderBy("fecha", "desc")
       );
-      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     } else if (filterType){
-      const q = query(
+      q = query(
         this._collectionRef, 
         where('tipo', '==', filterType.id), 
         orderBy("fecha", "desc")
       );
-      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     } else if (filterSaving){
-      const q = query(
+      q = query(
         this._collectionRef, 
         where('idAhorros', '==', filterSaving.id), 
         orderBy("fecha", "desc")
       );
-      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     } else {
-      const q = query(
+      q = query(
         this._collectionRef,orderBy("fecha", "desc")
       );
-      document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
     }
-    
-    document.subscribe({
-      next: (data) => {
-        this.movements$.set(
-          data.map((dto) => ({
-            id: dto.id,
-            cantidad: dto.cantidad,
-            tipo: dto.tipo,
-            descripcion: dto.descripcion,
-            fecha: dto.fecha.toDate().toLocaleDateString('es-ES', {
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric',
-            }),
-            familiar: dto.familiar,  // Obtener el ID del DocumentReference
-            idAhorros: dto.idAhorros
-          }))
-        );
-        this.loading$.set(false);
-      },
-      error: (err) => {
-        this.loading$.set(false);
-        console.error('Error al obtener la colección: ', err);
-      }
-    });
+    try {
+      const document = collectionData(q, { idField: 'id' }) as Observable<MovementDTO[]>;
+      document.subscribe({
+        next: (data) => {
+          this.movements$.set(
+            data.map((dto) => ({
+              id: dto.id,
+              cantidad: dto.cantidad,
+              tipo: dto.tipo,
+              descripcion: dto.descripcion,
+              fecha: dto.fecha.toDate().toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              }),
+              familiar: dto.familiar,  // Obtener el ID del DocumentReference
+              idAhorros: dto.idAhorros
+            }))
+          );
+          this.loading$.set(false);
+        },
+        error: (err) => {
+          this.loading$.set(false);
+          throw err;
+        }
+      });
+    } catch (error) {
+      this.loading$.set(false)
+      throw error;
+    }
 
     return this.movements$;
   }

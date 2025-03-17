@@ -18,6 +18,8 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Family } from '../../../core/interfaces/family.interface';
 import { FirebaseError } from '@angular/fire/app';
+import { AuthService } from '../../../services/auth.service';
+import { AsyncPipe } from '@angular/common';
 
 
 @Component({
@@ -25,7 +27,7 @@ import { FirebaseError } from '@angular/fire/app';
   standalone: true,
   imports: [
     Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, ConfirmPopupModule,
-    InputText, FormsModule, ReactiveFormsModule, Skeleton, DialogModule, CheckboxModule],
+    InputText, FormsModule, ReactiveFormsModule, Skeleton, DialogModule, CheckboxModule, AsyncPipe],
   templateUrl: './family.component.html',
   styleUrl: './family.component.css',
   providers: [ConfirmationService]
@@ -46,6 +48,8 @@ export class FamilyComponent implements OnInit, OnDestroy {
 
   dialogFormVisible = false;
   dialogIsNew = false;
+
+  isAdmin = inject(AuthService).isAdmin();
 
   familyFg = new FormGroup({
     id: new FormControl<string | null>(null),

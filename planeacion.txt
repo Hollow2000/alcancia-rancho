@@ -1,8 +1,9 @@
 >Verificar porque no se estan creando los familiares al registrarse.
 >Hacer las consultas de movimientos en orden de fechas
 >Hacer las consultas de ahorros y familiares en orden alfabetico.
--Corregir manejo de errores en consultas, usar los errores de indices para probar
--Solo permitir modificar a los admins.
+>Corregir manejo de errores en consultas, usar los errores de indices para probar
+>Solo permitir modificar a los admins.
+-Faltaria solo hacer un guard para la pagina de new movement
 -Crear seccion de mi cuenta para cambiar foto, nombre y cerrar sesion
 >Crear el flujo de recuperar contraseña
 -Crear la funcion para corroborar la clave secreta de forma remota.

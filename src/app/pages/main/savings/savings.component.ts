@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Component, inject, signal, Signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -22,6 +22,7 @@ import { enviroment } from '../../../env/enviroment';
 import { FirebaseError } from '@angular/fire/app';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-savings',
@@ -41,6 +42,7 @@ import { InputIconModule } from 'primeng/inputicon';
     ProgressBarModule,
     IconFieldModule, 
     InputIconModule,
+    AsyncPipe
   ],
   templateUrl: './savings.component.html',
   styleUrl: './savings.component.css',
@@ -64,6 +66,8 @@ export class SavingsComponent {
 
   dialogFormVisible = false;
   dialogIsNew = false;
+
+  isAdmin = inject(AuthService).isAdmin();
 
   savingForm = new FormGroup({
     id: new FormControl<string | null>(null),

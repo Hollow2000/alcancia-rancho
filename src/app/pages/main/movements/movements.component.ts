@@ -6,7 +6,7 @@ import { CardModule } from 'primeng/card';
 import { DeviceService } from '../../../services/device.service';
 import { Subscription } from 'rxjs';
 import { MovementService } from '../../../services/movement.service';
-import { CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { SavingService } from '../../../services/saving.service';
 import { Button } from 'primeng/button';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,13 +20,14 @@ import { FilterSaving } from '../../../core/enums/saving-filter.enum';
 import { MessageService } from 'primeng/api';
 import { FirebaseError } from '@angular/fire/app';
 import { PopoverModule } from 'primeng/popover';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     DataViewModule, SelectModule, FormsModule, CardModule,
-    Button ,CurrencyPipe, Skeleton, PopoverModule
+    Button ,CurrencyPipe, Skeleton, PopoverModule, AsyncPipe
   ],
   templateUrl: './movements.component.html',
   styleUrl: './movements.component.css'
@@ -46,6 +47,8 @@ export class MovementsComponent implements OnInit, OnDestroy {
   private subscription?: Subscription;
   
   layout: 'list' | 'grid' = 'list';
+
+  isAdmin = inject(AuthService).isAdmin();
   
   filterSaving?: Saving | undefined;
   allSavings$: Signal<Saving[]> = signal([]);

@@ -4,12 +4,12 @@
             <h3>{{filterType?.nombre ?? 'Movimientos'}} {{filterSaving ? 'de '+filterSaving.nombre :'recientes'}}</h3>
             @if (layout === 'grid') {
             <div class="controls">
-                @if (filterSaving) {
+                @if (filterSaving && isAdmin | async) {
                 @if(filterType?.id === 'retiro' || !filterType){
-                <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Retirar" size="small" />
+                <p-button (onClick)="goToNewMovement('retiro',filterSaving!)" label="Retirar" size="small" />
                 }
                 @if(filterType?.id === 'deposito' || !filterType){
-                <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Guardar" size="small" />
+                <p-button (onClick)="goToNewMovement('deposito',filterSaving!)" label="Guardar" size="small" />
                 }
                 }
                 <p-button [badge]="numFiltersON" (onClick)="filterOP.toggle($event)" icon="pi {{filterSaving || filterType ? 'pi-filter-fill' : 'pi-filter'}}" [rounded]="true" [text]="true" />
@@ -19,12 +19,12 @@
         @if (layout === 'list') {
         <div class="header-bottom">
             <div class="controls">
-                @if (filterSaving) {
+                @if (filterSaving && isAdmin | async) {
                 @if(filterType?.id === 'retiro' || !filterType){
-                <p-button (onClick)="goToNewMovement('retiro',filterSaving)" label="Retirar" size="small" />
+                <p-button (onClick)="goToNewMovement('retiro',filterSaving!)" label="Retirar" size="small" />
                 }
                 @if(filterType?.id === 'deposito' || !filterType){
-                <p-button (onClick)="goToNewMovement('deposito',filterSaving)" label="Guardar" size="small" />
+                <p-button (onClick)="goToNewMovement('deposito',filterSaving!)" label="Guardar" size="small" />
                 }
                 }
             </div>
