@@ -95,13 +95,18 @@ export class AuthService {
 
   async updateName(name: string) {
     if (this._auth.currentUser && !enviroment.mockUp) {
+      this._familyService.loading$.set(true)
       await updateProfile(this._auth.currentUser, { displayName: name })
+      this._familyService.loading$.set(false)
     }
-
   }
 
   getUserName() {
     return enviroment.mockUp ? 'Mock Up' : this._auth.currentUser?.displayName;
+  }
+
+  getUID() {
+    return enviroment.mockUp ? null : this._auth.currentUser?.uid;
   }
 
   getUserImage() {
@@ -133,7 +138,7 @@ export class AuthService {
     return user;
   }
 
-  private getNames(displayName: string | null) {
+  getNames(displayName: string | null) {
     if (!displayName) { return { name: 'Actualiza tu nombre', lastname: '' }; }
     const nameArray = displayName.split(' ');
     switch (nameArray.length) {

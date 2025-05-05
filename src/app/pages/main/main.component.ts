@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FirebaseError } from '@angular/fire/app';
@@ -6,11 +6,17 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Menubar } from 'primeng/menubar';
 import { Menu } from 'primeng/menu';
 import { AvatarModule } from 'primeng/avatar';
+import { DialogModule } from 'primeng/dialog';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { FamilyService } from '../../services/family.service';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [RouterOutlet, Menubar, AvatarModule, Menu],
+  imports: [RouterOutlet, Menubar, AvatarModule, Menu, DialogModule,
+    ReactiveFormsModule, ButtonModule, InputTextModule],
   providers: [],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
@@ -18,9 +24,18 @@ import { AvatarModule } from 'primeng/avatar';
 export class MainComponent {
   private readonly router = inject(Router);
   private readonly _authService = inject(AuthService);
+  private readonly _familyService = inject(FamilyService);
   private readonly _messageService = inject(MessageService);
   itemsNavigator: MenuItem[] | undefined;
   itemsAccount: MenuItem[] | undefined;
+
+  loading$ = this._familyService.loading$;
+  dialogFormNameVisible = false;
+  nameForm = new FormGroup({
+    uid: new FormControl<null | string>(this._authService.getUID() ?? null),
+    nombre: new FormControl<null | string>(this._authService.getNames(this._authService.getUserName() ?? null).name),
+    apellidos: new FormControl<null | string>(this._authService.getNames(this._authService.getUserName() ?? null).lastname),
+  });
 
   ngOnInit() {
     this.itemsNavigator = [
@@ -60,7 +75,8 @@ export class MainComponent {
     this.itemsAccount = [
       {
         label: 'Modificar nombre',
-        icon: 'pi pi-pencil'
+        icon: 'pi pi-pencil',
+        command: () => { this.openDialog(); }
       },
       {
         label: 'Cambiar imagen',
@@ -69,9 +85,24 @@ export class MainComponent {
       {
         label: 'Cerrar sesión',
         icon: 'pi pi-sign-out',
-        command: () => { this.logOut() }
+        command: () => { this.logOut(); }
       }
     ];
+  }
+
+  openDialog() {
+    this.dialogFormNameVisible = true;
+  }
+
+  cancelDialog() {
+    this.dialogFormNameVisible = false;
+  }
+
+  submitDialog() {
+    this.nameForm.markAllAsTouched();
+    if (this.nameForm.valid) {
+      this.updateName();
+    }
   }
 
   get userName() {
@@ -96,5 +127,25 @@ export class MainComponent {
         sticky: true
       });
     });
+  }
+
+  async updateName() {
+    try {
+      const { uid, nombre, apellidos } = this.nameForm.value;
+      await this._authService.updateName(`${nombre?.trim()} ${apellidos?.trim()}`);
+      await this._familyService.updateName(uid!, nombre!, apellidos!);
+      this.dialogFormNameVisible = false;
+      this._messageService.add({
+        summary: "Nombre actualizado exitosamente",
+        severity: "success"
+      });
+    } catch (error) {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error al actualizar tu nombre.',
+        detail: (error as FirebaseError).message,
+        sticky: true
+      });
+    }
   }
 }

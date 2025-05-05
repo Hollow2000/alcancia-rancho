@@ -92,6 +92,34 @@ export class FamilyService {
 
   }
 
+  async updateName(uid: string, nombre: string, apellidos: string) {
+    this.loading$.set(true);
+
+    if (enviroment.mockUp) {
+      await this._utils.delay(1);
+      const index = this.mockFamifly$().findIndex(f => f.id === uid);
+      const updatedList = this.mockFamifly$();
+      const family = updatedList[index];
+      family.nombres = nombre;
+      family.apellidos = apellidos;
+      updatedList[index] = family;
+      this.mockFamifly$.set(updatedList);
+      this.loading$.set(false);
+      return;
+    }
+
+    try {
+      await updateDoc(doc(this._collectionRef, uid), {
+        nombres: nombre,
+        apellidos: apellidos,
+      });
+    } catch (error) {
+      throw error;
+    } finally {
+      this.loading$.set(false);
+    }
+  }
+
   async updateFamily(pepole: Family): Promise<void> {
     this.loading$.set(true);
 

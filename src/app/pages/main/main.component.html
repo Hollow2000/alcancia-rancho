@@ -9,4 +9,36 @@
                 <p-menu #menu [model]="itemsAccount" [popup]="true" [style]="{left: '0'}" />
         </div>
 </p-menubar>
+
+<p-dialog header="Modificar nombre" [modal]="true" closable="false"
+    [(visible)]="dialogFormNameVisible" [style]="{ width: '25rem' }">
+    <form class="dialog-content" [formGroup]="nameForm">
+        <span class="dialog-subtitle">Ingresa la información solicitada</span>
+        <div class="dialog-input">
+            <label for="nombre" class="dialog-labels">Nombre</label>
+            <div style="display: flex; flex-direction: column;">
+                <input pInputText id="nombre" autocomplete="off" formControlName="nombre"
+                    class="{{nameForm.controls.nombre.invalid && nameForm.controls.nombre.touched ? 'ng-invalid ng-dirty' : ''}}" />
+                @if (nameForm.controls.nombre.getError('required') && nameForm.controls.nombre.touched) {
+                <small class="label-error">Este campo es requerido</small>
+                }
+            </div>
+        </div>
+        <div class="dialog-input">
+                <label for="apellidos" class="dialog-labels">Nombre</label>
+                <div style="display: flex; flex-direction: column;">
+                    <input pInputText id="apellidos" autocomplete="off" formControlName="apellidos"
+                        class="{{nameForm.controls.apellidos.invalid && nameForm.controls.apellidos.touched ? 'ng-invalid ng-dirty' : ''}}" />
+                    @if (nameForm.controls.apellidos.getError('required') && nameForm.controls.apellidos.touched) {
+                    <small class="label-error">Este campo es requerido</small>
+                    }
+                </div>
+            </div>
+        <div class="dialog-buttons">
+            <p-button label="Cancelar" severity="secondary" (click)="cancelDialog()" />
+            <p-button label="Modificar" [loading]="loading$()"
+                (click)="submitDialog()" />
+        </div>
+    </form>
+</p-dialog>
 <router-outlet/>
