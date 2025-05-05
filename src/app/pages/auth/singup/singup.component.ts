@@ -12,6 +12,7 @@ import { FirebaseError } from '@angular/fire/app';
 import { FamilyService } from '../../../services/family.service';
 import { Utils } from '../../../Utils/utils';
 import { enviroment } from '../../../env/enviroment';
+import { AUTH_ERROR } from '../../../core/constants/AuthFirebaseErrors';
 
 interface FormRegister {
   name: FormControl<string | null>;
@@ -68,24 +69,32 @@ export default class SingupComponent {
     }
   }
 
-  async signInWithGoogle() {
-    await this._authService.signInWithGoogle().then(() => {
-      this._messageService.add({
-        severity: 'success',
-        summary: 'Registro exitoso',
-        detail: '¡Bienvenido a la Alcancia del Rancho!',
-        life: 3000
+  async signInWithGoogle(){
+      await this._authService.signInWithGoogle().then(() => {
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Registro exitoso',
+          detail: '¡Bienvenido a la Alcancia del Rancho!',
+          life: 3000
+        });
+        this.router.navigateByUrl('');
+      }).catch((error: FirebaseError) => {
+        let message;
+        if (error.code === AUTH_ERROR.POPUP_CLOSED_BY_USER) {
+          message = 'Cancelado por el usuario';
+        } else {
+          message = error.message
+        }
+        console.log(error);
+        
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error al acceder con Google',
+          detail: message,
+          sticky: true
+        });
       });
-      this.router.navigateByUrl('');
-    }).catch((error: FirebaseError) => {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error al crear cuenta',
-        detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
-        sticky: true
-      });
-    });
-  }
+    }
 
   private async createAccount() {
     const { name, lastName, email, password } = this.form.value;

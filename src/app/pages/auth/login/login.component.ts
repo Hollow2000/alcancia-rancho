@@ -58,10 +58,18 @@ export default class LoginComponent {
       });
       this.router.navigateByUrl('');
     }).catch((error: FirebaseError) => {
+      let message;
+      if (error.code === AUTH_ERROR.POPUP_CLOSED_BY_USER) {
+        message = 'Cancelado por el usuario';
+      } else {
+        message = error.message
+      }
+      console.log(error);
+      
       this._messageService.add({
         severity: 'error',
-        summary: 'Error al crear cuenta',
-        detail: 'Por favor comunicate con el desarrollador Code:' + error.code,
+        summary: 'Error al acceder con Google',
+        detail: message,
         sticky: true
       });
     });

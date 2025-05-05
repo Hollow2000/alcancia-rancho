@@ -121,21 +121,25 @@ export class AuthService {
       this.mockIsLogged = true;
       return Promise.resolve();
     }
-    const user = await signInWithPopup(this._auth, new GoogleAuthProvider);
-    const family = await this._familyService.getFamily(this._auth.currentUser?.uid!);
-    if (!family) {
-      const { name, lastname } = this.getNames(user.user.displayName);
-      this._familyService.addFamily({
-        id: enviroment.mockUp ? this._utils.generateId() : this._auth.currentUser?.uid!,
-        nombres: name,
-        apellidos: lastname,
-        admin: false,
-        foto: user.user.photoURL ?? undefined
-      });
+    try {
+      const user = await signInWithPopup(this._auth, new GoogleAuthProvider);
+      const family = await this._familyService.getFamily(this._auth.currentUser?.uid!);
+      if (!family) {
+        const { name, lastname } = this.getNames(user.user.displayName);
+        this._familyService.addFamily({
+          id: enviroment.mockUp ? this._utils.generateId() : this._auth.currentUser?.uid!,
+          nombres: name,
+          apellidos: lastname,
+          admin: false,
+          foto: user.user.photoURL ?? undefined
+        });
+      }
+      return user;
+    } catch (error) {
+      throw error;
+    } finally {
+      this._loaderService.hide();
     }
-
-    this._loaderService.hide()
-    return user;
   }
 
   getNames(displayName: string | null) {
