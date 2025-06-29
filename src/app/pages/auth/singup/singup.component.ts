@@ -119,6 +119,7 @@ export default class SingupComponent {
             nombres: name!,
             apellidos: lastName!,
             admin: false,
+            deleted: false
           });
         }
       }

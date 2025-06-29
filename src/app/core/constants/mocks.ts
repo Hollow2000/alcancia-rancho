@@ -8,13 +8,15 @@ export class Mocks {
             nombres: 'Saul Emmanuel',
             apellidos: 'Moedano Miguel',
             foto: 'https://lh3.googleusercontent.com/a/ACg8ocJ7ZbUYuyq1H169amNmFLN8jsIkriChMWqZnF3lfunnqPdlNF6x=s96-c',
-            admin: true
+            admin: true,
+            deleted: false
         },
         {
             id: '43grh3a',
             nombres: 'Diana Laura',
             apellidos: 'Cortes Zarate',
-            admin: false
+            admin: false,
+            deleted: false
         }
     ];
     

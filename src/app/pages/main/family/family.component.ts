@@ -118,7 +118,8 @@ export class FamilyComponent implements OnInit, OnDestroy {
             nombres: this.familyFg.value.nombre!.trim(),
             apellidos: this.familyFg.value.apellidos!.trim(),
             admin: this.familyFg.value.admin!,
-            foto: this.familyFg.value.foto!
+            foto: this.familyFg.value.foto!,
+            deleted: false
           });
         } catch (error) {
           this._messageService.add({
@@ -135,7 +136,8 @@ export class FamilyComponent implements OnInit, OnDestroy {
             nombres: this.familyFg.value.nombre!.trim(),
             apellidos: this.familyFg.value.apellidos!.trim(),
             admin: this.familyFg.value.admin!,
-            foto: this.familyFg.value.foto!
+            foto: this.familyFg.value.foto!,
+            deleted: false
           });
         } catch (error) {
           this._messageService.add({

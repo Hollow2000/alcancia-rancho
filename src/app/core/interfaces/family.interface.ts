@@ -3,5 +3,6 @@ export interface Family {
   nombres: string,
   apellidos: string,
   foto?: string,
-  admin: boolean
+  admin: boolean,
+  deleted: boolean
 }

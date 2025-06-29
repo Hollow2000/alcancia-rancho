@@ -1,11 +1,10 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { Firestore, collection, collectionData, deleteDoc, doc, getDoc, orderBy, query, setDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, deleteDoc, doc, getDoc, orderBy, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { enviroment } from '../env/enviroment';
 import { Utils } from '../Utils/utils';
 import { Mocks } from '../core/constants/mocks';
 import { Family } from '../core/interfaces/family.interface';
-import { MessageService } from 'primeng/api';
 
 const PATH = 'familiares';
 
@@ -32,7 +31,7 @@ export class FamilyService {
     }
 
     const document = collectionData(
-      query(this._collectionRef,orderBy("nombres", "asc")), 
+      query(this._collectionRef,where('deleted','!=', true),orderBy("nombres", "asc")), 
       { idField: 'id' }
     ) as Observable<Family[]>;
 
@@ -166,7 +165,9 @@ export class FamilyService {
     }
 
     try {
-      await deleteDoc(doc(this._collectionRef, familyId));
+      await updateDoc(doc(this._collectionRef, familyId), {
+        deleted: true
+      });
     } catch (error) {
       throw error;
     } finally {

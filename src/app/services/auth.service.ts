@@ -73,13 +73,19 @@ export class AuthService {
       this.mockIsLogged = true;
       return Promise.resolve();
     }
-    await signInWithEmailAndPassword(this._auth, email, password).then(user => {
+    const user = await signInWithEmailAndPassword(this._auth, email, password).then(user => {
       this._loaderService.hide()
       return user;
     }).catch(error => {
       this._loaderService.hide()
       throw error;
-    })
+    });
+    const family = await this._familyService.getFamily(user.user.uid); 
+    if (!family || family.deleted) {
+      await signOut(this._auth);
+      throw {message: 'Usuario eliminado'};
+    }
+    return user;
   }
 
   async recoverPassword(email: string): Promise<void> {
@@ -131,8 +137,12 @@ export class AuthService {
           nombres: name,
           apellidos: lastname,
           admin: false,
-          foto: user.user.photoURL ?? undefined
+          foto: user.user.photoURL ?? undefined,
+          deleted: false
         });
+      } else if (family.deleted) {
+        await signOut(this._auth);
+        throw { message: 'Usuario eliminado' };
       }
       return user;
     } catch (error) {
