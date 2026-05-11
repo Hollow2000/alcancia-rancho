@@ -23,7 +23,7 @@
     "@angular/router": "^20.3.20",
     "@angular/service-worker": "^20.3.20",
     "@primeuix/themes": "^2.0.3",
-    "angular-cli-ghpages": "^2.0.3",
+    "angular-cli-ghpages": "^3.0.3",
     "primeicons": "^7.0.0",
     "primeng": "^20.4.0",
     "rxjs": "~7.8.0",
