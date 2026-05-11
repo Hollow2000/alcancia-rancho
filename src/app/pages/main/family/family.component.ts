@@ -23,14 +23,14 @@ import { AsyncPipe } from '@angular/common';
 
 
 @Component({
-  selector: 'app-family',
-  standalone: true,
-  imports: [
-    Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, ConfirmPopupModule,
-    InputText, FormsModule, ReactiveFormsModule, Skeleton, DialogModule, CheckboxModule, AsyncPipe],
-  templateUrl: './family.component.html',
-  styleUrl: './family.component.css',
-  providers: [ConfirmationService]
+    selector: 'app-family',
+    imports: [
+        Card, Button, DataView, AvatarModule, IconFieldModule, InputIconModule, ConfirmPopupModule,
+        InputText, FormsModule, ReactiveFormsModule, Skeleton, DialogModule, CheckboxModule, AsyncPipe
+    ],
+    templateUrl: './family.component.html',
+    styleUrl: './family.component.css',
+    providers: [ConfirmationService]
 })
 export class FamilyComponent implements OnInit, OnDestroy {
   private readonly _deviceService = inject(DeviceService);

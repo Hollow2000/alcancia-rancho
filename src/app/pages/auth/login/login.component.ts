@@ -17,11 +17,10 @@ interface FormLogin {
 }
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports:  [Card, FloatLabel, PasswordModule, ButtonModule, InputTextModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    imports: [Card, FloatLabel, PasswordModule, ButtonModule, InputTextModule, ReactiveFormsModule, RouterLink],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export default class LoginComponent {
   private readonly _fb = inject(FormBuilder);

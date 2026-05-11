@@ -1,8 +1,5 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { providePrimeNG } from 'primeng/config';
-import Material from "@primeng/themes/material";
-import { definePreset } from "@primeng/themes";
+import Material from "@primeuix/themes/material";
+import { definePreset } from "@primeuix/themes";
 
 const MyPreset = definePreset(Material, {
     primitive: {

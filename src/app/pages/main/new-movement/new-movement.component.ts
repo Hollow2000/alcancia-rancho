@@ -22,14 +22,13 @@ import { MessageService } from 'primeng/api';
 import { FirebaseError } from '@angular/fire/app';
 
 @Component({
-  selector: 'app-new-movement',
-  standalone: true,
-  imports: [
-    InputTextModule, SelectModule, Avatar, ReactiveFormsModule, FloatLabel, DatePickerModule,
-    CardModule, InputNumberModule, TextareaModule, Button, CurrencyPipe
-  ],
-  templateUrl: './new-movement.component.html',
-  styleUrl: './new-movement.component.css'
+    selector: 'app-new-movement',
+    imports: [
+        InputTextModule, SelectModule, Avatar, ReactiveFormsModule, FloatLabel, DatePickerModule,
+        CardModule, InputNumberModule, TextareaModule, Button, CurrencyPipe
+    ],
+    templateUrl: './new-movement.component.html',
+    styleUrl: './new-movement.component.css'
 })
 export class NewMovementComponent implements OnInit {
   private readonly _savingService = inject(SavingService);
