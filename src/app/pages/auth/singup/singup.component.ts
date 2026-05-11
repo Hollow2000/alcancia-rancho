@@ -23,11 +23,10 @@ interface FormRegister {
 }
 
 @Component({
-  selector: 'app-singup',
-  standalone: true,
-  imports: [Card, FloatLabel, PasswordModule, ButtonModule, InputTextModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './singup.component.html',
-  styleUrl: './singup.component.css'
+    selector: 'app-singup',
+    imports: [Card, FloatLabel, PasswordModule, ButtonModule, InputTextModule, ReactiveFormsModule, RouterLink],
+    templateUrl: './singup.component.html',
+    styleUrl: './singup.component.css'
 })
 export default class SingupComponent {
   private readonly _fb = inject(FormBuilder);

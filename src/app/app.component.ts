@@ -5,11 +5,10 @@ import { Toast } from 'primeng/toast';
 import { LoaderComponent } from './shared/loader/loader.component';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, Toast, LoaderComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  providers: [MessageService]
+    selector: 'app-root',
+    imports: [RouterOutlet, Toast, LoaderComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    providers: [MessageService]
 })
 export class AppComponent {}

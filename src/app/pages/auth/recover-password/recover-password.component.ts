@@ -10,11 +10,10 @@ import { MessageService } from 'primeng/api';
 import { FirebaseError } from '@angular/fire/app';
 
 @Component({
-  selector: 'app-recover-password',
-  standalone: true,
-  imports: [Card, Button, InputTextModule, FloatLabel, ReactiveFormsModule],
-  templateUrl: './recover-password.component.html',
-  styleUrl: './recover-password.component.css'
+    selector: 'app-recover-password',
+    imports: [Card, Button, InputTextModule, FloatLabel, ReactiveFormsModule],
+    templateUrl: './recover-password.component.html',
+    styleUrl: './recover-password.component.css'
 })
 export default class RecoverPasswordComponent {
   private readonly _authService = inject(AuthService);

@@ -25,28 +25,27 @@ import { InputIconModule } from 'primeng/inputicon';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-savings',
-  standalone: true,
-  imports: [
-    DataViewModule,
-    Button,
-    FormsModule,
-    CardModule,
-    ConfirmPopupModule,
-    CurrencyPipe,
-    Skeleton,
-    ReactiveFormsModule,
-    DialogModule,
-    InputTextModule,
-    InputNumberModule,
-    ProgressBarModule,
-    IconFieldModule, 
-    InputIconModule,
-    AsyncPipe
-  ],
-  templateUrl: './savings.component.html',
-  styleUrl: './savings.component.css',
-  providers: [ConfirmationService, DialogService],
+    selector: 'app-savings',
+    imports: [
+        DataViewModule,
+        Button,
+        FormsModule,
+        CardModule,
+        ConfirmPopupModule,
+        CurrencyPipe,
+        Skeleton,
+        ReactiveFormsModule,
+        DialogModule,
+        InputTextModule,
+        InputNumberModule,
+        ProgressBarModule,
+        IconFieldModule,
+        InputIconModule,
+        AsyncPipe
+    ],
+    templateUrl: './savings.component.html',
+    styleUrl: './savings.component.css',
+    providers: [ConfirmationService, DialogService]
 })
 export class SavingsComponent {
   private readonly _savingService = inject(SavingService);

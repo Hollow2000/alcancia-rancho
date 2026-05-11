@@ -13,13 +13,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FamilyService } from '../../services/family.service';
 
 @Component({
-  selector: 'app-main',
-  standalone: true,
-  imports: [RouterOutlet, Menubar, AvatarModule, Menu, DialogModule,
-    ReactiveFormsModule, ButtonModule, InputTextModule],
-  providers: [],
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.css'
+    selector: 'app-main',
+    imports: [RouterOutlet, Menubar, AvatarModule, Menu, DialogModule,
+        ReactiveFormsModule, ButtonModule, InputTextModule],
+    providers: [],
+    templateUrl: './main.component.html',
+    styleUrl: './main.component.css'
 })
 export class MainComponent {
   private readonly router = inject(Router);

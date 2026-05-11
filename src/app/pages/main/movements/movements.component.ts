@@ -23,14 +23,13 @@ import { PopoverModule } from 'primeng/popover';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [
-    DataViewModule, SelectModule, FormsModule, CardModule,
-    Button ,CurrencyPipe, Skeleton, PopoverModule, AsyncPipe
-  ],
-  templateUrl: './movements.component.html',
-  styleUrl: './movements.component.css'
+    selector: 'app-home',
+    imports: [
+        DataViewModule, SelectModule, FormsModule, CardModule,
+        Button, CurrencyPipe, Skeleton, PopoverModule, AsyncPipe
+    ],
+    templateUrl: './movements.component.html',
+    styleUrl: './movements.component.css'
 })
 export class MovementsComponent implements OnInit, OnDestroy {
   private readonly _movementService = inject(MovementService);
