@@ -1,0 +1,1 @@
+import"./chunk-ACKELEN3.js";var o=[{path:"login",loadComponent:()=>import("./chunk-HN3H6ORP.js")},{path:"register",loadComponent:()=>import("./chunk-ZSG45DU3.js")},{path:"recuperar-contrasena",loadComponent:()=>import("./chunk-VF5UVV22.js")}];export{o as authRoutes};
